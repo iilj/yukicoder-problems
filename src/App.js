@@ -10,6 +10,7 @@ import { Container } from "reactstrap";
 import { NavigationBar } from "./components/NavigationBar";
 import { TablePage } from "./pages/TablePage";
 import { ListPage } from "./pages/ListPage";
+import { UserPage } from "./pages/UserPage"
 // import logo from './logo.svg';
 import './App.css';
 
@@ -30,6 +31,10 @@ function App() {
           <Route
             path={["/list/:param(name|twitter|id)/:user([a-zA-Z0-9_-]+)", "/list/"]}
             component={ListPage}
+          />
+          <Route
+            path="/user/:param(name|twitter|id)/:user([a-zA-Z0-9_-]+)"
+            component={UserPage}
           />
           <Redirect path="/" to="/table/" />
         </Switch>

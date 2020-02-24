@@ -91,6 +91,8 @@ export const ListTable = (props) => {
                   return !!problem.SolveDate;
                 case "Only Trying":
                   return !problem.SolveDate;
+                default:
+                  return true;
               }
             })
             .sort((a, b) => a.Date < b.Date ? 1 : -1)

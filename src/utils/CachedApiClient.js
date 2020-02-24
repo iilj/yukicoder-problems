@@ -8,6 +8,9 @@ const fetchArray = async (url) => {
 }
 const fetchContests = () => fetchArray(`${STATIC_API_BASE_URL}/contest/past`);
 const fetchProblems = () => fetchArray(`${STATIC_API_BASE_URL}/problems`);
+const fetchGolferRanking = () => fetchArray(`${STATIC_API_BASE_URL}/ranking/golfer`);
+const fetchGolferRankingPure = () => fetchArray(`${STATIC_API_BASE_URL}/ranking/golfer/pure`);
+const fetchUserInfo = (param, user) => fetchArray(`${STATIC_API_BASE_URL}/user/${param}/${encodeURIComponent(user)}`);
 const fetchSolvedProblems = (param, user) => fetchArray(`${STATIC_API_BASE_URL}/solved/${param}/${encodeURIComponent(user)}`);
 
 ////////////////////
@@ -61,6 +64,55 @@ export const cachedSolvedProblemArray = (param, user) => {
     }
   }
   return CACHED_SOLVED_PROBLEMS;
+};
+
+// user data object
+let CACHED_USER_INFO;
+let CACHED_USER_INFO_PARAM;
+let CACHED_USER_INFO_USER;
+export const cachedUserInfo = (param, user) => {
+  if (CACHED_USER_INFO === undefined
+    || param !== CACHED_USER_INFO_PARAM
+    || user !== CACHED_USER_INFO_USER
+  ) {
+    CACHED_USER_INFO_PARAM = param;
+    CACHED_USER_INFO_USER = user;
+    try {
+      CACHED_USER_INFO = fetchUserInfo(param, user);
+    } catch (e) {
+      console.log(e);
+      CACHED_USER_INFO = {};
+    }
+  }
+  return CACHED_USER_INFO;
+};
+
+// shortest code array
+let CACHED_GOLFER_RANKING;
+export const cachedGolferRankingArray = () => {
+  if (CACHED_GOLFER_RANKING === undefined) {
+    try {
+      CACHED_GOLFER_RANKING = fetchGolferRanking();
+    } catch (e) {
+      console.log(e);
+      CACHED_GOLFER_RANKING = [];
+    }
+  }
+  return CACHED_GOLFER_RANKING;
+};
+
+// pure shortest code array
+let CACHED_GOLFER_RANKING_PURE;
+export const cachedGolferRankingPureArray = () => {
+  if (CACHED_GOLFER_RANKING_PURE === undefined) {
+    try {
+      CACHED_GOLFER_RANKING_PURE = fetchGolferRankingPure();
+    } catch (e) {
+      console.log(e);
+      CACHED_GOLFER_RANKING_PURE = [];
+    }
+  }
+  return CACHED_GOLFER_RANKING_PURE;
 };
 
 ////////////////////
@@ -132,4 +184,34 @@ export const cachedSolvedProblemMap = async (param, user) => {
     }
   }
   return CACHED_SOLVED_PROBLEMS_MAP;
+};
+
+// map (UserName -> RankingProblem array)
+let CACHED_GOLFER_RANKING_MAP;
+export const cachedGolferMap = async () => {
+  if (CACHED_GOLFER_RANKING_MAP === undefined) {
+    CACHED_GOLFER_RANKING_MAP = (await cachedGolferRankingArray()).reduce((map, rankingProblem) => {
+      if (!(rankingProblem.UserName in map)) {
+        map[rankingProblem.UserName] = [];
+      }
+      map[rankingProblem.UserName].push(rankingProblem);
+      return map;
+    }, {});
+  }
+  return CACHED_GOLFER_RANKING_MAP;
+};
+
+// map (UserName -> RankingProblem array of pure shortest code)
+let CACHED_GOLFER_RANKING_PURE_MAP;
+export const cachedGolferPureMap = async () => {
+  if (CACHED_GOLFER_RANKING_PURE_MAP === undefined) {
+    CACHED_GOLFER_RANKING_PURE_MAP = (await cachedGolferRankingPureArray()).reduce((map, rankingProblem) => {
+      if (!(rankingProblem.UserName in map)) {
+        map[rankingProblem.UserName] = [];
+      }
+      map[rankingProblem.UserName].push(rankingProblem);
+      return map;
+    }, {});
+  }
+  return CACHED_GOLFER_RANKING_PURE_MAP;
 };

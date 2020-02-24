@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Table from "reactstrap/lib/Table";
 import { DifficultyStars } from "../../components/DifficultyStars";
 import { getDifficultyLevelColorClass } from "../../utils"

@@ -125,6 +125,17 @@ export const NavigationBar2 = (props) => {
             >
               List
             </Button>
+            <Button
+              className="mb-2 mr-sm-2 mb-sm-0"
+              disabled={!user || user.length === 0}
+              tag={RouterLink}
+              to={generatePath("user", param, user)}
+              onClick={() => {
+                submit("user");
+              }}
+            >
+              User Page
+            </Button>
           </Form>
         </Nav>
         <Nav className="ml-auto" navbar>
