@@ -10,7 +10,10 @@ export const ListTable = (props) => {
     problems,
     contestMap,
     problemContestMap,
-    solvedProblemsMap
+    solvedProblemsMap,
+    statusFilterState,
+    fromDifficultyLevel,
+    toDifficultyLevel
   } = props;
   const columns = [
     {
@@ -36,6 +39,12 @@ export const ListTable = (props) => {
       dataField: "Contest",
       dataSort: true,
       dataFormat: (contest) => contest ? <ContestLink contestId={contest.Id} contestName={contest.Name} /> : null
+    },
+    {
+      header: "Solve Date",
+      dataField: "SolveDate",
+      dataSort: true,
+      dataFormat: (solveDate) => solveDate ? <>{dataFormat(new Date(solveDate), "yyyy/mm/dd HH:MM")}</> : null
     },
     {
       header: "Tags",
@@ -65,28 +74,38 @@ export const ListTable = (props) => {
         tableContainerClass="list-table"
         data={
           problems
-            .sort((a, b) => a.Date < b.Date ? 1 : -1)
-            .map(row => {
-              row.Contest = (contestMap && problemContestMap && row)
-                ? contestMap[problemContestMap[row.ProblemId]]
+            .filter(problem => fromDifficultyLevel <= problem.Level && problem.Level <= toDifficultyLevel)
+            .map(problem => {
+              problem.Contest = (contestMap && problemContestMap)
+                ? contestMap[problemContestMap[problem.ProblemId]]
                 : null;
-              return row;
+              problem.SolveDate = (solvedProblemsMap && problem.ProblemId in solvedProblemsMap)
+                ? solvedProblemsMap[problem.ProblemId].Date : undefined;
+              return problem;
             })
+            .filter(problem => {
+              switch (statusFilterState) {
+                case "All":
+                  return true;
+                case "Only AC":
+                  return !!problem.SolveDate;
+                case "Only Trying":
+                  return !problem.SolveDate;
+              }
+            })
+            .sort((a, b) => a.Date < b.Date ? 1 : -1)
         }
         trClassName={(problem) => {
-          const solvedProblem = (solvedProblemsMap && problem.ProblemId in solvedProblemsMap)
-            ? solvedProblemsMap[problem.ProblemId] : undefined;
-          if (!solvedProblem)
+          if (!problem.SolveDate)
             return "table-problem";
-          const contest = problem.Contest;
-          if (!contest)
+          if (!problem.Contest)
             return "table-problem";
-          const solvedDate = Date.parse(solvedProblem.Date);
-          const startDate = Date.parse(contest.Date)
-          const endDate = Date.parse(contest.EndDate);
-          if (solvedDate > endDate)
+          const solveDate = Date.parse(problem.SolveDate);
+          const startDate = Date.parse(problem.Contest.Date)
+          const endDate = Date.parse(problem.Contest.EndDate);
+          if (solveDate > endDate)
             return "table-problem table-problem-solved";
-          else if (solvedDate >= startDate)
+          else if (solveDate >= startDate)
             return "table-problem table-problem-solved-intime";
           else
             return "table-problem table-problem-solved-before-contest";
