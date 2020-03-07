@@ -13,6 +13,9 @@ export const ContestTable = (props) => {
     showDifficultyLevel,
     showContestResult
   } = props;
+  const header = [
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+    "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
   return (
     <>
       <Row className="my-4">
@@ -21,7 +24,7 @@ export const ContestTable = (props) => {
       <div>
         {contests.map(contest => {
           return (
-            <div key={contest.Id} className="contest-table-responsive">
+            <div key={contest.Id} className="contest-table">
               <strong>
                 <ContestLink contestId={contest.Id} contestName={contest.Name} />
               </strong>
@@ -29,12 +32,11 @@ export const ContestTable = (props) => {
                 striped
                 bordered
                 hover
-                responsive
-                className="contest-other-table-responsive"
+                className="contest-other-table"
               >
                 <tbody>
                   <tr>
-                    {contest.ProblemIdList.map(pid => {
+                    {contest.ProblemIdList.map((pid, i) => {
                       if (problemsMap !== undefined && pid in problemsMap) {
                         const problem = problemsMap[pid];
                         const solvedProblem = (solvedProblemsMap && pid in solvedProblemsMap)
@@ -53,13 +55,16 @@ export const ContestTable = (props) => {
                           else
                             className = "table-problem table-problem-solved-before-contest";
                         }
+
+                        const problemTitle = header[i] + ". " + problem.Title;
+
                         return (
                           <td
                             key={pid}
                             className={className}
                           >
                             <DifficultyStarsAbsoluteSpan level={problem.Level} showDifficultyLevel={showDifficultyLevel} />
-                            <ProblemLink problemNo={problem.No} problemTitle={problem.Title} level={problem.Level} showDifficultyLevel={showDifficultyLevel} />
+                            <ProblemLink problemNo={problem.No} problemTitle={problemTitle} level={problem.Level} showDifficultyLevel={showDifficultyLevel} />
                             <SubmitTimespan contest={contest} solvedProblem={solvedProblem} showContestResult={showContestResult} />
                           </td>
                         );

@@ -26,7 +26,7 @@ export const YukicoderRegularTable = (props) => {
       <h2>{props.title}</h2>
       <BootstrapTable
         data={contests.sort((a, b) => a.Date < b.Date ? 1 : -1)}
-        tableContainerClass="contest-table-responsive contest-regular-table-responsive"
+        tableContainerClass="contest-table contest-regular-table"
       >
         <TableHeaderColumn
           isKey
@@ -103,10 +103,12 @@ export const YukicoderRegularTable = (props) => {
                   return (<span>(Id={pid})</span>);
                 }
 
+                const problemTitle = header[i] + ". " + problem.Title;
+
                 return (
                   <>
                     <DifficultyStarsAbsoluteSpan level={problem.Level} showDifficultyLevel={showDifficultyLevel} />
-                    <ProblemLink problemNo={problem.No} problemTitle={problem.Title} level={problem.Level} showDifficultyLevel={showDifficultyLevel} />
+                    <ProblemLink problemNo={problem.No} problemTitle={problemTitle} level={problem.Level} showDifficultyLevel={showDifficultyLevel} />
                     <SubmitTimespan contest={contest} solvedProblem={solvedProblem} showContestResult={showContestResult} />
                   </>
                 );

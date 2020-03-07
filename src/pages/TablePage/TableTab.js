@@ -22,6 +22,15 @@ export const TableTabButtons = props => {
           }}
           active={active === 1}
         >
+          yukicoder contest (long)
+          </Button>
+        <Button
+          color="secondary"
+          onClick={() => {
+            setActive(2);
+          }}
+          active={active === 2}
+        >
           Other contests
           </Button>
       </ButtonGroup>

@@ -41,10 +41,14 @@ export const TablePage = props => {
     setSolvedProblemsMap({});
 
   let yukicoderRegularContests = [];
+  let yukicoderLongContests = [];
   let otherContests = [];
   contests.forEach(contest => {
     if (contest.Name.match(/^yukicoder contest \d+/))
-      yukicoderRegularContests.push(contest);
+      if (contest.ProblemIdList.length <= 6)
+        yukicoderRegularContests.push(contest);
+      else
+        yukicoderLongContests.push(contest);
     else
       otherContests.push(contest);
   });
@@ -85,6 +89,15 @@ export const TablePage = props => {
           showContestResult={showContestResult} />
       </ContestWrapper>
       <ContestWrapper display={activeTab === 1}>
+        <ContestTable
+          contests={yukicoderLongContests}
+          title={"yukicoder contest (long)"}
+          problemsMap={problemsMap}
+          solvedProblemsMap={solvedProblemsMap}
+          showDifficultyLevel={showDifficultyLevel}
+          showContestResult={showContestResult} />
+      </ContestWrapper>
+      <ContestWrapper display={activeTab === 2}>
         <ContestTable
           contests={otherContests}
           title={"Other contests"}
