@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  padding: 70px 20px 20px 20px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -10,4 +11,197 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.list-table tbody tr td, .list-table thead th {
+  font-size: small;
+  padding: 0.3rem;
+  line-height: 1.0;
+  white-space: normal;
+}
+
+.star-bronze path {
+  fill: url(#gbronze);
+}
+.star-silver path {
+  fill: url(#gsilver);
+}
+.star-gold path {
+  fill: url(#ggold);
+}
+
+.contest-regular-table table td {
+  white-space: normal;
+}
+
+.contest-other-table tr {
+  /* display: flex;
+  flex-wrap: wrap; */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.contest-other-table tr td {
+  flex: auto;
+}
+
+.table-problem {
+  position: relative;
+}
+.table-problem-solved, .table-problem-solved>td, .table-problem-solved>th {
+  background-color: #c3e6cb;
+}
+.table-problem-solved-intime, .table-problem-solved-intime>td, .table-problem-solved-intime>th {
+  background-color: #9AD59E;
+}
+.table-problem-solved-before-contest, .table-problem-solved-before-contest>td, .table-problem-solved-before-contest>th {
+  background-color: #99CCFF;
+}
+.table-hover .table-problem-solved-intime:hover, .table-hover .table-problem-solved-intime:hover>td, .table-hover .table-problem-solved-intime:hover>th {
+  background-color: #88CC88;
+}
+.table-hover .table-problem-solved-before-contest:hover, .table-hover .table-problem-solved-before-contest:hover>td, .table-hover .table-problem-solved-before-contest:hover>th {
+  background-color: #88BBFF;
+}
+
+.table-problem-timespan {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: #888888;
+  font-size: x-small;
+}
+
+.table-problem-stars {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: x-small;
+}
+
+.difficulty-red {
+  color: #FF0000;
+}
+.difficulty-orange {
+  color: #FF8000;
+}
+.difficulty-yellow {
+  color: #C0C000;
+}
+.difficulty-blue {
+  color: #0000FF;
+}
+.difficulty-cyan {
+  color: #00C0C0;
+}
+.difficulty-green {
+  color: #008000;
+}
+.difficulty-brown {
+  color: #804000;
+}
+.difficulty-grey {
+  color: #808080;
+}
+
+@media only screen and (max-width: 480px) {
+  .contest-table table,
+  .contest-table thead,
+  .contest-table tbody,
+  .contest-table th,
+  .contest-table td,
+  .contest-table tr {
+      display: block;
+  }
+
+  .contest-table td.table-problem-empty {
+      display: none;
+  }
+
+  .contest-table thead tr {
+      display: none;
+  }
+
+  .contest-table tr {
+      border: 1px solid #ccc;
+  }
+
+  .contest-table td {
+      position: relative;
+      padding-left: .75rem;
+      padding-bottom: 6px;
+  }
+
+  .contest-table.contest-regular-table td:not(:first-child) {
+      padding-left: 2.5rem;
+  }
+  
+  div.btn-group.table-tab {
+      display: block;
+  }
+
+  div.btn-group.table-tab > button.btn:not(:last-child):not(.dropdown-toggle),
+  div.btn-group.table-tab > button.btn:not(:first-child) {
+      border-radius: .25rem;
+      margin-left: 0.1rem;
+  }
+
+  div.btn-group.table-tab > button.btn {
+      margin: 0.1rem;
+      padding: 0.4rem;
+  }
+
+  .contest-table .table-problem-stars {
+    padding-left: 2.0rem;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .list-table table,
+  .list-table thead,
+  .list-table tbody,
+  .list-table th,
+  .list-table td,
+  .list-table tr {
+      display: block;
+  }
+
+  .list-table thead tr {
+      display: none;
+  }
+
+  .list-table tbody tr {
+      border: 1px solid #ccc;
+      margin-top: 0.5rem;
+  }
+
+  .list-table tbody tr td {
+      position: relative;
+      padding-left: 32%;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      min-height: calc(1rem + 12px);
+  }
+
+  .list-table tbody td:before {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 32%;
+    padding-right: 10px;
+    text-align: left;
+    font-weight: bold;
+    content: attr(data-col-name);
+  }
+
+  .list-table td p {
+    margin-bottom: 0;
+  }
+
+  .react-bs-table-bordered {
+    border: none;
+  }
+
+  .react-bs-table .table-bordered>tbody>tr>td:first-child {
+    border-left-width: 1px;
+  }
 }
