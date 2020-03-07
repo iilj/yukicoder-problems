@@ -12,6 +12,9 @@ import { CalendarHeatmap } from './CalendarHeatmap';
 import { SolvedProblemList } from './SolvedProblemList';
 import dataFormat from 'dateformat';
 
+const MS_OF_HOUR = 1000 * 60 * 60;
+const MS_OF_DAY = MS_OF_HOUR * 24;
+
 export const UserPage = (props) => {
   const { param, user } = useParams();
 
@@ -89,11 +92,10 @@ export const UserPage = (props) => {
   }, []);
 
   // for daily chart section
-  const MS_OF_HOUR = 1000 * 60 * 60;
   const dailyCountMap = solvedProblems
     .map((solvedProblem) => Date.parse(solvedProblem.Date) + MS_OF_HOUR * 9)
     .reduce((map, sec) => {
-      const key = sec - (sec % (MS_OF_HOUR * 24));
+      const key = sec - (sec % MS_OF_DAY);
       if (!(key in map)) {
         map[key] = 0;
       }
@@ -102,7 +104,7 @@ export const UserPage = (props) => {
     }, {});
   const dailyCount = Object.keys(dailyCountMap)
     .reduce((ar, key) => {
-      ar.push({ dateSecond: key, count: dailyCountMap[key] });
+      ar.push({ dateSecond: Number(key), count: dailyCountMap[key] });
       return ar;
     }, [])
     .sort((a, b) => a.dateSecond - b.dateSecond);
@@ -112,6 +114,25 @@ export const UserPage = (props) => {
     ar.push({ dateSecond, count: last ? last.count + count : count });
     return ar;
   }, []);
+
+  const { longestStreak, currentStreak, prevDateSecond } = dailyCount
+    .map((e) => e.dateSecond)
+    .reduce(
+      (state, dateSecond) => {
+        const nextDateSecond = state.prevDateSecond + MS_OF_DAY;
+        const currentStreak = dateSecond === nextDateSecond ? state.currentStreak + 1 : 1;
+        const longestStreak = Math.max(state.longestStreak, currentStreak);
+        return { longestStreak, currentStreak, prevDateSecond: dateSecond };
+      },
+      {
+        longestStreak: 0,
+        currentStreak: 0,
+        prevDateSecond: 0,
+      },
+    );
+  const currentDateSecond = Number(new Date());
+  const yesterdaySecond = currentDateSecond - (currentDateSecond % MS_OF_DAY) - MS_OF_DAY;
+  const isIncreasing = prevDateSecond >= yesterdaySecond;
 
   const achievements = [
     {
@@ -161,6 +182,17 @@ export const UserPage = (props) => {
             )}
           </Col>
         ))}
+        <Col key="Longest Streak" className="text-center" xs="6" md="3">
+          <h6>Longest Streak</h6>
+          <h3>{longestStreak} days</h3>
+        </Col>
+        <Col key="Current Streak" className="text-center" xs="6" md="3">
+          <h6>Current Streak</h6>
+          <h3>{isIncreasing ? currentStreak : 0} days</h3>
+          <h6 className="text-muted">{`Last AC: ${
+            prevDateSecond > 0 ? dataFormat(prevDateSecond, 'yyyy/mm/dd') : ''
+          }`}</h6>
+        </Col>
       </Row>
 
       <PieCharts problems={regularContestProblemsCnt} title="yukicoder contest" />
