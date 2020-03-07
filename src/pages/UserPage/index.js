@@ -4,7 +4,13 @@ import { Col, Row } from "reactstrap";
 
 import * as CachedApiClient from "../../utils/CachedApiClient";
 import { ordinalSuffixOf } from "../../utils";
-import { SolvedProblemList } from "./SolvedProblemList"
+
+import { PieCharts } from "./SmallPieChart"
+import { DailyEffortBarChart } from "./DailyEffortBarChart";
+import { ClimbingLineChart } from "./ClimbingLineChart";
+import { CalendarHeatmap } from "./CalendarHeatmap";
+import { SolvedProblemList } from "./SolvedProblemList";
+import dataFormat from "dateformat";
 
 export const UserPage = props => {
   const { param, user } = useParams();
@@ -13,15 +19,19 @@ export const UserPage = props => {
   const [golferMap, setGolferMap] = useState({});
   const [pureGolferMap, setPureGolferMap] = useState({});
 
+  const [contests, setContests] = useState([]);
   const [contestMap, setContestMap] = useState({});
   const [problemContestMap, setProblemContestMap] = useState({});
   const [solvedProblems, setSolvedProblems] = useState([]);
+  const [solvedProblemsMap, setSolvedProblemsMap] = useState({});
 
   CachedApiClient.cachedGolferMap()
     .then(map => setGolferMap(map));
   CachedApiClient.cachedGolferPureMap()
     .then(map => setPureGolferMap(map));
 
+  CachedApiClient.cachedContestArray()
+    .then(ar => setContests(ar));
   CachedApiClient.cachedContestMap()
     .then(map => setContestMap(map));
   CachedApiClient.cachedProblemContestMap()
@@ -30,12 +40,15 @@ export const UserPage = props => {
   if (param && user) {
     CachedApiClient.cachedSolvedProblemArray(param, user)
       .then(ar => setSolvedProblems(ar));
+    CachedApiClient.cachedSolvedProblemMap(param, user)
+      .then(map => setSolvedProblemsMap(map));
     CachedApiClient.cachedUserInfo(param, user)
       .then(obj => setUserInfo(!obj.Message ? obj : {}));
   }
 
   const name = userInfo ? userInfo.Name : undefined;
 
+  // for user info section
   const shortestCount = (name && name in golferMap) ? golferMap[name].length : 0;
   const golfRankerCount = Object.keys(golferMap).length;
   const shortestRank =
@@ -59,6 +72,53 @@ export const UserPage = props => {
           }
           return cnt;
         }, 0);
+
+  // for pichart
+  const regularContestProblemsCntMap = contests.reduce((map, contest) => {
+    if (contest.Name.match(/^yukicoder contest \d+/))
+      return contest.ProblemIdList.reduce((map_, problemId, idx) => {
+        const key = Math.min(idx, 5);
+        if (!(key in map_))
+          map_[key] = { total: 0, solved: 0 };
+        if (problemId in solvedProblemsMap)
+          map_[key].solved++;
+        map_[key].total++;
+        return map_;
+      }, map);
+    else
+      return map;
+  }, {});
+  const regularContestProblemsCnt = Object.keys(regularContestProblemsCntMap).reduce((ar, key) => {
+    ar[key] = regularContestProblemsCntMap[key];
+    return ar;
+  }, []);
+
+  // for daily chart section
+  const MS_OF_HOUR = 1000 * 60 * 60;
+  const dailyCountMap = solvedProblems
+    .map(solvedProblem => Date.parse(solvedProblem.Date) + MS_OF_HOUR * 9)
+    .reduce(
+      (map, sec) => {
+        const key = sec - (sec % (MS_OF_HOUR * 24));
+        if (!(key in map)) {
+          map[key] = 0;
+        }
+        map[key]++;
+        return map;
+      }, {}
+    );
+  const dailyCount = Object.keys(dailyCountMap).reduce(
+    (ar, key) => {
+      ar.push({ dateSecond: key, count: dailyCountMap[key] });
+      return ar;
+    }, []
+  ).sort((a, b) => a.dateSecond - b.dateSecond);
+
+  const climbing = dailyCount.reduce((ar, { dateSecond, count }) => {
+    const last = ar[ar.length - 1];
+    ar.push({ dateSecond, count: (last ? last.count + count : count) })
+    return ar;
+  }, []);
 
   const achievements = [
     {
@@ -116,6 +176,35 @@ export const UserPage = props => {
             {rank === undefined ? null : <h6 className="text-muted">{`${rank}${ordinalSuffixOf(rank)}`}</h6>}
           </Col>
         ))}
+      </Row>
+
+      <PieCharts
+        problems={regularContestProblemsCnt}
+        title="yukicoder contest"
+      />
+
+      <Row className="my-2 border-bottom">
+        <h1>Daily Effort</h1>
+      </Row>
+      <DailyEffortBarChart
+        dailyData={dailyCount}
+      />
+
+      <Row className="my-2 border-bottom">
+        <h1>Climbing</h1>
+      </Row>
+      <ClimbingLineChart climbingData={climbing} />
+
+      <Row className="my-2 border-bottom">
+        <h1>Heatmap</h1>
+      </Row>
+      <Row className="my-5">
+        <CalendarHeatmap
+          dailyCountMap={dailyCountMap}
+          formatTooltip={(date, count) =>
+            `${dataFormat(new Date(date), "yyyy/mm/dd")} ${count} submissions`
+          }
+        />
       </Row>
 
       <Row className="my-2 border-bottom">

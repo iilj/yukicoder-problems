@@ -19,10 +19,12 @@ const fetchSolvedProblems = (param, user) => fetchArray(`${STATIC_API_BASE_URL}/
 
 // contests raw array
 let CACHED_CONTESTS;
-export const cachedContestArray = () => {
+export const cachedContestArray = async () => {
   if (CACHED_CONTESTS === undefined) {
     try {
-      CACHED_CONTESTS = fetchContests();
+      CACHED_CONTESTS = await fetchContests();
+      if ('Message' in CACHED_CONTESTS)
+        throw CACHED_CONTESTS.Message;
     } catch (e) {
       console.log(e);
       CACHED_CONTESTS = [];
@@ -33,10 +35,12 @@ export const cachedContestArray = () => {
 
 // problems raw array
 let CACHED_PROBLEMS;
-export const cachedProblemArray = () => {
+export const cachedProblemArray = async () => {
   if (CACHED_PROBLEMS === undefined) {
     try {
-      CACHED_PROBLEMS = fetchProblems();
+      CACHED_PROBLEMS = await fetchProblems();
+      if ('Message' in CACHED_PROBLEMS)
+        throw CACHED_PROBLEMS.Message;
     } catch (e) {
       console.log(e);
       CACHED_PROBLEMS = [];
@@ -49,19 +53,21 @@ export const cachedProblemArray = () => {
 let CACHED_SOLVED_PROBLEMS;
 let CACHED_SOLVED_PROBLEMS_PARAM;
 let CACHED_SOLVED_PROBLEMS_USER;
-export const cachedSolvedProblemArray = (param, user) => {
+export const cachedSolvedProblemArray = async (param, user) => {
   if (CACHED_SOLVED_PROBLEMS === undefined
     || param !== CACHED_SOLVED_PROBLEMS_PARAM
     || user !== CACHED_SOLVED_PROBLEMS_USER
   ) {
-    CACHED_SOLVED_PROBLEMS_PARAM = param;
-    CACHED_SOLVED_PROBLEMS_USER = user;
     try {
-      CACHED_SOLVED_PROBLEMS = fetchSolvedProblems(param, user);
+      CACHED_SOLVED_PROBLEMS = await fetchSolvedProblems(param, user);
+      if ('Message' in CACHED_SOLVED_PROBLEMS)
+        throw CACHED_SOLVED_PROBLEMS.Message;
     } catch (e) {
       console.log(e);
       CACHED_SOLVED_PROBLEMS = [];
     }
+    CACHED_SOLVED_PROBLEMS_PARAM = param;
+    CACHED_SOLVED_PROBLEMS_USER = user;
   }
   return CACHED_SOLVED_PROBLEMS;
 };
@@ -70,29 +76,33 @@ export const cachedSolvedProblemArray = (param, user) => {
 let CACHED_USER_INFO;
 let CACHED_USER_INFO_PARAM;
 let CACHED_USER_INFO_USER;
-export const cachedUserInfo = (param, user) => {
+export const cachedUserInfo = async (param, user) => {
   if (CACHED_USER_INFO === undefined
     || param !== CACHED_USER_INFO_PARAM
     || user !== CACHED_USER_INFO_USER
   ) {
-    CACHED_USER_INFO_PARAM = param;
-    CACHED_USER_INFO_USER = user;
     try {
-      CACHED_USER_INFO = fetchUserInfo(param, user);
+      CACHED_USER_INFO = await fetchUserInfo(param, user);
+      if ('Message' in CACHED_USER_INFO)
+        throw CACHED_USER_INFO.Message;
     } catch (e) {
       console.log(e);
       CACHED_USER_INFO = {};
     }
+    CACHED_USER_INFO_PARAM = param;
+    CACHED_USER_INFO_USER = user;
   }
   return CACHED_USER_INFO;
 };
 
 // shortest code array
 let CACHED_GOLFER_RANKING;
-export const cachedGolferRankingArray = () => {
+export const cachedGolferRankingArray = async () => {
   if (CACHED_GOLFER_RANKING === undefined) {
     try {
-      CACHED_GOLFER_RANKING = fetchGolferRanking();
+      CACHED_GOLFER_RANKING = await fetchGolferRanking();
+      if ('Message' in CACHED_GOLFER_RANKING)
+        throw CACHED_GOLFER_RANKING.Message;
     } catch (e) {
       console.log(e);
       CACHED_GOLFER_RANKING = [];
@@ -103,10 +113,12 @@ export const cachedGolferRankingArray = () => {
 
 // pure shortest code array
 let CACHED_GOLFER_RANKING_PURE;
-export const cachedGolferRankingPureArray = () => {
+export const cachedGolferRankingPureArray = async () => {
   if (CACHED_GOLFER_RANKING_PURE === undefined) {
     try {
-      CACHED_GOLFER_RANKING_PURE = fetchGolferRankingPure();
+      CACHED_GOLFER_RANKING_PURE = await fetchGolferRankingPure();
+      if ('Message' in CACHED_GOLFER_RANKING_PURE)
+        throw CACHED_GOLFER_RANKING_PURE.Message;
     } catch (e) {
       console.log(e);
       CACHED_GOLFER_RANKING_PURE = [];
@@ -166,10 +178,12 @@ export const cachedProblemContestMap = async () => {
 
 // map (problem id -> solved problem object)
 let CACHED_SOLVED_PROBLEMS_MAP;
+let CACHED_SOLVED_PROBLEMS_MAP_PARAM;
+let CACHED_SOLVED_PROBLEMS_MAP_USER
 export const cachedSolvedProblemMap = async (param, user) => {
   if (CACHED_SOLVED_PROBLEMS_MAP === undefined
-    || param !== CACHED_SOLVED_PROBLEMS_PARAM
-    || user !== CACHED_SOLVED_PROBLEMS_USER
+    || param !== CACHED_SOLVED_PROBLEMS_MAP_PARAM
+    || user !== CACHED_SOLVED_PROBLEMS_MAP_USER
   ) {
     const cachedSolvedProblems = await cachedSolvedProblemArray(param, user);
     if (cachedSolvedProblems && Array.isArray(cachedSolvedProblems)) {
@@ -182,6 +196,8 @@ export const cachedSolvedProblemMap = async (param, user) => {
     } else {
       CACHED_SOLVED_PROBLEMS_MAP = {};
     }
+    CACHED_SOLVED_PROBLEMS_MAP_PARAM = param;
+    CACHED_SOLVED_PROBLEMS_MAP_USER = user;
   }
   return CACHED_SOLVED_PROBLEMS_MAP;
 };

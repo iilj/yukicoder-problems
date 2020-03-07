@@ -82,6 +82,7 @@ export const SolvedProblemList = (props) => {
       >
         Contest
       </TableHeaderColumn>
+      <TableHeaderColumn dataField="Title" hidden />
     </BootstrapTable>
   );
 };
