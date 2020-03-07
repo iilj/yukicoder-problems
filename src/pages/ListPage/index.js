@@ -27,6 +27,8 @@ export const ListPage = props => {
   const [contestMap, setContestMap] = useState({});
   const [problemContestMap, setProblemContestMap] = useState({});
   const [solvedProblemsMap, setSolvedProblemsMap] = useState({});
+  const [golferProblemMap, setGolferProblemMap] = useState({});
+  const [golferPureProblemMap, setGolferPureProblemMap] = useState({});
 
   const [statusFilterState, setStatusFilterState] = useState("All");
   const [fromDifficultyLevel, setFromDifficultyLevel] = useState(-1);
@@ -38,6 +40,11 @@ export const ListPage = props => {
     .then(map => setContestMap(map));
   CachedApiClient.cachedProblemContestMap()
     .then(map => setProblemContestMap(map));
+  CachedApiClient.cachedGolferRankingProblemMap()
+    .then(map => setGolferProblemMap(map));
+  CachedApiClient.cachedGolferRankingPureProblemMap()
+    .then(map => setGolferPureProblemMap(map));
+
   if (param && user) {
     CachedApiClient.cachedSolvedProblemArray(param, user)
       .then(ar => setSolvedProblems(ar));
@@ -46,6 +53,7 @@ export const ListPage = props => {
   } else if (Object.keys(solvedProblemsMap).length > 0) {
     setSolvedProblemsMap({});
   }
+  console.log(golferProblemMap);
 
   const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 
@@ -141,6 +149,8 @@ export const ListPage = props => {
           contestMap={contestMap}
           problemContestMap={problemContestMap}
           solvedProblemsMap={solvedProblemsMap}
+          golferProblemMap={golferProblemMap}
+          golferPureProblemMap={golferPureProblemMap}
           statusFilterState={statusFilterState}
           fromDifficultyLevel={fromDifficultyLevel}
           toDifficultyLevel={toDifficultyLevel}

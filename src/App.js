@@ -9,6 +9,7 @@ import { Container } from "reactstrap";
 
 import { NavigationBar } from "./components/NavigationBar";
 import { ShortRanking } from "./pages/ShortRanking";
+import { PureShortRanking } from "./pages/PureShortRanking"
 import { TablePage } from "./pages/TablePage";
 import { ListPage } from "./pages/ListPage";
 import { UserPage } from "./pages/UserPage"
@@ -26,6 +27,7 @@ function App() {
       <Container style={{ width: "100%", maxWidth: "90%" }}>
         <Switch>
           <Route exact path="/short" component={() => <ShortRanking />} />
+          <Route exact path="/pureshort" component={() => <PureShortRanking />} />
           <Route
             path={["/table/:param(name|twitter|id)/:user([a-zA-Z0-9_-]+)", "/table/"]}
             component={TablePage}

@@ -3,6 +3,7 @@ import React from "react";
 import { DifficultyStars } from "../../components/DifficultyStars";
 import { ProblemLink } from "../../components/ProblemLink";
 import { ContestLink } from "../../components/ContestLink";
+import { formatSubmissionUrl } from "../../utils/Url"
 import dataFormat from "dateformat"
 
 export const ListTable = (props) => {
@@ -11,6 +12,8 @@ export const ListTable = (props) => {
     contestMap,
     problemContestMap,
     solvedProblemsMap,
+    golferProblemMap,
+    golferPureProblemMap,
     statusFilterState,
     fromDifficultyLevel,
     toDifficultyLevel
@@ -52,6 +55,34 @@ export const ListTable = (props) => {
       dataSort: true
     },
     {
+      header: "Shortest",
+      dataField: "ShortestRankingProblem",
+      dataSort: true,
+      dataFormat: (shortestRankingProblem) => shortestRankingProblem
+        ? <a
+          href={formatSubmissionUrl(shortestRankingProblem.SubmissionId)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {shortestRankingProblem.UserName} ({shortestRankingProblem.Length} Bytes)
+        </a>
+        : null
+    },
+    {
+      header: "Pure Shortest",
+      dataField: "PureShortestRankingProblem",
+      dataSort: true,
+      dataFormat: (pureShortestRankingProblem) => pureShortestRankingProblem
+        ? <a
+          href={formatSubmissionUrl(pureShortestRankingProblem.SubmissionId)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {pureShortestRankingProblem.UserName} ({pureShortestRankingProblem.Length} Bytes)
+        </a>
+        : null
+    },
+    {
       header: "No",
       dataField: "No",
       dataSort: true
@@ -81,6 +112,10 @@ export const ListTable = (props) => {
                 : null;
               problem.SolveDate = (solvedProblemsMap && problem.ProblemId in solvedProblemsMap)
                 ? solvedProblemsMap[problem.ProblemId].Date : undefined;
+              problem.ShortestRankingProblem = (golferProblemMap && problem.No in golferProblemMap)
+                ? golferProblemMap[problem.No] : undefined;
+              problem.PureShortestRankingProblem = (golferPureProblemMap && problem.No in golferPureProblemMap)
+                ? golferPureProblemMap[problem.No] : undefined;
               return problem;
             })
             .filter(problem => {

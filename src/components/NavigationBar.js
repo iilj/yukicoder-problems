@@ -148,6 +148,9 @@ export const NavigationBar2 = (props) => {
               <DropdownItem tag={RouterLink} to="/short">
                 Shortest Submissions
               </DropdownItem>
+              <DropdownItem tag={RouterLink} to="/pureshort">
+                Pure Shortest Submissions
+              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav>

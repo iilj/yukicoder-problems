@@ -215,3 +215,27 @@ export const cachedGolferPureMap = async () => {
   }
   return CACHED_GOLFER_RANKING_PURE_MAP;
 };
+
+// map (Problem No -> RankingProblem of golfers)
+let CACHED_GOLFER_RANKING_PROBLEM_MAP;
+export const cachedGolferRankingProblemMap = async () => {
+  if (CACHED_GOLFER_RANKING_PROBLEM_MAP === undefined) {
+    CACHED_GOLFER_RANKING_PROBLEM_MAP = (await cachedGolferRankingArray()).reduce((map, rankingProblem) => {
+      map[rankingProblem.No] = rankingProblem;
+      return map;
+    }, {});
+  }
+  return CACHED_GOLFER_RANKING_PROBLEM_MAP;
+};
+
+// map (Problem No -> RankingProblem of pure golfers)
+let CACHED_GOLFER_RANKING_PURE_PROBLEM_MAP;
+export const cachedGolferRankingPureProblemMap = async () => {
+  if (CACHED_GOLFER_RANKING_PURE_PROBLEM_MAP === undefined) {
+    CACHED_GOLFER_RANKING_PURE_PROBLEM_MAP = (await cachedGolferRankingPureArray()).reduce((map, rankingProblem) => {
+      map[rankingProblem.No] = rankingProblem;
+      return map;
+    }, {});
+  }
+  return CACHED_GOLFER_RANKING_PURE_PROBLEM_MAP;
+};

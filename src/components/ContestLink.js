@@ -1,4 +1,5 @@
 import React from "react";
+import { formatContestUrl } from "../utils/Url"
 
 export const ContestLink = (props) => {
   const {
@@ -7,7 +8,7 @@ export const ContestLink = (props) => {
   } = props;
   return (
     <a
-      href={`https://yukicoder.me/contests/${contestId}`}
+      href={formatContestUrl(contestId)}
       target="_blank"
       rel="noopener noreferrer"
     >

@@ -1,4 +1,5 @@
 import React from "react";
+import { formatProblemUrl } from "../utils/Url"
 import { getDifficultyLevelColorClass } from "../utils"
 
 export const ProblemLink = (props) => {
@@ -10,7 +11,7 @@ export const ProblemLink = (props) => {
   } = props;
   return (
     <a
-      href={`https://yukicoder.me/problems/no/${problemNo}`}
+      href={formatProblemUrl(problemNo)}
       target="_blank"
       rel="noopener noreferrer"
       className={showDifficultyLevel ? getDifficultyLevelColorClass(level) : ""}
