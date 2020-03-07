@@ -138,6 +138,20 @@ export const NavigationBar2 = (props) => {
             </Button>
           </Form>
         </Nav>
+
+        <Nav className="ml-auto" navbar>
+          <UncontrolledDropdown nav inNavbar>
+            <DropdownToggle nav caret>
+              Rankings
+            </DropdownToggle>
+            <DropdownMenu right>
+              <DropdownItem tag={RouterLink} to="/short">
+                Shortest Submissions
+              </DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+        </Nav>
+
         <Nav className="ml-auto" navbar>
           <UncontrolledDropdown nav inNavbar>
             <DropdownToggle nav caret>

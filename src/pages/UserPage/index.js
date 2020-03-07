@@ -4,6 +4,7 @@ import { Col, Row } from "reactstrap";
 
 import * as CachedApiClient from "../../utils/CachedApiClient";
 import { ordinalSuffixOf } from "../../utils";
+import { SolvedProblemList } from "./SolvedProblemList"
 
 export const UserPage = props => {
   const { param, user } = useParams();
@@ -11,13 +12,27 @@ export const UserPage = props => {
   const [userInfo, setUserInfo] = useState({});
   const [golferMap, setGolferMap] = useState({});
   const [pureGolferMap, setPureGolferMap] = useState({});
+
+  const [contestMap, setContestMap] = useState({});
+  const [problemContestMap, setProblemContestMap] = useState({});
+  const [solvedProblems, setSolvedProblems] = useState([]);
+
   CachedApiClient.cachedGolferMap()
     .then(map => setGolferMap(map));
   CachedApiClient.cachedGolferPureMap()
     .then(map => setPureGolferMap(map));
-  if (param && user)
+
+  CachedApiClient.cachedContestMap()
+    .then(map => setContestMap(map));
+  CachedApiClient.cachedProblemContestMap()
+    .then(map => setProblemContestMap(map));
+
+  if (param && user) {
+    CachedApiClient.cachedSolvedProblemArray(param, user)
+      .then(ar => setSolvedProblems(ar));
     CachedApiClient.cachedUserInfo(param, user)
       .then(obj => setUserInfo(!obj.Message ? obj : {}));
+  }
 
   const name = userInfo ? userInfo.Name : undefined;
 
@@ -102,6 +117,15 @@ export const UserPage = props => {
           </Col>
         ))}
       </Row>
+
+      <Row className="my-2 border-bottom">
+        <h1>Solved Problems</h1>
+      </Row>
+      <SolvedProblemList
+        solvedProblems={solvedProblems}
+        problemContestMap={problemContestMap}
+        contestMap={contestMap}
+      />
     </div>
   );
 };

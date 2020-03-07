@@ -128,7 +128,6 @@ code {
   .contest-table td {
       position: relative;
       padding-left: .75rem;
-      padding-top: 6px;
       padding-bottom: 6px;
   }
 
@@ -149,6 +148,10 @@ code {
   div.btn-group.table-tab > button.btn {
       margin: 0.1rem;
       padding: 0.4rem;
+  }
+
+  .contest-table .table-problem-stars {
+    padding-left: 2.0rem;
   }
 }
 

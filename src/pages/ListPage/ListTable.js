@@ -134,7 +134,7 @@ export const ListTable = (props) => {
             },
             {
               text: "All",
-              value: problems.size
+              value: problems.length
             }
           ]
         }}
