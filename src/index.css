@@ -1,22 +1,21 @@
 body {
   margin: 0;
   padding: 70px 20px 20px 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.list-table tbody tr td, .list-table thead th {
+.list-table tbody tr td,
+.list-table thead th {
   font-size: small;
   padding: 0.3rem;
-  line-height: 1.0;
+  line-height: 1;
   white-space: normal;
 }
 
@@ -30,13 +29,7 @@ code {
   fill: url(#ggold);
 }
 
-.contest-regular-table table td {
-  white-space: normal;
-}
-
 .contest-other-table tr {
-  /* display: flex;
-  flex-wrap: wrap; */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
@@ -47,20 +40,30 @@ code {
 .table-problem {
   position: relative;
 }
-.table-problem-solved, .table-problem-solved>td, .table-problem-solved>th {
+.table-problem-solved,
+.table-problem-solved > td,
+.table-problem-solved > th {
   background-color: #c3e6cb;
 }
-.table-problem-solved-intime, .table-problem-solved-intime>td, .table-problem-solved-intime>th {
-  background-color: #9AD59E;
+.table-problem-solved-intime,
+.table-problem-solved-intime > td,
+.table-problem-solved-intime > th {
+  background-color: #9ad59e;
 }
-.table-problem-solved-before-contest, .table-problem-solved-before-contest>td, .table-problem-solved-before-contest>th {
-  background-color: #99CCFF;
+.table-problem-solved-before-contest,
+.table-problem-solved-before-contest > td,
+.table-problem-solved-before-contest > th {
+  background-color: #99ccff;
 }
-.table-hover .table-problem-solved-intime:hover, .table-hover .table-problem-solved-intime:hover>td, .table-hover .table-problem-solved-intime:hover>th {
-  background-color: #88CC88;
+.table-hover .table-problem-solved-intime:hover,
+.table-hover .table-problem-solved-intime:hover > td,
+.table-hover .table-problem-solved-intime:hover > th {
+  background-color: #88cc88;
 }
-.table-hover .table-problem-solved-before-contest:hover, .table-hover .table-problem-solved-before-contest:hover>td, .table-hover .table-problem-solved-before-contest:hover>th {
-  background-color: #88BBFF;
+.table-hover .table-problem-solved-before-contest:hover,
+.table-hover .table-problem-solved-before-contest:hover > td,
+.table-hover .table-problem-solved-before-contest:hover > th {
+  background-color: #88bbff;
 }
 
 .table-problem-timespan {
@@ -78,20 +81,24 @@ code {
   font-size: x-small;
 }
 
+.col-achivement {
+  margin-bottom: 1rem;
+}
+
 .difficulty-red {
-  color: #FF0000;
+  color: #ff0000;
 }
 .difficulty-orange {
-  color: #FF8000;
+  color: #ff8000;
 }
 .difficulty-yellow {
-  color: #C0C000;
+  color: #c0c000;
 }
 .difficulty-blue {
-  color: #0000FF;
+  color: #0000ff;
 }
 .difficulty-cyan {
-  color: #00C0C0;
+  color: #00c0c0;
 }
 .difficulty-green {
   color: #008000;
@@ -110,48 +117,52 @@ code {
   .contest-table th,
   .contest-table td,
   .contest-table tr {
-      display: block;
+    display: block;
   }
 
   .contest-table td.table-problem-empty {
-      display: none;
+    display: none;
   }
 
   .contest-table thead tr {
-      display: none;
+    display: none;
   }
 
   .contest-table tr {
-      border: 1px solid #ccc;
+    border: 1px solid #ccc;
   }
 
   .contest-table td {
-      position: relative;
-      padding-left: .75rem;
-      padding-bottom: 6px;
+    position: relative;
+    padding-left: 0.75rem;
+    padding-bottom: 6px;
   }
 
   .contest-table.contest-regular-table td:not(:first-child) {
-      padding-left: 2.5rem;
+    padding-left: 2.5rem;
   }
-  
+
   div.btn-group.table-tab {
-      display: block;
+    display: block;
   }
 
   div.btn-group.table-tab > button.btn:not(:last-child):not(.dropdown-toggle),
   div.btn-group.table-tab > button.btn:not(:first-child) {
-      border-radius: .25rem;
-      margin-left: 0.1rem;
+    border-radius: 0.25rem;
+    margin-left: 0.1rem;
   }
 
   div.btn-group.table-tab > button.btn {
-      margin: 0.1rem;
-      padding: 0.4rem;
+    margin: 0.1rem;
+    padding: 0.4rem;
   }
 
   .contest-table .table-problem-stars {
-    padding-left: 2.0rem;
+    padding-left: 2rem;
+  }
+
+  .contest-regular-table table td {
+    white-space: normal;
   }
 }
 
@@ -162,24 +173,24 @@ code {
   .list-table th,
   .list-table td,
   .list-table tr {
-      display: block;
+    display: block;
   }
 
   .list-table thead tr {
-      display: none;
+    display: none;
   }
 
   .list-table tbody tr {
-      border: 1px solid #ccc;
-      margin-top: 0.5rem;
+    border: 1px solid #ccc;
+    margin-top: 0.5rem;
   }
 
   .list-table tbody tr td {
-      position: relative;
-      padding-left: 32%;
-      padding-top: 6px;
-      padding-bottom: 6px;
-      min-height: calc(1rem + 12px);
+    position: relative;
+    padding-left: 32%;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    min-height: calc(1rem + 12px);
   }
 
   .list-table tbody td:before {
@@ -201,7 +212,7 @@ code {
     border: none;
   }
 
-  .react-bs-table .table-bordered>tbody>tr>td:first-child {
+  .react-bs-table .table-bordered > tbody > tr > td:first-child {
     border-left-width: 1px;
   }
 }

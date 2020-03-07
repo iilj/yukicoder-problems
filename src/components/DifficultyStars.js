@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { getDifficultyLevelColor } from "../utils"
+import { getDifficultyLevelColor } from '../utils';
 
 export const DifficultyStarsFillDefs = () => (
   <svg style={{ height: 0 }}>
@@ -25,17 +25,13 @@ export const DifficultyStarsFillDefs = () => (
 );
 
 export const DifficultyStars = (props) => {
-  const {
-    level,
-    showDifficultyLevel
-  } = props;
-  if (!showDifficultyLevel)
-    return null;
+  const { level, showDifficultyLevel } = props;
+  if (!showDifficultyLevel) return null;
 
   const half = level % 1;
   const full = level - half;
 
-  let stars = [];
+  const stars = [];
   for (let i = 0; i < full; ++i) {
     stars.push([i, 1]);
   }
@@ -44,28 +40,27 @@ export const DifficultyStars = (props) => {
   }
 
   const color = getDifficultyLevelColor(level);
-  const style = { color: color };
-  const className =
-    (level <= 4.5) ? "star-normal"
-      : (level <= 5) ? "star-bronze"
-        : (level <= 5.5) ? "star-silver" : "star-gold";
+  const style = { color };
+  const className = level <= 4.5
+    ? 'star-normal'
+    : level <= 5
+      ? 'star-bronze'
+      : level <= 5.5
+        ? 'star-silver'
+        : 'star-gold';
   return (
     <>
-      {
-        stars.map(s =>
-          s[1] === 1
-            ? <FontAwesomeIcon icon="star" key={s[0]} style={style} className={className} />
-            : <FontAwesomeIcon icon="star-half" key={s[0]} style={style} className={className} />
-        )
-      }
+      {stars.map((s) => (s[1] === 1 ? (
+        <FontAwesomeIcon icon="star" key={s[0]} style={style} className={className} />
+      ) : (
+        <FontAwesomeIcon icon="star-half" key={s[0]} style={style} className={className} />
+      )))}
     </>
   );
-}
+};
 
-export const DifficultyStarsAbsoluteSpan = (props) => {
-  return (
-    <span className="table-problem-stars">
-      <DifficultyStars {...props} />
-    </span>
-  );
-}
+export const DifficultyStarsAbsoluteSpan = (props) => (
+  <span className="table-problem-stars">
+    <DifficultyStars {...props} />
+  </span>
+);

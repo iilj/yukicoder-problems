@@ -1,5 +1,5 @@
-import React from "react";
-import { Row } from "reactstrap";
+import React from 'react';
+import { Row } from 'reactstrap';
 import {
   XAxis,
   YAxis,
@@ -7,13 +7,12 @@ import {
   Tooltip,
   LineChart,
   Line,
-  ResponsiveContainer
-} from "recharts";
-import dataFormat from "dateformat"
+  ResponsiveContainer,
+} from 'recharts';
+import dataFormat from 'dateformat';
 
-export const ClimbingLineChart = props => {
-  if (props.climbingData.length === 0)
-    return null;
+export const ClimbingLineChart = (props) => {
+  if (props.climbingData.length === 0) return null;
 
   return (
     <Row className="my-3">
@@ -24,27 +23,23 @@ export const ClimbingLineChart = props => {
             top: 5,
             right: 30,
             left: 20,
-            bottom: 5
+            bottom: 5,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="dateSecond"
             type="number"
-            domain={["dataMin", "dataMax"]}
-            tickFormatter={dateSecond =>
-              dataFormat(new Date(dateSecond), "yyyy/mm/dd")
-            }
+            domain={['dataMin', 'dataMax']}
+            tickFormatter={(dateSecond) => dataFormat(new Date(dateSecond), 'yyyy/mm/dd')}
           />
           <YAxis />
           <Tooltip
-            labelFormatter={dateSecond =>
-              dataFormat(new Date(Number(dateSecond)), "yyyy/mm/dd")
-            }
+            labelFormatter={(dateSecond) => dataFormat(new Date(Number(dateSecond)), 'yyyy/mm/dd')}
           />
           <Line dataKey="count" stroke="#8884d8" />
         </LineChart>
       </ResponsiveContainer>
     </Row>
-  )
+  );
 };

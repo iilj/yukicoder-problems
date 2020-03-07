@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   DropdownItem,
   DropdownMenu,
@@ -7,18 +7,18 @@ import {
   UncontrolledButtonDropdown,
   UncontrolledDropdown,
   Button,
-  ButtonGroup
-} from "reactstrap";
-import { useParams } from "react-router-dom";
+  ButtonGroup,
+} from 'reactstrap';
+import { useParams } from 'react-router-dom';
 
-import { DifficultyLevelTable } from "./DifficultyLevelTable"
-import { ListTable } from "./ListTable";
-import * as CachedApiClient from "../../utils/CachedApiClient";
-import { DifficultyStarsFillDefs, DifficultyStars } from "../../components/DifficultyStars";
+import { DifficultyLevelTable } from './DifficultyLevelTable';
+import { ListTable } from './ListTable';
+import * as CachedApiClient from '../../utils/CachedApiClient';
+import { DifficultyStarsFillDefs, DifficultyStars } from '../../components/DifficultyStars';
 
 const INF_LEVEL = 100;
 
-export const ListPage = props => {
+export const ListPage = (props) => {
   const { param, user } = useParams();
 
   const [problems, setProblems] = useState([]);
@@ -30,26 +30,19 @@ export const ListPage = props => {
   const [golferProblemMap, setGolferProblemMap] = useState({});
   const [golferPureProblemMap, setGolferPureProblemMap] = useState({});
 
-  const [statusFilterState, setStatusFilterState] = useState("All");
+  const [statusFilterState, setStatusFilterState] = useState('All');
   const [fromDifficultyLevel, setFromDifficultyLevel] = useState(-1);
   const [toDifficultyLevel, setToDifficultyLevel] = useState(INF_LEVEL);
 
-  CachedApiClient.cachedProblemArray()
-    .then(ar => setProblems(ar));
-  CachedApiClient.cachedContestMap()
-    .then(map => setContestMap(map));
-  CachedApiClient.cachedProblemContestMap()
-    .then(map => setProblemContestMap(map));
-  CachedApiClient.cachedGolferRankingProblemMap()
-    .then(map => setGolferProblemMap(map));
-  CachedApiClient.cachedGolferRankingPureProblemMap()
-    .then(map => setGolferPureProblemMap(map));
+  CachedApiClient.cachedProblemArray().then((ar) => setProblems(ar));
+  CachedApiClient.cachedContestMap().then((map) => setContestMap(map));
+  CachedApiClient.cachedProblemContestMap().then((map) => setProblemContestMap(map));
+  CachedApiClient.cachedGolferRankingProblemMap().then((map) => setGolferProblemMap(map));
+  CachedApiClient.cachedGolferRankingPureProblemMap().then((map) => setGolferPureProblemMap(map));
 
   if (param && user) {
-    CachedApiClient.cachedSolvedProblemArray(param, user)
-      .then(ar => setSolvedProblems(ar));
-    CachedApiClient.cachedSolvedProblemMap(param, user)
-      .then(map => setSolvedProblemsMap(map));
+    CachedApiClient.cachedSolvedProblemArray(param, user).then((ar) => setSolvedProblems(ar));
+    CachedApiClient.cachedSolvedProblemMap(param, user).then((map) => setSolvedProblemsMap(map));
   } else if (Object.keys(solvedProblemsMap).length > 0) {
     setSolvedProblemsMap({});
   }
@@ -65,11 +58,7 @@ export const ListPage = props => {
         <h1>Difficulty Level Status</h1>
       </Row>
       <Row>
-        <DifficultyLevelTable
-          problems={problems}
-          solvedProblems={solvedProblems}
-          user={user}
-        />
+        <DifficultyLevelTable problems={problems} solvedProblems={solvedProblems} user={user} />
       </Row>
 
       <Row className="my-2 border-bottom">
@@ -80,15 +69,11 @@ export const ListPage = props => {
           <UncontrolledDropdown>
             <DropdownToggle caret>{statusFilterState}</DropdownToggle>
             <DropdownMenu>
-              <DropdownItem onClick={() => setStatusFilterState("All")}>
-                All
-              </DropdownItem>
-              <DropdownItem onClick={() => setStatusFilterState("Only Trying")}>
+              <DropdownItem onClick={() => setStatusFilterState('All')}>All</DropdownItem>
+              <DropdownItem onClick={() => setStatusFilterState('Only Trying')}>
                 Only Trying
               </DropdownItem>
-              <DropdownItem onClick={() => setStatusFilterState("Only AC")}>
-                Only AC
-              </DropdownItem>
+              <DropdownItem onClick={() => setStatusFilterState('Only AC')}>Only AC</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </ButtonGroup>
@@ -96,36 +81,29 @@ export const ListPage = props => {
         <ButtonGroup className="mr-4">
           <UncontrolledButtonDropdown>
             <DropdownToggle caret>
-              {fromDifficultyLevel === -1
-                ? "Difficulty Level From"
-                : `${fromDifficultyLevel} - `}
+              {fromDifficultyLevel === -1 ? 'Level From' : `${fromDifficultyLevel} - `}
             </DropdownToggle>
             <DropdownMenu>
-              {difficultyLevels.map(level => (
-                <DropdownItem
-                  key={level}
-                  onClick={() => setFromDifficultyLevel(level)}
-                >
-                  <DifficultyStars level={level} showDifficultyLevel={true} />
-                  {level} -
+              {difficultyLevels.map((level) => (
+                <DropdownItem key={level} onClick={() => setFromDifficultyLevel(level)}>
+                  <DifficultyStars level={level} showDifficultyLevel />
+                  {level}
+                  {' '}
+                  -
                 </DropdownItem>
               ))}
             </DropdownMenu>
           </UncontrolledButtonDropdown>
           <UncontrolledButtonDropdown>
             <DropdownToggle caret>
-              {toDifficultyLevel === INF_LEVEL
-                ? "Difficulty Level To"
-                : ` - ${toDifficultyLevel}`}
+              {toDifficultyLevel === INF_LEVEL ? 'Level To' : ` - ${toDifficultyLevel}`}
             </DropdownToggle>
             <DropdownMenu>
-              {difficultyLevels.map(level => (
-                <DropdownItem
-                  key={level}
-                  onClick={() => setToDifficultyLevel(level)}
-                >
-                  <DifficultyStars level={level} showDifficultyLevel={true} />
-                  - {level}
+              {difficultyLevels.map((level) => (
+                <DropdownItem key={level} onClick={() => setToDifficultyLevel(level)}>
+                  <DifficultyStars level={level} showDifficultyLevel />
+                  -
+                  {level}
                 </DropdownItem>
               ))}
             </DropdownMenu>
@@ -135,7 +113,7 @@ export const ListPage = props => {
           outline
           color="danger"
           onClick={() => {
-            setStatusFilterState("All");
+            setStatusFilterState('All');
             setFromDifficultyLevel(-1);
             setToDifficultyLevel(INF_LEVEL);
           }}
