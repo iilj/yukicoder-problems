@@ -112,6 +112,21 @@ export const ListTable = (props) => {
       dataField: 'ProblemId',
       dataSort: true,
     },
+    {
+      header: 'Contest name for Search',
+      dataField: 'ContestName',
+      hidden: true,
+    },
+    {
+      header: 'Shortest User for Search',
+      dataField: 'ShortestRankingUserName',
+      hidden: true,
+    },
+    {
+      header: 'Pure Shortest User for Search',
+      dataField: 'PureShortestRankingUserName',
+      hidden: true,
+    },
   ];
   return (
     <>
@@ -139,6 +154,14 @@ export const ListTable = (props) => {
               : undefined;
             problem.PureShortestRankingProblem = golferPureProblemMap && problem.No in golferPureProblemMap
               ? golferPureProblemMap[problem.No]
+              : undefined;
+            // props for search
+            problem.ContestName = problem.Contest ? problem.Contest.Name : undefined;
+            problem.ShortestRankingUserName = problem.ShortestRankingProblem
+              ? problem.ShortestRankingProblem.UserName
+              : undefined;
+            problem.PureShortestRankingUserName = problem.PureShortestRankingProblem
+              ? problem.PureShortestRankingProblem.UserName
               : undefined;
             return problem;
           })
