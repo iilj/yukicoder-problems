@@ -36,9 +36,11 @@ export const cachedContestArray = async () => {
 // problems raw array
 let CACHED_PROBLEMS;
 export const cachedProblemArray = async () => {
+  console.log(CACHED_PROBLEMS === undefined);
   if (CACHED_PROBLEMS === undefined) {
     try {
       CACHED_PROBLEMS = await fetchProblems();
+      console.log(CACHED_PROBLEMS);
       if ('Message' in CACHED_PROBLEMS) throw CACHED_PROBLEMS.Message;
     } catch (e) {
       console.log(e);

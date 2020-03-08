@@ -17,6 +17,11 @@ const ContestWrapper = (props) => (
 export const TablePage = (props) => {
   const { param, user } = useParams();
 
+  const [loadStarted, setLoadStarted] = useState(false);
+  const [loadStartedParamUser, setLoadStartedParamUser] = useState({
+    param: undefined,
+    user: undefined,
+  });
   const [showDifficultyLevel, setShowDifficultyLevel] = useState(true);
   const [showContestResult, setShowContestResult] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
@@ -25,10 +30,17 @@ export const TablePage = (props) => {
   const [problemsMap, setProblemsMap] = useState({});
   const [solvedProblemsMap, setSolvedProblemsMap] = useState({});
 
-  CachedApiClient.cachedContestArray().then((ar) => setContests(ar));
-  CachedApiClient.cachedProblemMap().then((map) => setProblemsMap(map));
-  if (param && user) CachedApiClient.cachedSolvedProblemMap(param, user).then((map) => setSolvedProblemsMap(map));
-  else if (Object.keys(solvedProblemsMap).length > 0) setSolvedProblemsMap({});
+  if (!loadStarted) {
+    setLoadStarted(true);
+    CachedApiClient.cachedContestArray().then((ar) => setContests(ar));
+    CachedApiClient.cachedProblemMap().then((map) => setProblemsMap(map));
+  }
+  if (param && user) {
+    if (loadStartedParamUser.param !== param || loadStartedParamUser.user !== user) {
+      setLoadStartedParamUser({ param, user });
+      CachedApiClient.cachedSolvedProblemMap(param, user).then((map) => setSolvedProblemsMap(map));
+    }
+  }
 
   const yukicoderRegularContests = [];
   const yukicoderLongContests = [];
