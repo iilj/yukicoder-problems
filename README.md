@@ -6,6 +6,8 @@
 
 Some components were constructed based on corresponding components of [AtCoderProblems](https://github.com/kenkoooo/AtCoderProblems).
 
+This application uses [yukicoder API](https://petstore.swagger.io/?url=https://yukicoder.me/api/swagger.yaml).
+
 ### Install required packages
 ```bash
 yarn
@@ -38,4 +40,5 @@ Favicons were generated with [The best Favicon Generator \(completely free\) \| 
 ## Links
 
 - [yukicoder](https://yukicoder.me/)
+- [yukicoder Web API swagger](https://petstore.swagger.io/?url=https://yukicoder.me/api/swagger.yaml)
 - [kenkoooo/AtCoderProblems: Problem manager for AtCoder users](https://github.com/kenkoooo/AtCoderProblems)

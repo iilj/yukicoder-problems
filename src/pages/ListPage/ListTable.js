@@ -190,7 +190,9 @@ export const ListTable = (props) => {
               value: problems.length,
             },
           ],
-          paginationPanel: (paginationPanelProps) => <ListPaginationPanel {...paginationPanelProps} />,
+          paginationPanel: (paginationPanelProps) => (
+            <ListPaginationPanel {...paginationPanelProps} />
+          ),
         }}
       >
         {columns.map((c) => (

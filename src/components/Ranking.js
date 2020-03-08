@@ -50,7 +50,9 @@ export const Ranking = (props) => (
             value: props.ranking.length,
           },
         ],
-        paginationPanel: (paginationPanelProps) => <ListPaginationPanel {...paginationPanelProps} />,
+        paginationPanel: (paginationPanelProps) => (
+          <ListPaginationPanel {...paginationPanelProps} />
+        ),
       }}
     >
       <TableHeaderColumn dataField="rank">#</TableHeaderColumn>

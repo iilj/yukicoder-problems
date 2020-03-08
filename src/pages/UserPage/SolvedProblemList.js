@@ -46,7 +46,9 @@ export const SolvedProblemList = (props) => {
             value: solvedProblems.length,
           },
         ],
-        paginationPanel: (paginationPanelProps) => <ListPaginationPanel {...paginationPanelProps} />,
+        paginationPanel: (paginationPanelProps) => (
+          <ListPaginationPanel {...paginationPanelProps} />
+        ),
       }}
     >
       <TableHeaderColumn
