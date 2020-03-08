@@ -1,10 +1,11 @@
-import React from "react";
-import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import React from 'react';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
-import { ProblemLink } from "../../components/ProblemLink";
-import { ContestLink } from "../../components/ContestLink";
-import { DifficultyStars } from "../../components/DifficultyStars";
-import dataFormat from "dateformat"
+import dataFormat from 'dateformat';
+import { ProblemLink } from '../../components/ProblemLink';
+import { ContestLink } from '../../components/ContestLink';
+import { DifficultyStars } from '../../components/DifficultyStars';
+import { ListPaginationPanel } from '../../components/ListPaginationPanel';
 
 export const SolvedProblemList = (props) => {
   const { solvedProblems, problemContestMap, contestMap } = props;
@@ -12,8 +13,8 @@ export const SolvedProblemList = (props) => {
   return (
     <BootstrapTable
       data={solvedProblems
-        .sort((a, b) => a.Date < b.Date ? 1 : -1)
-        .map(s => ({ Contest: contestMap[problemContestMap[s.ProblemId]], ...s }))}
+        .sort((a, b) => (a.Date < b.Date ? 1 : -1))
+        .map((s) => ({ Contest: contestMap[problemContestMap[s.ProblemId]], ...s }))}
       keyField="ProblemId"
       height="auto"
       hover
@@ -21,36 +22,39 @@ export const SolvedProblemList = (props) => {
       search
       pagination
       options={{
-        paginationPosition: "top",
+        paginationPosition: 'top',
         sizePerPage: 20,
         sizePerPageList: [
           {
-            text: "20",
-            value: 20
+            text: '20',
+            value: 20,
           },
           {
-            text: "50",
-            value: 50
+            text: '50',
+            value: 50,
           },
           {
-            text: "100",
-            value: 100
+            text: '100',
+            value: 100,
           },
           {
-            text: "200",
-            value: 200
+            text: '200',
+            value: 200,
           },
           {
-            text: "All",
-            value: solvedProblems.length
-          }
-        ]
+            text: 'All',
+            value: solvedProblems.length,
+          },
+        ],
+        paginationPanel: (paginationPanelProps) => (
+          <ListPaginationPanel {...paginationPanelProps} />
+        ),
       }}
     >
       <TableHeaderColumn
         dataSort
         dataField="Date"
-        dataFormat={(date) => <>{dataFormat(new Date(date), "yyyy/mm/dd HH:MM")}</>}
+        dataFormat={(date) => <>{dataFormat(new Date(date), 'yyyy/mm/dd HH:MM')}</>}
       >
         Date
       </TableHeaderColumn>
@@ -59,7 +63,12 @@ export const SolvedProblemList = (props) => {
         dataSort
         dataField="Title"
         dataFormat={(title, row) => (
-          <ProblemLink problemTitle={title} problemNo={row.No} level={row.Level} showDifficultyLevel={true} />
+          <ProblemLink
+            problemTitle={title}
+            problemNo={row.No}
+            level={row.Level}
+            showDifficultyLevel
+          />
         )}
       >
         Problem
@@ -68,7 +77,7 @@ export const SolvedProblemList = (props) => {
         filterFormatted
         dataSort
         dataField="Level"
-        dataFormat={(level) => <DifficultyStars level={level} showDifficultyLevel={true} />}
+        dataFormat={(level) => <DifficultyStars level={level} showDifficultyLevel />}
       >
         Level
       </TableHeaderColumn>
@@ -76,9 +85,7 @@ export const SolvedProblemList = (props) => {
         filterFormatted
         dataSort
         dataField="Contest"
-        dataFormat={(contest) =>
-          contest ? <ContestLink contestId={contest.Id} contestName={contest.Name} /> : null
-        }
+        dataFormat={(contest) => (contest ? <ContestLink contestId={contest.Id} contestName={contest.Name} /> : null)}
       >
         Contest
       </TableHeaderColumn>

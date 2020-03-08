@@ -1,12 +1,12 @@
-import React from "react";
-import { UncontrolledTooltip } from "reactstrap";
+import React from 'react';
+import { UncontrolledTooltip } from 'reactstrap';
 
 const WEEKDAY = 7;
 const WEEKS = 53;
-const COLORS = ["#ebedf0", "#c6e48b", "#7bc96f", "#239a3b", "#196127"];
+const COLORS = ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196127'];
 const MS_OF_DAY = 1000 * 60 * 60 * 24;
 
-export const getNextSunday = t => {
+export const getNextSunday = (t) => {
   const date = new Date(t);
   const diff = 7 - date.getDay();
   date.setDate(date.getDate() + diff);
@@ -16,9 +16,9 @@ export const getNextSunday = t => {
 export const getToday = () => {
   const cur = Number(new Date());
   return new Date(cur - (cur % MS_OF_DAY));
-}
+};
 
-export const CalendarHeatmap = props => {
+export const CalendarHeatmap = (props) => {
   const { dailyCountMap, formatTooltip } = props;
 
   const today = getToday();
@@ -27,23 +27,20 @@ export const CalendarHeatmap = props => {
   const startDateSec = Number(nextSunday) - WEEKS * WEEKDAY * MS_OF_DAY;
 
   const tableData = [...Array(WEEKS * WEEKDAY).keys()]
-    .map(i => startDateSec + i * MS_OF_DAY)
-    .reduce(
-      (ar, dateSec) => {
-        if (dateSec in dailyCountMap)
-          ar.push({ date: dateSec, count: dailyCountMap[dateSec] });
-        else
-          ar.push({ date: dateSec, count: 0 });
-        return ar;
-      }, []
-    ).sort((a, b) => a.date - b.date);
+    .map((i) => startDateSec + i * MS_OF_DAY)
+    .reduce((ar, dateSec) => {
+      if (dateSec in dailyCountMap) ar.push({ date: dateSec, count: dailyCountMap[dateSec] });
+      else ar.push({ date: dateSec, count: 0 });
+      return ar;
+    }, [])
+    .sort((a, b) => a.date - b.date);
 
   const blockWidth = 10;
   const width = blockWidth * WEEKS;
   const height = blockWidth * WEEKDAY;
   return (
-    <div style={{ width: "100%" }}>
-      <svg viewBox={`0 0 ${width} ${height}`} style={{ width: "100%" }}>
+    <div style={{ width: '100%' }}>
+      <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%' }}>
         {tableData.map(({ date, count }, i) => {
           const color = COLORS[Math.min(count, COLORS.length - 1)];
           const week = Math.floor(i / WEEKDAY);

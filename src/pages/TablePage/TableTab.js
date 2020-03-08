@@ -1,7 +1,7 @@
-import React from "react";
-import { Row, ButtonGroup, Button } from "reactstrap";
+import React from 'react';
+import { Row, ButtonGroup, Button } from 'reactstrap';
 
-export const TableTabButtons = props => {
+export const TableTabButtons = (props) => {
   const { active, setActive } = props;
   return (
     <Row>
@@ -14,7 +14,7 @@ export const TableTabButtons = props => {
           active={active === 0}
         >
           yukicoder contest (regular)
-          </Button>
+        </Button>
         <Button
           color="secondary"
           onClick={() => {
@@ -23,7 +23,7 @@ export const TableTabButtons = props => {
           active={active === 1}
         >
           yukicoder contest (long)
-          </Button>
+        </Button>
         <Button
           color="secondary"
           onClick={() => {
@@ -32,7 +32,7 @@ export const TableTabButtons = props => {
           active={active === 2}
         >
           Other contests
-          </Button>
+        </Button>
       </ButtonGroup>
     </Row>
   );
