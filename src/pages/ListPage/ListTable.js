@@ -17,6 +17,7 @@ export const ListTable = (props) => {
     statusFilterState,
     fromDifficultyLevel,
     toDifficultyLevel,
+    showTagsOfTryingProblems,
   } = props;
   const columns = [
     {
@@ -60,6 +61,7 @@ export const ListTable = (props) => {
       header: 'Tags',
       dataField: 'Tags',
       dataSort: true,
+      dataFormat: (tags, row) => (showTagsOfTryingProblems || row.SolveDate ? <>{tags}</> : null),
     },
     {
       header: 'Shortest',

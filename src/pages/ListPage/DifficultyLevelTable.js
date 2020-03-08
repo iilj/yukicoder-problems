@@ -1,6 +1,6 @@
 import React from 'react';
 import Table from 'reactstrap/lib/Table';
-import { DifficultyStars } from '../../components/DifficultyStars';
+import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { getDifficultyLevelColorClass } from '../../utils';
 
 export const DifficultyLevelTable = (props) => {
@@ -37,11 +37,11 @@ export const DifficultyLevelTable = (props) => {
             {difficultyLevels.map((level) => (
               <th
                 key={level}
-                style={{ whiteSpace: 'nowrap' }}
+                style={{ whiteSpace: 'nowrap', position: 'relative', minWidth: '70px' }}
                 className={getDifficultyLevelColorClass(level)}
               >
+                <DifficultyStarsAbsoluteSpan level={level} showDifficultyLevel />
                 {level}
-                <DifficultyStars level={level} showDifficultyLevel />
               </th>
             ))}
           </tr>

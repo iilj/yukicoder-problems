@@ -8,6 +8,9 @@ import {
   UncontrolledDropdown,
   Button,
   ButtonGroup,
+  FormGroup,
+  Label,
+  Input,
 } from 'reactstrap';
 import { useParams } from 'react-router-dom';
 
@@ -34,6 +37,7 @@ export const ListPage = (props) => {
   const [statusFilterState, setStatusFilterState] = useState('All');
   const [fromDifficultyLevel, setFromDifficultyLevel] = useState(-1);
   const [toDifficultyLevel, setToDifficultyLevel] = useState(INF_LEVEL);
+  const [showTagsOfTryingProblems, setShowTagsOfTryingProblems] = useState(false);
 
   CachedApiClient.cachedProblemArray().then((ar) => setProblems(ar));
   CachedApiClient.cachedContestMap().then((map) => setContestMap(map));
@@ -55,7 +59,7 @@ export const ListPage = (props) => {
       <DifficultyStarsFillDefs />
 
       <Row className="my-2 border-bottom">
-        <h1>Difficulty Level Status</h1>
+        <h1>Level Status</h1>
       </Row>
       <Row>
         <DifficultyLevelTable problems={problems} solvedProblems={solvedProblems} user={user} />
@@ -109,6 +113,18 @@ export const ListPage = (props) => {
             </WellPositionedDropdownMenu>
           </UncontrolledButtonDropdown>
         </ButtonGroup>
+
+        <FormGroup check inline>
+          <Label check>
+            <Input
+              type="checkbox"
+              checked={showTagsOfTryingProblems}
+              onChange={(e) => setShowTagsOfTryingProblems(e.target.checked)}
+            />
+            Show Tags of Trying Problems
+          </Label>
+        </FormGroup>
+
         <Button
           outline
           color="danger"
@@ -116,6 +132,7 @@ export const ListPage = (props) => {
             setStatusFilterState('All');
             setFromDifficultyLevel(-1);
             setToDifficultyLevel(INF_LEVEL);
+            setShowTagsOfTryingProblems(false);
           }}
         >
           Reset
@@ -132,6 +149,7 @@ export const ListPage = (props) => {
           statusFilterState={statusFilterState}
           fromDifficultyLevel={fromDifficultyLevel}
           toDifficultyLevel={toDifficultyLevel}
+          showTagsOfTryingProblems={showTagsOfTryingProblems}
         />
       </Row>
     </>
