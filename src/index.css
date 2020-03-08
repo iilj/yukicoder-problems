@@ -35,6 +35,7 @@ code {
 }
 .contest-other-table tr td {
   flex: auto;
+  word-break: break-word;
 }
 
 .table-problem {

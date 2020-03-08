@@ -14,6 +14,7 @@ import { useParams } from 'react-router-dom';
 import { DifficultyLevelTable } from './DifficultyLevelTable';
 import { ListTable } from './ListTable';
 import * as CachedApiClient from '../../utils/CachedApiClient';
+import { WellPositionedDropdownMenu } from '../../components/WellPositionedDropdownMenu';
 import { DifficultyStarsFillDefs, DifficultyStars } from '../../components/DifficultyStars';
 
 const INF_LEVEL = 100;
@@ -46,7 +47,6 @@ export const ListPage = (props) => {
   } else if (Object.keys(solvedProblemsMap).length > 0) {
     setSolvedProblemsMap({});
   }
-  console.log(golferProblemMap);
 
   const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 
@@ -83,7 +83,7 @@ export const ListPage = (props) => {
             <DropdownToggle caret>
               {fromDifficultyLevel === -1 ? 'Level From' : `${fromDifficultyLevel} - `}
             </DropdownToggle>
-            <DropdownMenu>
+            <WellPositionedDropdownMenu>
               {difficultyLevels.map((level) => (
                 <DropdownItem key={level} onClick={() => setFromDifficultyLevel(level)}>
                   <DifficultyStars level={level} showDifficultyLevel />
@@ -92,13 +92,13 @@ export const ListPage = (props) => {
                   -
                 </DropdownItem>
               ))}
-            </DropdownMenu>
+            </WellPositionedDropdownMenu>
           </UncontrolledButtonDropdown>
           <UncontrolledButtonDropdown>
             <DropdownToggle caret>
               {toDifficultyLevel === INF_LEVEL ? 'Level To' : ` - ${toDifficultyLevel}`}
             </DropdownToggle>
-            <DropdownMenu>
+            <WellPositionedDropdownMenu>
               {difficultyLevels.map((level) => (
                 <DropdownItem key={level} onClick={() => setToDifficultyLevel(level)}>
                   <DifficultyStars level={level} showDifficultyLevel />
@@ -106,7 +106,7 @@ export const ListPage = (props) => {
                   {level}
                 </DropdownItem>
               ))}
-            </DropdownMenu>
+            </WellPositionedDropdownMenu>
           </UncontrolledButtonDropdown>
         </ButtonGroup>
         <Button

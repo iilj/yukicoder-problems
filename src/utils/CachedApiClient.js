@@ -7,8 +7,10 @@ const fetchArray = async (url) => {
 };
 const fetchContests = () => fetchArray(`${STATIC_API_BASE_URL}/contest/past`);
 const fetchProblems = () => fetchArray(`${STATIC_API_BASE_URL}/problems`);
+const fetchLanguages = () => fetchArray(`${STATIC_API_BASE_URL}/languages`);
 const fetchGolferRanking = () => fetchArray(`${STATIC_API_BASE_URL}/ranking/golfer`);
 const fetchGolferRankingPure = () => fetchArray(`${STATIC_API_BASE_URL}/ranking/golfer/pure`);
+const fetchGolferRankingPureLangId = (landId) => fetchArray(`${STATIC_API_BASE_URL}/ranking/golfer/pure/${landId}`);
 const fetchUserInfo = (param, user) => fetchArray(`${STATIC_API_BASE_URL}/user/${param}/${encodeURIComponent(user)}`);
 const fetchSolvedProblems = (param, user) => fetchArray(`${STATIC_API_BASE_URL}/solved/${param}/${encodeURIComponent(user)}`);
 
@@ -122,6 +124,36 @@ export const cachedGolferRankingPureArray = async () => {
   return CACHED_GOLFER_RANKING_PURE;
 };
 
+// pure shortest code array map (langid -> array of shortest submissions)
+const CACHED_GOLFER_RANKING_PURE_LANG_MAP = {};
+export const cachedGolferRankingPureLangIdArray = async (langId) => {
+  if (!(langId in CACHED_GOLFER_RANKING_PURE_LANG_MAP)) {
+    try {
+      CACHED_GOLFER_RANKING_PURE_LANG_MAP[langId] = await fetchGolferRankingPureLangId(langId);
+      if ('Message' in CACHED_GOLFER_RANKING_PURE_LANG_MAP[langId]) throw CACHED_GOLFER_RANKING_PURE_LANG_MAP[langId].Message;
+    } catch (e) {
+      console.log(e);
+      CACHED_GOLFER_RANKING_PURE_LANG_MAP[langId] = [];
+    }
+  }
+  return CACHED_GOLFER_RANKING_PURE_LANG_MAP[langId];
+};
+
+// language array
+let CACHED_LANGUAGES;
+export const cachedLanguageArray = async () => {
+  if (CACHED_LANGUAGES === undefined) {
+    try {
+      CACHED_LANGUAGES = await fetchLanguages();
+      if ('Message' in CACHED_LANGUAGES) throw CACHED_LANGUAGES.Message;
+    } catch (e) {
+      console.log(e);
+      CACHED_LANGUAGES = [];
+    }
+  }
+  return CACHED_LANGUAGES;
+};
+
 // //////////////////
 // Map Data
 // //////////////////
@@ -225,6 +257,23 @@ export const cachedGolferPureMap = async () => {
     );
   }
   return CACHED_GOLFER_RANKING_PURE_MAP;
+};
+
+// map (langId -> UserName -> RankingProblem array of pure shortest code)
+const CACHED_GOLFER_RANKING_PURE_MAP_LANG_MAP = {};
+export const cachedGolferPureMapLangMap = async (langId) => {
+  if (!(langId in CACHED_GOLFER_RANKING_PURE_MAP_LANG_MAP)) {
+    CACHED_GOLFER_RANKING_PURE_MAP_LANG_MAP[langId] = (
+      await cachedGolferRankingPureLangIdArray(langId)
+    ).reduce((map, rankingProblem) => {
+      if (!(rankingProblem.UserName in map)) {
+        map[rankingProblem.UserName] = [];
+      }
+      map[rankingProblem.UserName].push(rankingProblem);
+      return map;
+    }, {});
+  }
+  return CACHED_GOLFER_RANKING_PURE_MAP_LANG_MAP[langId];
 };
 
 // map (Problem No -> RankingProblem of golfers)
