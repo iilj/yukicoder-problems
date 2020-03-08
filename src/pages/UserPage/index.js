@@ -18,6 +18,11 @@ const MS_OF_DAY = MS_OF_HOUR * 24;
 export const UserPage = (props) => {
   const { param, user } = useParams();
 
+  const [loadStarted, setLoadStarted] = useState(false);
+  const [loadStartedParamUser, setLoadStartedParamUser] = useState({
+    param: undefined,
+    user: undefined,
+  });
   const [userInfo, setUserInfo] = useState({});
   const [golferMap, setGolferMap] = useState({});
   const [pureGolferMap, setPureGolferMap] = useState({});
@@ -28,17 +33,28 @@ export const UserPage = (props) => {
   const [solvedProblems, setSolvedProblems] = useState([]);
   const [solvedProblemsMap, setSolvedProblemsMap] = useState({});
 
-  CachedApiClient.cachedGolferMap().then((map) => setGolferMap(map));
-  CachedApiClient.cachedGolferPureMap().then((map) => setPureGolferMap(map));
+  if (!loadStarted) {
+    setLoadStarted(true);
+    CachedApiClient.cachedGolferMap().then((map) => setGolferMap(map));
+    CachedApiClient.cachedGolferPureMap().then((map) => setPureGolferMap(map));
 
-  CachedApiClient.cachedContestArray().then((ar) => setContests(ar));
-  CachedApiClient.cachedContestMap().then((map) => setContestMap(map));
-  CachedApiClient.cachedProblemContestMap().then((map) => setProblemContestMap(map));
+    CachedApiClient.cachedContestArray().then((ar) => setContests(ar));
+  }
+  if (contests.length > 0) {
+    CachedApiClient.cachedContestMap().then((map) => setContestMap(map));
+    CachedApiClient.cachedProblemContestMap().then((map) => setProblemContestMap(map));
+  }
 
   if (param && user) {
-    CachedApiClient.cachedSolvedProblemArray(param, user).then((ar) => setSolvedProblems(ar));
-    CachedApiClient.cachedSolvedProblemMap(param, user).then((map) => setSolvedProblemsMap(map));
-    CachedApiClient.cachedUserInfo(param, user).then((obj) => setUserInfo(!obj.Message ? obj : {}));
+    if (loadStartedParamUser.param !== param || loadStartedParamUser.user !== user) {
+      setLoadStartedParamUser({ param: param, user: user });
+      CachedApiClient.cachedSolvedProblemArray(param, user).then((ar) => setSolvedProblems(ar));
+      CachedApiClient.cachedUserInfo(param, user).then((obj) =>
+        setUserInfo(!obj.Message ? obj : {}),
+      );
+    }
+    if (solvedProblems.length > 0)
+      CachedApiClient.cachedSolvedProblemMap(param, user).then((map) => setSolvedProblemsMap(map));
   }
 
   const name = userInfo ? userInfo.Name : undefined;

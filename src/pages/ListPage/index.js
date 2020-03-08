@@ -25,6 +25,11 @@ const INF_LEVEL = 100;
 export const ListPage = (props) => {
   const { param, user } = useParams();
 
+  const [loadStarted, setLoadStarted] = useState(false);
+  const [loadStartedParamUser, setLoadStartedParamUser] = useState({
+    param: undefined,
+    user: undefined,
+  });
   const [problems, setProblems] = useState([]);
   const [solvedProblems, setSolvedProblems] = useState([]);
 
@@ -39,17 +44,21 @@ export const ListPage = (props) => {
   const [toDifficultyLevel, setToDifficultyLevel] = useState(INF_LEVEL);
   const [showTagsOfTryingProblems, setShowTagsOfTryingProblems] = useState(false);
 
-  CachedApiClient.cachedProblemArray().then((ar) => setProblems(ar));
-  CachedApiClient.cachedContestMap().then((map) => setContestMap(map));
-  CachedApiClient.cachedProblemContestMap().then((map) => setProblemContestMap(map));
-  CachedApiClient.cachedGolferRankingProblemMap().then((map) => setGolferProblemMap(map));
-  CachedApiClient.cachedGolferRankingPureProblemMap().then((map) => setGolferPureProblemMap(map));
+  if (!loadStarted) {
+    setLoadStarted(true);
+    CachedApiClient.cachedProblemArray().then((ar) => setProblems(ar));
+    CachedApiClient.cachedContestMap().then((map) => setContestMap(map));
+    CachedApiClient.cachedGolferRankingProblemMap().then((map) => setGolferProblemMap(map));
+    CachedApiClient.cachedGolferRankingPureProblemMap().then((map) => setGolferPureProblemMap(map));
+  }
+  if (problems.length > 0 && Object.keys(contestMap).length > 0) CachedApiClient.cachedProblemContestMap().then((map) => setProblemContestMap(map));
 
   if (param && user) {
-    CachedApiClient.cachedSolvedProblemArray(param, user).then((ar) => setSolvedProblems(ar));
-    CachedApiClient.cachedSolvedProblemMap(param, user).then((map) => setSolvedProblemsMap(map));
-  } else if (Object.keys(solvedProblemsMap).length > 0) {
-    setSolvedProblemsMap({});
+    if (loadStartedParamUser.param !== param || loadStartedParamUser.user !== user) {
+      setLoadStartedParamUser({ param, user });
+      CachedApiClient.cachedSolvedProblemArray(param, user).then((ar) => setSolvedProblems(ar));
+    }
+    if (solvedProblems.length > 0) CachedApiClient.cachedSolvedProblemMap(param, user).then((map) => setSolvedProblemsMap(map));
   }
 
   const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];

@@ -8,12 +8,22 @@ import * as CachedApiClient from '../utils/CachedApiClient';
 
 export const PureShortRanking = () => {
   const emptyLangId = '';
+
+  const [loadStarted, setLoadStarted] = useState(false);
+  const [loadStartedLangId, setLoadStartedLangId] = useState(undefined);
   const [langId, setLangId] = useState(emptyLangId);
   const [languages, setLanguages] = useState([]);
   const [golferPureMap, setGolferPureMap] = useState({});
-  CachedApiClient.cachedLanguageArray().then((ar) => setLanguages(ar));
-  if (langId === emptyLangId) CachedApiClient.cachedGolferPureMap().then((map) => setGolferPureMap(map));
-  else CachedApiClient.cachedGolferPureMapLangMap(langId).then((map) => setGolferPureMap(map));
+
+  if (!loadStarted) {
+    setLoadStarted(true);
+    CachedApiClient.cachedLanguageArray().then((ar) => setLanguages(ar));
+  }
+  if (loadStartedLangId !== langId) {
+    setLoadStartedLangId(langId);
+    if (langId === emptyLangId) CachedApiClient.cachedGolferPureMap().then((map) => setGolferPureMap(map));
+    else CachedApiClient.cachedGolferPureMapLangMap(langId).then((map) => setGolferPureMap(map));
+  }
 
   const ranking = Object.keys(golferPureMap).reduce((ar, userName) => {
     ar.push({ name: userName, count: golferPureMap[userName].length });
