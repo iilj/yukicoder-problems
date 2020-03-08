@@ -31,7 +31,7 @@ export const PureShortRanking = () => {
         <ButtonGroup className="mr-4">
           <UncontrolledDropdown>
             <DropdownToggle caret>
-              {langId === emptyLangId ? 'All' : languagesMap[langId].Name}
+              {langId === emptyLangId ? 'Language' : languagesMap[langId].Name}
             </DropdownToggle>
             <WellPositionedDropdownMenu>
               <DropdownItem header>Language</DropdownItem>

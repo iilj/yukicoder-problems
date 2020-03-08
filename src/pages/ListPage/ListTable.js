@@ -4,6 +4,7 @@ import dataFormat from 'dateformat';
 import { DifficultyStars } from '../../components/DifficultyStars';
 import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
+import { ListPaginationPanel } from '../../components/ListPaginationPanel';
 import { formatSubmissionUrl } from '../../utils/Url';
 
 export const ListTable = (props) => {
@@ -189,6 +190,7 @@ export const ListTable = (props) => {
               value: problems.length,
             },
           ],
+          paginationPanel: (paginationPanelProps) => <ListPaginationPanel {...paginationPanelProps} />,
         }}
       >
         {columns.map((c) => (

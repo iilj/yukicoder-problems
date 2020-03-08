@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { ListPaginationPanel } from './ListPaginationPanel';
 
 const refineRanking = (ranking) => ranking
   .sort((a, b) => b.count - a.count)
@@ -49,6 +50,7 @@ export const Ranking = (props) => (
             value: props.ranking.length,
           },
         ],
+        paginationPanel: (paginationPanelProps) => <ListPaginationPanel {...paginationPanelProps} />,
       }}
     >
       <TableHeaderColumn dataField="rank">#</TableHeaderColumn>

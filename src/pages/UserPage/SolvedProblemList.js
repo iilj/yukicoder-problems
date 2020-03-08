@@ -5,6 +5,7 @@ import dataFormat from 'dateformat';
 import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
 import { DifficultyStars } from '../../components/DifficultyStars';
+import { ListPaginationPanel } from '../../components/ListPaginationPanel';
 
 export const SolvedProblemList = (props) => {
   const { solvedProblems, problemContestMap, contestMap } = props;
@@ -45,6 +46,7 @@ export const SolvedProblemList = (props) => {
             value: solvedProblems.length,
           },
         ],
+        paginationPanel: (paginationPanelProps) => <ListPaginationPanel {...paginationPanelProps} />,
       }}
     >
       <TableHeaderColumn
