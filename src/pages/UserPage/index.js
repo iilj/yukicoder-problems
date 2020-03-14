@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Col, Row } from 'reactstrap';
 
@@ -15,48 +15,81 @@ import dataFormat from 'dateformat';
 const MS_OF_HOUR = 1000 * 60 * 60;
 const MS_OF_DAY = MS_OF_HOUR * 24;
 
+const initialUniversalState = {
+  golferMap: {},
+  pureGolferMap: {},
+  contests: [],
+  contestMap: {},
+  problemContestMap: {},
+};
+
+const initialUserState = {
+  userInfo: {},
+  solvedProblems: [],
+  solvedProblemsMap: {},
+};
+
 export const UserPage = (props) => {
   let { param, user } = useParams();
   user = decodeURIComponent(user);
 
-  const [loadStarted, setLoadStarted] = useState(false);
-  const [loadStartedParamUser, setLoadStartedParamUser] = useState({
-    param: undefined,
-    user: undefined,
-  });
-  const [userInfo, setUserInfo] = useState({});
-  const [golferMap, setGolferMap] = useState({});
-  const [pureGolferMap, setPureGolferMap] = useState({});
+  const [universalState, setUniversalState] = useState(initialUniversalState);
+  const [userState, setUserState] = useState(initialUserState);
 
-  const [contests, setContests] = useState([]);
-  const [contestMap, setContestMap] = useState({});
-  const [problemContestMap, setProblemContestMap] = useState({});
-  const [solvedProblems, setSolvedProblems] = useState([]);
-  const [solvedProblemsMap, setSolvedProblemsMap] = useState({});
+  useEffect(() => {
+    let unmounted = false;
+    const getUniversalInfo = async () => {
+      const [golferMap, pureGolferMap, contests] = await Promise.all([
+        CachedApiClient.cachedGolferMap(),
+        CachedApiClient.cachedGolferPureMap(),
+        CachedApiClient.cachedContestArray(),
+      ]);
+      const [contestMap, problemContestMap] = await Promise.all([
+        CachedApiClient.cachedContestMap(),
+        CachedApiClient.cachedProblemContestMap(),
+      ]);
 
-  if (!loadStarted) {
-    setLoadStarted(true);
-    CachedApiClient.cachedGolferMap().then((map) => setGolferMap(map));
-    CachedApiClient.cachedGolferPureMap().then((map) => setPureGolferMap(map));
+      if (!unmounted)
+        setUniversalState({
+          golferMap,
+          pureGolferMap,
+          contests,
+          contestMap,
+          problemContestMap,
+        });
+    };
+    getUniversalInfo();
+    const cleanup = () => {
+      unmounted = true;
+    };
+    return cleanup;
+  }, [setUniversalState]);
 
-    CachedApiClient.cachedContestArray().then((ar) => setContests(ar));
-  }
-  if (contests.length > 0) {
-    CachedApiClient.cachedContestMap().then((map) => setContestMap(map));
-    CachedApiClient.cachedProblemContestMap().then((map) => setProblemContestMap(map));
-  }
+  useEffect(() => {
+    let unmounted = false;
+    const getUserInfo = async () => {
+      let [userInfo, solvedProblems] = await Promise.all([
+        CachedApiClient.cachedUserInfo(param, user).then((obj) => (!obj.Message ? obj : {})),
+        CachedApiClient.cachedSolvedProblemArray(param, user),
+      ]);
+      const solvedProblemsMap = await CachedApiClient.cachedSolvedProblemMap(param, user);
 
-  if (param && user) {
-    if (loadStartedParamUser.param !== param || loadStartedParamUser.user !== user) {
-      setLoadStartedParamUser({ param: param, user: user });
-      CachedApiClient.cachedSolvedProblemArray(param, user).then((ar) => setSolvedProblems(ar));
-      CachedApiClient.cachedUserInfo(param, user).then((obj) =>
-        setUserInfo(!obj.Message ? obj : {}),
-      );
-    }
-    if (solvedProblems.length > 0)
-      CachedApiClient.cachedSolvedProblemMap(param, user).then((map) => setSolvedProblemsMap(map));
-  }
+      if (!unmounted)
+        setUserState({
+          userInfo,
+          solvedProblems,
+          solvedProblemsMap,
+        });
+    };
+    getUserInfo();
+    const cleanup = () => {
+      unmounted = true;
+    };
+    return cleanup;
+  }, [param, user, setUserState]);
+
+  const { golferMap, pureGolferMap, contests, contestMap, problemContestMap } = universalState;
+  const { userInfo, solvedProblems, solvedProblemsMap } = userState;
 
   const name = userInfo ? userInfo.Name : undefined;
 
@@ -67,8 +100,8 @@ export const UserPage = (props) => {
     golfRankerCount === 0
       ? 0
       : shortestCount === 0
-        ? 1 + golfRankerCount
-        : 1 +
+      ? 1 + golfRankerCount
+      : 1 +
         Object.keys(golferMap).reduce((cnt, userName) => {
           if (golferMap[userName].length > shortestCount) {
             ++cnt;
@@ -82,8 +115,8 @@ export const UserPage = (props) => {
     pureGolfRankerCount === 0
       ? 0
       : pureShortestCount === 0
-        ? 1 + pureGolfRankerCount
-        : 1 +
+      ? 1 + pureGolfRankerCount
+      : 1 +
         Object.keys(pureGolferMap).reduce((cnt, userName) => {
           if (pureGolferMap[userName].length > pureShortestCount) {
             ++cnt;
@@ -208,7 +241,7 @@ export const UserPage = (props) => {
           <h3>{isIncreasing ? currentStreak : 0} days</h3>
           <h6 className="text-muted">{`Last AC: ${
             prevDateSecond > 0 ? dataFormat(prevDateSecond, 'yyyy/mm/dd') : ''
-            }`}</h6>
+          }`}</h6>
         </Col>
       </Row>
 
