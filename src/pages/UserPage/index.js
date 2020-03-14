@@ -16,7 +16,8 @@ const MS_OF_HOUR = 1000 * 60 * 60;
 const MS_OF_DAY = MS_OF_HOUR * 24;
 
 export const UserPage = (props) => {
-  const { param, user } = useParams();
+  let { param, user } = useParams();
+  user = decodeURIComponent(user);
 
   const [loadStarted, setLoadStarted] = useState(false);
   const [loadStartedParamUser, setLoadStartedParamUser] = useState({
@@ -66,8 +67,8 @@ export const UserPage = (props) => {
     golfRankerCount === 0
       ? 0
       : shortestCount === 0
-      ? 1 + golfRankerCount
-      : 1 +
+        ? 1 + golfRankerCount
+        : 1 +
         Object.keys(golferMap).reduce((cnt, userName) => {
           if (golferMap[userName].length > shortestCount) {
             ++cnt;
@@ -81,8 +82,8 @@ export const UserPage = (props) => {
     pureGolfRankerCount === 0
       ? 0
       : pureShortestCount === 0
-      ? 1 + pureGolfRankerCount
-      : 1 +
+        ? 1 + pureGolfRankerCount
+        : 1 +
         Object.keys(pureGolferMap).reduce((cnt, userName) => {
           if (pureGolferMap[userName].length > pureShortestCount) {
             ++cnt;
@@ -207,7 +208,7 @@ export const UserPage = (props) => {
           <h3>{isIncreasing ? currentStreak : 0} days</h3>
           <h6 className="text-muted">{`Last AC: ${
             prevDateSecond > 0 ? dataFormat(prevDateSecond, 'yyyy/mm/dd') : ''
-          }`}</h6>
+            }`}</h6>
         </Col>
       </Row>
 

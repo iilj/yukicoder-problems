@@ -15,7 +15,8 @@ const ContestWrapper = (props) => (
 );
 
 export const TablePage = (props) => {
-  const { param, user } = useParams();
+  let { param, user } = useParams();
+  user = decodeURIComponent(user);
 
   const [loadStarted, setLoadStarted] = useState(false);
   const [loadStartedParamUser, setLoadStartedParamUser] = useState({

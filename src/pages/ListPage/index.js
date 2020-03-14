@@ -23,7 +23,8 @@ import { DifficultyStarsFillDefs, DifficultyStars } from '../../components/Diffi
 const INF_LEVEL = 100;
 
 export const ListPage = (props) => {
-  const { param, user } = useParams();
+  let { param, user } = useParams();
+  user = decodeURIComponent(user);
 
   const [loadStarted, setLoadStarted] = useState(false);
   const [loadStartedParamUser, setLoadStartedParamUser] = useState({
