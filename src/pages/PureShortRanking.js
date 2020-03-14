@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DropdownItem, DropdownToggle, Row, UncontrolledDropdown, ButtonGroup,
 } from 'reactstrap';
@@ -6,24 +6,61 @@ import { Ranking } from '../components/Ranking';
 import { WellPositionedDropdownMenu } from '../components/WellPositionedDropdownMenu';
 import * as CachedApiClient from '../utils/CachedApiClient';
 
+const initialUniversalState = {
+  languages: [],
+};
+
+const initialUserState = {
+  golferPureMap: {},
+};
+
 export const PureShortRanking = () => {
   const emptyLangId = '';
-
-  const [loadStarted, setLoadStarted] = useState(false);
-  const [loadStartedLangId, setLoadStartedLangId] = useState(undefined);
   const [langId, setLangId] = useState(emptyLangId);
-  const [languages, setLanguages] = useState([]);
-  const [golferPureMap, setGolferPureMap] = useState({});
 
-  if (!loadStarted) {
-    setLoadStarted(true);
-    CachedApiClient.cachedLanguageArray().then((ar) => setLanguages(ar));
-  }
-  if (loadStartedLangId !== langId) {
-    setLoadStartedLangId(langId);
-    if (langId === emptyLangId) CachedApiClient.cachedGolferPureMap().then((map) => setGolferPureMap(map));
-    else CachedApiClient.cachedGolferPureMapLangMap(langId).then((map) => setGolferPureMap(map));
-  }
+  const [universalState, setUniversalState] = useState(initialUniversalState);
+  const [userState, setUserState] = useState(initialUserState);
+
+  useEffect(() => {
+    let unmounted = false;
+    const getUniversalInfo = async () => {
+      const languages = await CachedApiClient.cachedLanguageArray();
+
+      if (!unmounted) {
+        setUniversalState({
+          languages,
+        });
+      }
+    };
+    getUniversalInfo();
+    const cleanup = () => {
+      unmounted = true;
+    };
+    return cleanup;
+  }, [setUniversalState]);
+
+  useEffect(() => {
+    let unmounted = false;
+    const getUserInfo = async () => {
+      const golferPureMap = langId === emptyLangId
+        ? await CachedApiClient.cachedGolferPureMap()
+        : await CachedApiClient.cachedGolferPureMapLangMap(langId);
+
+      if (!unmounted) {
+        setUserState({
+          golferPureMap,
+        });
+      }
+    };
+    getUserInfo();
+    const cleanup = () => {
+      unmounted = true;
+    };
+    return cleanup;
+  }, [langId, setUserState]);
+
+  const { languages } = universalState;
+  const { golferPureMap } = userState;
 
   const ranking = Object.keys(golferPureMap).reduce((ar, userName) => {
     ar.push({ name: userName, count: golferPureMap[userName].length });

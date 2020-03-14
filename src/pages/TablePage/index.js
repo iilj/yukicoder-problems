@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Row, FormGroup, Label, Input,
@@ -14,34 +14,70 @@ const ContestWrapper = (props) => (
   <div style={{ display: props.display ? '' : 'none' }}>{props.children}</div>
 );
 
+const initialUniversalState = {
+  contests: [],
+  problemsMap: {},
+};
+
+const initialUserState = {
+  solvedProblemsMap: {},
+};
+
 export const TablePage = (props) => {
   let { param, user } = useParams();
   user = decodeURIComponent(user);
 
-  const [loadStarted, setLoadStarted] = useState(false);
-  const [loadStartedParamUser, setLoadStartedParamUser] = useState({
-    param: undefined,
-    user: undefined,
-  });
+  const [universalState, setUniversalState] = useState(initialUniversalState);
+  const [userState, setUserState] = useState(initialUserState);
+
+  useEffect(() => {
+    let unmounted = false;
+    const getUniversalInfo = async () => {
+      const [contests, problemsMap] = await Promise.all([
+        CachedApiClient.cachedContestArray(),
+        CachedApiClient.cachedProblemMap(),
+      ]);
+
+      if (!unmounted) {
+        setUniversalState({
+          contests,
+          problemsMap,
+        });
+      }
+    };
+    getUniversalInfo();
+    const cleanup = () => {
+      unmounted = true;
+    };
+    return cleanup;
+  }, [setUniversalState]);
+
+  useEffect(() => {
+    let unmounted = false;
+    const getUserInfo = async () => {
+      if (param && user) {
+        const solvedProblemsMap = await CachedApiClient.cachedSolvedProblemMap(param, user);
+
+        if (!unmounted) {
+          setUserState({
+            solvedProblemsMap,
+          });
+        }
+      }
+    };
+    getUserInfo();
+    const cleanup = () => {
+      unmounted = true;
+    };
+    return cleanup;
+  }, [param, user, setUserState]);
+
+  const { contests, problemsMap } = universalState;
+  const { solvedProblemsMap } = userState;
+
   const [showDifficultyLevel, setShowDifficultyLevel] = useState(true);
   const [showContestResult, setShowContestResult] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
-
-  const [contests, setContests] = useState([]);
-  const [problemsMap, setProblemsMap] = useState({});
-  const [solvedProblemsMap, setSolvedProblemsMap] = useState({});
-
-  if (!loadStarted) {
-    setLoadStarted(true);
-    CachedApiClient.cachedContestArray().then((ar) => setContests(ar));
-    CachedApiClient.cachedProblemMap().then((map) => setProblemsMap(map));
-  }
-  if (param && user) {
-    if (loadStartedParamUser.param !== param || loadStartedParamUser.user !== user) {
-      setLoadStartedParamUser({ param, user });
-      CachedApiClient.cachedSolvedProblemMap(param, user).then((map) => setSolvedProblemsMap(map));
-    }
-  }
 
   const yukicoderRegularContests = [];
   const yukicoderLongContests = [];

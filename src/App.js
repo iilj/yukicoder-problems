@@ -25,22 +25,10 @@ function App() {
         <Routes>
           <Route exect path="/short" element={<ShortRanking />} />
           <Route exect path="/pureshort" element={<PureShortRanking />} />
-          <Route
-            path='/table/:param/:user'
-            element={<TablePage />}
-          />
-          <Route
-            path='/table/'
-            element={<TablePage />}
-          />
-          <Route
-            path='/list/:param/:user'
-            element={<ListPage />}
-          />
-          <Route
-            path='/list/'
-            element={<ListPage />}
-          />
+          <Route path="/table/:param/:user" element={<TablePage />} />
+          <Route path="/table/" element={<TablePage />} />
+          <Route path="/list/:param/:user" element={<ListPage />} />
+          <Route path="/list/" element={<ListPage />} />
           <Route path="/user/:param/:user" element={<UserPage />} />
           <Redirect path="/" to="/table/" />
         </Routes>

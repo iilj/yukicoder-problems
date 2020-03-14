@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DropdownItem,
   DropdownMenu,
@@ -22,45 +22,89 @@ import { DifficultyStarsFillDefs, DifficultyStars } from '../../components/Diffi
 
 const INF_LEVEL = 100;
 
+const initialUniversalState = {
+  problems: [],
+  contestMap: {},
+  problemContestMap: {},
+  golferProblemMap: {},
+  golferPureProblemMap: {},
+};
+
+const initialUserState = {
+  solvedProblems: [],
+  solvedProblemsMap: {},
+};
+
 export const ListPage = (props) => {
   let { param, user } = useParams();
   user = decodeURIComponent(user);
 
-  const [loadStarted, setLoadStarted] = useState(false);
-  const [loadStartedParamUser, setLoadStartedParamUser] = useState({
-    param: undefined,
-    user: undefined,
-  });
-  const [problems, setProblems] = useState([]);
-  const [solvedProblems, setSolvedProblems] = useState([]);
+  const [universalState, setUniversalState] = useState(initialUniversalState);
+  const [userState, setUserState] = useState(initialUserState);
 
-  const [contestMap, setContestMap] = useState({});
-  const [problemContestMap, setProblemContestMap] = useState({});
-  const [solvedProblemsMap, setSolvedProblemsMap] = useState({});
-  const [golferProblemMap, setGolferProblemMap] = useState({});
-  const [golferPureProblemMap, setGolferPureProblemMap] = useState({});
+  useEffect(() => {
+    let unmounted = false;
+    const getUniversalInfo = async () => {
+      const [problems, contestMap, golferProblemMap, golferPureProblemMap] = await Promise.all([
+        CachedApiClient.cachedProblemArray(),
+        CachedApiClient.cachedContestMap(),
+        CachedApiClient.cachedGolferRankingProblemMap(),
+        CachedApiClient.cachedGolferRankingPureProblemMap(),
+      ]);
+      const problemContestMap = await CachedApiClient.cachedProblemContestMap();
+
+      if (!unmounted) {
+        setUniversalState({
+          problems,
+          contestMap,
+          problemContestMap,
+          golferProblemMap,
+          golferPureProblemMap,
+        });
+      }
+    };
+    getUniversalInfo();
+    const cleanup = () => {
+      unmounted = true;
+    };
+    return cleanup;
+  }, [setUniversalState]);
+
+  useEffect(() => {
+    let unmounted = false;
+    const getUserInfo = async () => {
+      if (param && user) {
+        const solvedProblems = await CachedApiClient.cachedSolvedProblemArray(param, user);
+        const solvedProblemsMap = await CachedApiClient.cachedSolvedProblemMap(param, user);
+
+        if (!unmounted) {
+          setUserState({
+            solvedProblems,
+            solvedProblemsMap,
+          });
+        }
+      }
+    };
+    getUserInfo();
+    const cleanup = () => {
+      unmounted = true;
+    };
+    return cleanup;
+  }, [param, user, setUserState]);
+
+  const {
+    problems,
+    contestMap,
+    problemContestMap,
+    golferProblemMap,
+    golferPureProblemMap,
+  } = universalState;
+  const { solvedProblems, solvedProblemsMap } = userState;
 
   const [statusFilterState, setStatusFilterState] = useState('All');
   const [fromDifficultyLevel, setFromDifficultyLevel] = useState(-1);
   const [toDifficultyLevel, setToDifficultyLevel] = useState(INF_LEVEL);
   const [showTagsOfTryingProblems, setShowTagsOfTryingProblems] = useState(false);
-
-  if (!loadStarted) {
-    setLoadStarted(true);
-    CachedApiClient.cachedProblemArray().then((ar) => setProblems(ar));
-    CachedApiClient.cachedContestMap().then((map) => setContestMap(map));
-    CachedApiClient.cachedGolferRankingProblemMap().then((map) => setGolferProblemMap(map));
-    CachedApiClient.cachedGolferRankingPureProblemMap().then((map) => setGolferPureProblemMap(map));
-  }
-  if (problems.length > 0 && Object.keys(contestMap).length > 0) CachedApiClient.cachedProblemContestMap().then((map) => setProblemContestMap(map));
-
-  if (param && user) {
-    if (loadStartedParamUser.param !== param || loadStartedParamUser.user !== user) {
-      setLoadStartedParamUser({ param, user });
-      CachedApiClient.cachedSolvedProblemArray(param, user).then((ar) => setSolvedProblems(ar));
-    }
-    if (solvedProblems.length > 0) CachedApiClient.cachedSolvedProblemMap(param, user).then((map) => setSolvedProblemsMap(map));
-  }
 
   const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 
