@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  HashRouter as Router, Route, Switch, Redirect,
+  HashRouter as Router, Route, Routes, Redirect,
 } from 'react-router-dom';
 import { Container } from 'reactstrap';
 
@@ -22,20 +22,28 @@ function App() {
     <Router>
       <NavigationBar />
       <Container style={{ width: '100%', maxWidth: '90%' }}>
-        <Switch>
-          <Route exact path="/short" component={() => <ShortRanking />} />
-          <Route exact path="/pureshort" component={() => <PureShortRanking />} />
+        <Routes>
+          <Route exect path="/short" element={<ShortRanking />} />
+          <Route exect path="/pureshort" element={<PureShortRanking />} />
           <Route
-            path={['/table/:param(name|twitter|id)/:user([a-zA-Z0-9_-]+)', '/table/']}
-            component={TablePage}
+            path='/table/:param/:user'
+            element={<TablePage />}
           />
           <Route
-            path={['/list/:param(name|twitter|id)/:user([a-zA-Z0-9_-]+)', '/list/']}
-            component={ListPage}
+            path='/table/'
+            element={<TablePage />}
           />
-          <Route path="/user/:param(name|twitter|id)/:user([a-zA-Z0-9_-]+)" component={UserPage} />
+          <Route
+            path='/list/:param/:user'
+            element={<ListPage />}
+          />
+          <Route
+            path='/list/'
+            element={<ListPage />}
+          />
+          <Route path="/user/:param/:user" element={<UserPage />} />
           <Redirect path="/" to="/table/" />
-        </Switch>
+        </Routes>
       </Container>
     </Router>
   );

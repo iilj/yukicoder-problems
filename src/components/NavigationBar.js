@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { NavLink as RouterLink } from 'react-router-dom';
-import { withRouter } from 'react-router';
+import { NavLink as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+// import { withRouter } from 'react-router';
+// import { useHistory } from 'react-router-dom';
 import {
   Collapse,
   Navbar,
@@ -32,7 +33,7 @@ const extractPageKind = (pathname) => {
 const extractParams = (pathname) => {
   const params = pathname.split('/');
   const param = params.length >= 4 ? params[2] : '';
-  const user = params.length >= 4 ? params[3] : '';
+  const user = params.length >= 4 ? decodeURIComponent(params[3]) : '';
   return { param, user };
 };
 
@@ -40,8 +41,12 @@ const generatePath = (kind, param, user) => {
   return user && user !== '' ? `/${kind}/${param}/${encodeURIComponent(user)}` : `/${kind}/`;
 };
 
-export const NavigationBar2 = (props) => {
-  const { pathname } = props.location;
+export const NavigationBar = (props) => {
+  const location = useLocation();
+  // console.log(location);
+  const pathname = location.pathname;
+  const navigate = useNavigate();
+  // const { pathname } = props.location;
   const initialPageKind = extractPageKind(pathname);
   const initialState = extractParams(pathname);
 
@@ -51,7 +56,7 @@ export const NavigationBar2 = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const submit = (nextKind) => {
-    props.history.push({ pathname: generatePath(nextKind, param, user) }, null, true);
+    navigate(generatePath(nextKind, param, user));
     setPageKind(nextKind);
   };
   return (
@@ -84,7 +89,7 @@ export const NavigationBar2 = (props) => {
               <Input
                 style={{ width: '150px' }}
                 onKeyPress={(e) => {
-                  if (e.key === 'Enter' && pageKind !== null && user.match(/^[a-zA-Z0-9_-]*$/)) {
+                  if (e.key === 'Enter' && pageKind !== null) {
                     submit(pageKind);
                   }
                 }}
@@ -93,7 +98,6 @@ export const NavigationBar2 = (props) => {
                 name="user"
                 id="user"
                 placeholder="name|twitter|id"
-                pattern="^[a-zA-Z0-9_-]*$"
                 onChange={(e) => setUser(e.target.value)}
               />
             </FormGroup>
@@ -177,4 +181,4 @@ export const NavigationBar2 = (props) => {
   );
 };
 
-export const NavigationBar = withRouter(NavigationBar2);
+// export const NavigationBar = withRouter(NavigationBar2);
