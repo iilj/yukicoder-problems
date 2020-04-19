@@ -10,6 +10,7 @@ import { DailyEffortBarChart } from './DailyEffortBarChart';
 import { ClimbingLineChart } from './ClimbingLineChart';
 import { CalendarHeatmap } from './CalendarHeatmap';
 import { SolvedProblemList } from './SolvedProblemList';
+import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
 import dataFormat from 'dateformat';
 
 const MS_OF_HOUR = 1000 * 60 * 60;
@@ -222,6 +223,7 @@ export const UserPage = (props) => {
       <Row className="my-2 border-bottom">
         <h1>{name}</h1>
       </Row>
+      <DifficultyStarsFillDefs />
       <Row className="my-3">
         {achievements.map(({ key, value, rank }) => (
           <Col key={key} className="text-center col-achivement" xs="6" md="3">
