@@ -12,6 +12,7 @@ export const ProblemLink = (props) => {
       target="_blank"
       rel="noopener noreferrer"
       className={showDifficultyLevel ? getDifficultyLevelColorClass(level) : ''}
+      title={problemTitle}
     >
       {problemTitle}
     </a>
