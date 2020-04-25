@@ -15,6 +15,7 @@ import {
 import { useParams } from 'react-router-dom';
 
 import { DifficultyLevelTable } from './DifficultyLevelTable';
+import { ProblemTypeTable } from './ProblemTypeTable';
 import { ListTable } from './ListTable';
 import * as CachedApiClient from '../../utils/CachedApiClient';
 import { WellPositionedDropdownMenu } from '../../components/WellPositionedDropdownMenu';
@@ -117,6 +118,13 @@ export const ListPage = (props) => {
       </Row>
       <Row>
         <DifficultyLevelTable problems={problems} solvedProblems={solvedProblems} user={user} />
+      </Row>
+
+      <Row className="my-2 border-bottom">
+        <h1>Type Status</h1>
+      </Row>
+      <Row>
+        <ProblemTypeTable problems={problems} solvedProblems={solvedProblems} user={user} />
       </Row>
 
       <Row className="my-2 border-bottom">

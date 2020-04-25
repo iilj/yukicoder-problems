@@ -103,6 +103,11 @@ export const ListTable = (props) => {
       ) : null),
     },
     {
+      header: 'ProblemType',
+      dataField: 'ProblemType',
+      dataSort: true,
+    },
+    {
       header: 'No',
       dataField: 'No',
       dataSort: true,
