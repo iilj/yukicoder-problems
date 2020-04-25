@@ -32,7 +32,7 @@ const initialUserState = {
 
 export const UserPage = (props) => {
   let { param, user } = useParams();
-  user = decodeURIComponent(user);
+  if (user) user = decodeURIComponent(user);
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
