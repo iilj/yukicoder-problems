@@ -6,19 +6,19 @@ export const DifficultyStarsFillDefs = () => (
   <svg style={{ height: 0 }}>
     <defs>
       <linearGradient id="ggold">
-        <stop offset="0" stopColor="#ffd700" />
-        <stop offset="0.5" stopColor="#ffff00" />
-        <stop offset="1" stopColor="#ffd700" />
+        <stop offset="0" stopColor="#cca11f" />
+        <stop offset="0.5" stopColor="#fff93f" />
+        <stop offset="1" stopColor="#cca11f" />
       </linearGradient>
       <linearGradient id="gsilver">
         <stop offset="0.1" stopColor="#808080" />
-        <stop offset="0.5" stopColor="#e0e0e0" />
+        <stop offset="0.5" stopColor="#f5f5f5" />
         <stop offset="0.9" stopColor="#808080" />
       </linearGradient>
       <linearGradient id="gbronze">
-        <stop offset="0.2" stopColor="#725a36" />
-        <stop offset="0.5" stopColor="#eebb00" />
-        <stop offset="0.8" stopColor="#725a36" />
+        <stop offset="0.2" stopColor="#965c2c" />
+        <stop offset="0.5" stopColor="#ffdabd" />
+        <stop offset="0.8" stopColor="#965c2c" />
       </linearGradient>
     </defs>
   </svg>
