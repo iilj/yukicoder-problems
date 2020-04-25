@@ -37,7 +37,7 @@ const initialUserState = {
 
 export const ListPage = (props) => {
   let { param, user } = useParams();
-  user = decodeURIComponent(user);
+  if (user) user = decodeURIComponent(user);
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
