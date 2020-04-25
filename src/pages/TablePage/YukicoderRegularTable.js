@@ -54,6 +54,7 @@ export const YukicoderRegularTable = (props) => {
             <ContestLink
               contestId={contest.Id}
               contestName={contest.Name.replace(/^yukicoder contest /, '')}
+              rawContestName={contest.Name}
             />
           )}
         >
