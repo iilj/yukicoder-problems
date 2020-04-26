@@ -55,14 +55,12 @@ export const TablePage = (props) => {
   useEffect(() => {
     let unmounted = false;
     const getUserInfo = async () => {
-      if (param && user) {
-        const solvedProblemsMap = await CachedApiClient.cachedSolvedProblemMap(param, user);
+      const solvedProblemsMap = param && user ? await CachedApiClient.cachedSolvedProblemMap(param, user) : {};
 
-        if (!unmounted) {
-          setUserState({
-            solvedProblemsMap,
-          });
-        }
+      if (!unmounted) {
+        setUserState({
+          solvedProblemsMap,
+        });
       }
     };
     getUserInfo();
@@ -88,6 +86,8 @@ export const TablePage = (props) => {
       else yukicoderLongContests.push(contest);
     } else otherContests.push(contest);
   });
+  console.log(user);
+  console.log(solvedProblemsMap);
 
   return (
     <>

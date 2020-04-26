@@ -74,16 +74,14 @@ export const ListPage = (props) => {
   useEffect(() => {
     let unmounted = false;
     const getUserInfo = async () => {
-      if (param && user) {
-        const solvedProblems = await CachedApiClient.cachedSolvedProblemArray(param, user);
-        const solvedProblemsMap = await CachedApiClient.cachedSolvedProblemMap(param, user);
+      const solvedProblems = param && user ? await CachedApiClient.cachedSolvedProblemArray(param, user) : [];
+      const solvedProblemsMap = param && user ? await CachedApiClient.cachedSolvedProblemMap(param, user) : {};
 
-        if (!unmounted) {
-          setUserState({
-            solvedProblems,
-            solvedProblemsMap,
-          });
-        }
+      if (!unmounted) {
+        setUserState({
+          solvedProblems,
+          solvedProblemsMap,
+        });
       }
     };
     getUserInfo();
