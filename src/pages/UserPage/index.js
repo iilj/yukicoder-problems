@@ -10,7 +10,7 @@ import { DailyEffortBarChart } from './DailyEffortBarChart';
 import { ClimbingLineChart } from './ClimbingLineChart';
 import { CalendarHeatmap } from './CalendarHeatmap';
 import { SolvedProblemList } from './SolvedProblemList';
-import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
+import { DifficultyStarsFillDefs, NormalStarElement } from '../../components/DifficultyStars';
 import dataFormat from 'dateformat';
 
 const MS_OF_HOUR = 1000 * 60 * 60;
@@ -21,6 +21,7 @@ const initialUniversalState = {
   pureGolferMap: {},
   contests: [],
   contestMap: {},
+  problems: [],
   problemContestMap: {},
 };
 
@@ -40,9 +41,10 @@ export const UserPage = (props) => {
   useEffect(() => {
     let unmounted = false;
     const getUniversalInfo = async () => {
-      const [golferMap, pureGolferMap, contests] = await Promise.all([
+      const [golferMap, pureGolferMap, problems, contests] = await Promise.all([
         CachedApiClient.cachedGolferMap(),
         CachedApiClient.cachedGolferPureMap(),
+        CachedApiClient.cachedProblemArray(),
         CachedApiClient.cachedContestArray(),
       ]);
       const [contestMap, problemContestMap] = await Promise.all([
@@ -56,6 +58,7 @@ export const UserPage = (props) => {
           pureGolferMap,
           contests,
           contestMap,
+          problems,
           problemContestMap,
         });
     };
@@ -89,7 +92,14 @@ export const UserPage = (props) => {
     return cleanup;
   }, [param, user, setUserState]);
 
-  const { golferMap, pureGolferMap, contests, contestMap, problemContestMap } = universalState;
+  const {
+    golferMap,
+    pureGolferMap,
+    contests,
+    contestMap,
+    problems,
+    problemContestMap,
+  } = universalState;
   const { userInfo, solvedProblems, solvedProblemsMap } = userState;
 
   const name = userInfo ? userInfo.Name : undefined;
@@ -185,6 +195,19 @@ export const UserPage = (props) => {
   const yesterdaySecond = currentDateSecond - (currentDateSecond % MS_OF_DAY) - MS_OF_DAY;
   const isIncreasing = prevDateSecond >= yesterdaySecond;
 
+  // for user level
+  const userSolvedStars = solvedProblems
+    .filter((solvedProblem) => solvedProblem.ProblemType === 0)
+    .map((solvedProblem) => solvedProblem.Level)
+    .reduce((sum, cur) => sum + cur, 0);
+  const allProblemsStars = problems
+    .filter((problem) => problem.ProblemType === 0)
+    .map((problem) => problem.Level)
+    .reduce((sum, cur) => sum + cur, 0);
+  const userLevel = allProblemsStars > 0 ? (100.0 * userSolvedStars) / allProblemsStars : 0;
+  const nextLevel = Math.min(100, Math.floor(userLevel) + 1.0);
+  const starsToAdvance = (allProblemsStars * (nextLevel - userLevel)) / 100;
+
   const achievements = [
     {
       key: 'Solved',
@@ -211,11 +234,11 @@ export const UserPage = (props) => {
       value: userInfo.Points ?? 0,
       rank: undefined,
     },
-    {
-      key: 'Level',
-      value: userInfo.Level ?? 0,
-      rank: undefined,
-    },
+    // {
+    //   key: 'Level',
+    //   value: userInfo.Level ?? 0,
+    //   rank: undefined, // これは捨てて独自に計算する？
+    // },
   ];
 
   return (
@@ -234,6 +257,13 @@ export const UserPage = (props) => {
             )}
           </Col>
         ))}
+        <Col key="Level" className="text-center" xs="6" md="3">
+          <h6>Level</h6>
+          <h3 title={userLevel}>{userLevel.toFixed(2)}</h3>
+          <h6 className="text-muted" title={starsToAdvance}>
+            <NormalStarElement /> * {Math.ceil(starsToAdvance * 2) / 2} to advance
+          </h6>
+        </Col>
         <Col key="Longest Streak" className="text-center" xs="6" md="3">
           <h6>Longest Streak</h6>
           <h3>{longestStreak} days</h3>
