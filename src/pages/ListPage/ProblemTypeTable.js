@@ -1,5 +1,6 @@
 import React from 'react';
 import Table from 'reactstrap/lib/Table';
+import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
 
 export const ProblemTypeTable = (props) => {
   const { problems, solvedProblems, user } = props;
@@ -42,7 +43,7 @@ export const ProblemTypeTable = (props) => {
                 key={type}
                 style={{ whiteSpace: 'nowrap', position: 'relative', minWidth: '70px' }}
               >
-                {type}
+                <ProblemTypeIconSpanWithName problemType={type} />
               </th>
             ))}
           </tr>

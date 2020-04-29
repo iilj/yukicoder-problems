@@ -82,6 +82,14 @@ code {
   font-size: x-small;
 }
 
+.table-problem-type-icon {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  color: #888888;
+  font-size: x-small;
+}
+
 .col-achivement {
   margin-bottom: 1rem;
 }

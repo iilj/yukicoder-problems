@@ -11,7 +11,12 @@
 // 5.5 銀
 // 6.0 金
 
-// 問題の難易度レベル→色，の変換
+/**
+ * 問題の難易度レベル→色，の変換
+ *
+ * @param {number} level
+ * @returns color code string
+ */
 export const getDifficultyLevelColor = (level) => {
   if (!level) {
     return '';
@@ -52,7 +57,12 @@ export const getDifficultyLevelColor = (level) => {
   return '#ffd700'; // gold
 };
 
-// 問題の難易度レベル→色クラス，の変換
+/**
+ * 問題の難易度レベル→色クラス，の変換
+ *
+ * @param {number} level
+ * @returns 色クラス名
+ */
 export const getDifficultyLevelColorClass = (level) => {
   if (!level) {
     return '';
@@ -84,6 +94,12 @@ export const getDifficultyLevelColorClass = (level) => {
   return 'difficulty-red'; // red
 };
 
+/**
+ * returns suffix string of order, e.g. "st" of "1st".
+ *
+ * @param {number} i number representing order
+ * @returns suffix string of order
+ */
 export const ordinalSuffixOf = (i) => {
   const j = i % 10;
   const k = i % 100;
@@ -97,4 +113,25 @@ export const ordinalSuffixOf = (i) => {
     return 'rd';
   }
   return 'th';
+};
+
+/**
+ * returns string representing the problem type
+ *
+ * @param {number} problemType Problem Type number
+ * @returns string representing the problem type
+ */
+export const getProblemTypeName = (problemType) => {
+  switch (problemType) {
+    case 0:
+      return 'Normal';
+    case 1:
+      return 'Educational';
+    case 2:
+      return 'Scoring';
+    case 3:
+      return 'Joke';
+    default:
+      return `${problemType}`;
+  }
 };
