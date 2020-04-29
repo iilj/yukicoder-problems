@@ -185,7 +185,7 @@ export const ListTable = (props) => {
           .sort((a, b) => (a.Date < b.Date ? 1 : -1))}
         trClassName={(problem) => {
           if (!problem.SolveDate) return 'table-problem';
-          if (!problem.Contest) return 'table-problem';
+          if (!problem.Contest) return 'table-problem table-problem-solved';
           const solveDate = Date.parse(problem.SolveDate);
           const startDate = Date.parse(problem.Contest.Date);
           const endDate = Date.parse(problem.Contest.EndDate);
