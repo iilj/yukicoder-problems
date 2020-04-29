@@ -5,7 +5,13 @@ import {
 import { Container } from 'reactstrap';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faStar, faStarHalf } from '@fortawesome/free-solid-svg-icons';
+import {
+  faStar,
+  faStarHalf,
+  faSchool,
+  faCalculator,
+  faLaughBeam,
+} from '@fortawesome/free-solid-svg-icons';
 import { NavigationBar } from './components/NavigationBar';
 import { ShortRanking } from './pages/ShortRanking';
 import { PureShortRanking } from './pages/PureShortRanking';
@@ -15,7 +21,7 @@ import { UserPage } from './pages/UserPage';
 // import logo from './logo.svg';
 import './App.css';
 
-library.add(faStar, faStarHalf);
+library.add(faStar, faStarHalf, faSchool, faCalculator, faLaughBeam);
 
 function App() {
   return (

@@ -5,6 +5,7 @@ import { DifficultyStars } from '../../components/DifficultyStars';
 import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
 import { ListPaginationPanel } from '../../components/ListPaginationPanel';
+import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
 import { formatSubmissionUrl } from '../../utils/Url';
 
 export const ListTable = (props) => {
@@ -105,6 +106,7 @@ export const ListTable = (props) => {
     {
       header: 'ProblemType',
       dataField: 'ProblemType',
+      dataFormat: (problemType) => <ProblemTypeIconSpanWithName problemType={problemType} />,
       dataSort: true,
     },
     {

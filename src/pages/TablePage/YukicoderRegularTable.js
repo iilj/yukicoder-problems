@@ -5,6 +5,7 @@ import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
 import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { SubmitTimespan } from '../../components/SubmitTimespan';
+import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
 
 export const YukicoderRegularTable = (props) => {
   const {
@@ -114,6 +115,7 @@ export const YukicoderRegularTable = (props) => {
                     level={problem.Level}
                     showDifficultyLevel={showDifficultyLevel}
                   />
+                  <ProblemTypeIconAbsoluteSpan problemType={problem.ProblemType} />
                   <ProblemLink
                     problemNo={problem.No}
                     problemTitle={problemTitle}
