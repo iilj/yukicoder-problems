@@ -28,7 +28,9 @@ export const ListTable = (props) => {
       header: 'Date',
       dataField: 'Date',
       dataSort: true,
-      dataFormat: (date) => <>{date !== null ? dataFormat(new Date(date), 'yyyy/mm/dd HH:MM') : '-'}</>,
+      dataFormat: (date) => (
+        <>{date !== null ? dataFormat(new Date(date), 'yyyy/mm/dd HH:MM') : '-'}</>
+      ),
     },
     {
       header: 'Title',

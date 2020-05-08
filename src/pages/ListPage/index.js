@@ -20,7 +20,11 @@ import { ListTable } from './ListTable';
 import * as CachedApiClient from '../../utils/CachedApiClient';
 import { WellPositionedDropdownMenu } from '../../components/WellPositionedDropdownMenu';
 import { DifficultyStarsFillDefs, DifficultyStars } from '../../components/DifficultyStars';
-import { DateRangePicker, INITIAL_FROM_DATE, INITIAL_TO_DATE } from '../../components/DateRangePicker'
+import {
+  DateRangePicker,
+  INITIAL_FROM_DATE,
+  INITIAL_TO_DATE,
+} from '../../components/DateRangePicker';
 
 const INF_LEVEL = 100;
 

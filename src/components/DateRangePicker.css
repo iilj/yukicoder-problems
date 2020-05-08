@@ -2,11 +2,11 @@ div.react-datepicker-popper {
   z-index: 5;
 }
 
-.btn-group>.btn-group:not(:last-child)>.react-datepicker-wrapper .btn {
+.btn-group > .btn-group:not(:last-child) > .react-datepicker-wrapper .btn {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-.btn-group>.btn-group:not(:first-child)>.react-datepicker-wrapper .btn {
+.btn-group > .btn-group:not(:first-child) > .react-datepicker-wrapper .btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -39,7 +39,8 @@ div.react-datepicker__day-name {
   font-weight: bold;
 }
 div.react-datepicker__today-button {
-  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 div.react-datepicker__today-button:hover {
   background-color: #5a6268;
@@ -79,15 +80,20 @@ div.react-datepicker__today-button:hover {
   border-right: 1px solid #007bff;
 }
 /* 選択時の選択区間両端 */
-.react-datepicker__month .react-datepicker__day--selected.react-datepicker__day--in-selecting-range {
+.react-datepicker__month
+  .react-datepicker__day--selected.react-datepicker__day--in-selecting-range {
   border-radius: 0;
 }
-.react-datepicker__month.react-datepicker__month--selecting-range .react-datepicker__day--selecting-range-start,
-.react-datepicker__month.react-datepicker__month--selecting-range .react-datepicker__day--selecting-range-start:hover {
+.react-datepicker__month.react-datepicker__month--selecting-range
+  .react-datepicker__day--selecting-range-start,
+.react-datepicker__month.react-datepicker__month--selecting-range
+  .react-datepicker__day--selecting-range-start:hover {
   border-radius: 0.3rem 0 0 0.3rem;
 }
-.react-datepicker__month.react-datepicker__month--selecting-range .react-datepicker__day--selecting-range-end,
-.react-datepicker__month.react-datepicker__month--selecting-range .react-datepicker__day--selecting-range-end:hover {
+.react-datepicker__month.react-datepicker__month--selecting-range
+  .react-datepicker__day--selecting-range-end,
+.react-datepicker__month.react-datepicker__month--selecting-range
+  .react-datepicker__day--selecting-range-end:hover {
   border-radius: 0 0.3rem 0.3rem 0;
 }
 /* 選択時の元の区間内 */
@@ -95,13 +101,16 @@ div.react-datepicker__today-button:hover {
   color: #007bff;
 }
 /* 選択時の元の区間の始点終点 */
-.react-datepicker__month.react-datepicker__month--selecting-range .react-datepicker__day--in-selecting-range.react-datepicker__day--selected,
-.react-datepicker__month.react-datepicker__month--selecting-range .react-datepicker__day--in-range.react-datepicker__day--selected {
+.react-datepicker__month.react-datepicker__month--selecting-range
+  .react-datepicker__day--in-selecting-range.react-datepicker__day--selected,
+.react-datepicker__month.react-datepicker__month--selecting-range
+  .react-datepicker__day--in-range.react-datepicker__day--selected {
   background-color: #007bff;
   color: white;
 }
 /* 選択時の選択区間内 */
-.react-datepicker__month.react-datepicker__month--selecting-range .react-datepicker__day--in-selecting-range {
+.react-datepicker__month.react-datepicker__month--selecting-range
+  .react-datepicker__day--in-selecting-range {
   background-color: rgba(0, 123, 255, 0.5);
   border-top: 1px solid rgba(0, 123, 255, 0.5);
   border-bottom: 1px solid rgba(0, 123, 255, 0.5);

@@ -6,7 +6,7 @@ import {
   UncontrolledDropdown,
   PaginationLink,
 } from 'reactstrap';
-import { range } from '../utils'
+import { range } from '../utils';
 
 const pageList = (currPage, pageStartIndex, totalPage) => {
   if (totalPage === 0) {
