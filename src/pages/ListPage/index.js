@@ -25,6 +25,7 @@ import {
   INITIAL_FROM_DATE,
   INITIAL_TO_DATE,
 } from '../../components/DateRangePicker';
+import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
 
 const INF_LEVEL = 100;
 
@@ -111,6 +112,7 @@ export const ListPage = (props) => {
   const [showTagsOfTryingProblems, setShowTagsOfTryingProblems] = useState(false);
   const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
+  const [problemTypeFilterState, setProblemTypeFilterState] = useState('All');
 
   const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 
@@ -192,6 +194,27 @@ export const ListPage = (props) => {
           }}
         />
 
+        <ButtonGroup className="mr-4">
+          <UncontrolledDropdown>
+            <DropdownToggle caret>{problemTypeFilterState}</DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem onClick={() => setProblemTypeFilterState('All')}>All</DropdownItem>
+              <DropdownItem onClick={() => setProblemTypeFilterState('Normal')}>
+                <ProblemTypeIconSpanWithName problemType={0} />
+              </DropdownItem>
+              <DropdownItem onClick={() => setProblemTypeFilterState('Educational')}>
+                <ProblemTypeIconSpanWithName problemType={1} />
+              </DropdownItem>
+              <DropdownItem onClick={() => setProblemTypeFilterState('Scoring')}>
+                <ProblemTypeIconSpanWithName problemType={2} />
+              </DropdownItem>
+              <DropdownItem onClick={() => setProblemTypeFilterState('Joke')}>
+                <ProblemTypeIconSpanWithName problemType={3} />
+              </DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+        </ButtonGroup>
+
         <FormGroup check inline>
           <Label check>
             <Input
@@ -231,6 +254,7 @@ export const ListPage = (props) => {
           toDifficultyLevel={toDifficultyLevel}
           fromDate={fromDate === INITIAL_FROM_DATE ? null : fromDate}
           toDate={toDate === INITIAL_TO_DATE ? null : toDate}
+          problemTypeFilterState={problemTypeFilterState}
           showTagsOfTryingProblems={showTagsOfTryingProblems}
         />
       </Row>
