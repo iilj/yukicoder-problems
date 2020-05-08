@@ -21,6 +21,7 @@ export const ListTable = (props) => {
     toDifficultyLevel,
     fromDate,
     toDate,
+    problemTypeFilterState,
     showTagsOfTryingProblems,
   } = props;
   const columns = [
@@ -153,6 +154,22 @@ export const ListTable = (props) => {
           .filter(
             (problem) => fromDifficultyLevel <= problem.Level && problem.Level <= toDifficultyLevel,
           )
+          .filter((problem) => {
+            switch (problemTypeFilterState) {
+              case 'All':
+                return true;
+              case 'Normal':
+                return problem.ProblemType === 0;
+              case 'Educational':
+                return problem.ProblemType === 1;
+              case 'Scoring':
+                return problem.ProblemType === 2;
+              case 'Joke':
+                return problem.ProblemType === 3;
+              default:
+                return true;
+            }
+          })
           .map((problem) => {
             problem.Contest = contestMap && problemContestMap
               ? contestMap[problemContestMap[problem.ProblemId]]
