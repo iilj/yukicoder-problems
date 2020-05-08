@@ -6,8 +6,8 @@ import {
   UncontrolledDropdown,
   PaginationLink,
 } from 'reactstrap';
+import { range } from '../utils'
 
-const range = (start, end) => Array.from({ length: end - start + 1 }, (v, k) => k + start);
 const pageList = (currPage, pageStartIndex, totalPage) => {
   if (totalPage === 0) {
     return [];
