@@ -19,6 +19,8 @@ export const ListTable = (props) => {
     statusFilterState,
     fromDifficultyLevel,
     toDifficultyLevel,
+    fromDate,
+    toDate,
     showTagsOfTryingProblems,
   } = props;
   const columns = [
@@ -26,7 +28,7 @@ export const ListTable = (props) => {
       header: 'Date',
       dataField: 'Date',
       dataSort: true,
-      dataFormat: (date) => <>{dataFormat(new Date(date), 'yyyy/mm/dd HH:MM')}</>,
+      dataFormat: (date) => <>{date !== null ? dataFormat(new Date(date), 'yyyy/mm/dd HH:MM') : '-'}</>,
     },
     {
       header: 'Title',
@@ -183,6 +185,14 @@ export const ListTable = (props) => {
               default:
                 return true;
             }
+          })
+          .filter((problem) => {
+            if (fromDate === null && toDate === null) return true;
+            if (problem.Date === null) return false;
+            const startDate = Date.parse(problem.Date);
+            if (fromDate === null) return startDate <= toDate;
+            if (toDate === null) return fromDate <= startDate;
+            return fromDate <= startDate && startDate <= toDate;
           })
           .sort((a, b) => (a.Date < b.Date ? 1 : -1))}
         trClassName={(problem) => {

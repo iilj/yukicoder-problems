@@ -119,6 +119,8 @@ code {
   color: #808080;
 }
 
+
+
 @media only screen and (max-width: 1024px) {
   .react-bs-table table td,
   .react-bs-table table th {

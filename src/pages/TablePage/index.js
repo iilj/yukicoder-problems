@@ -86,8 +86,6 @@ export const TablePage = (props) => {
       else yukicoderLongContests.push(contest);
     } else otherContests.push(contest);
   });
-  console.log(user);
-  console.log(solvedProblemsMap);
 
   return (
     <>

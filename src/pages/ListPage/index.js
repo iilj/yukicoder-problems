@@ -20,6 +20,7 @@ import { ListTable } from './ListTable';
 import * as CachedApiClient from '../../utils/CachedApiClient';
 import { WellPositionedDropdownMenu } from '../../components/WellPositionedDropdownMenu';
 import { DifficultyStarsFillDefs, DifficultyStars } from '../../components/DifficultyStars';
+import { DateRangePicker, INITIAL_FROM_DATE, INITIAL_TO_DATE } from '../../components/DateRangePicker'
 
 const INF_LEVEL = 100;
 
@@ -104,6 +105,8 @@ export const ListPage = (props) => {
   const [fromDifficultyLevel, setFromDifficultyLevel] = useState(-1);
   const [toDifficultyLevel, setToDifficultyLevel] = useState(INF_LEVEL);
   const [showTagsOfTryingProblems, setShowTagsOfTryingProblems] = useState(false);
+  const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
+  const [toDate, setToDate] = useState(INITIAL_TO_DATE);
 
   const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 
@@ -174,6 +177,17 @@ export const ListPage = (props) => {
           </UncontrolledButtonDropdown>
         </ButtonGroup>
 
+        <DateRangePicker
+          fromDate={fromDate}
+          toDate={toDate}
+          onFromDateChange={(date) => {
+            setFromDate(date);
+          }}
+          onToDateChange={(date) => {
+            setToDate(date);
+          }}
+        />
+
         <FormGroup check inline>
           <Label check>
             <Input
@@ -193,6 +207,8 @@ export const ListPage = (props) => {
             setFromDifficultyLevel(-1);
             setToDifficultyLevel(INF_LEVEL);
             setShowTagsOfTryingProblems(false);
+            setFromDate(INITIAL_FROM_DATE);
+            setToDate(INITIAL_TO_DATE);
           }}
         >
           Reset
@@ -209,6 +225,8 @@ export const ListPage = (props) => {
           statusFilterState={statusFilterState}
           fromDifficultyLevel={fromDifficultyLevel}
           toDifficultyLevel={toDifficultyLevel}
+          fromDate={fromDate === INITIAL_FROM_DATE ? null : fromDate}
+          toDate={toDate === INITIAL_TO_DATE ? null : toDate}
           showTagsOfTryingProblems={showTagsOfTryingProblems}
         />
       </Row>
