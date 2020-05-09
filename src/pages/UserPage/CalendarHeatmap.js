@@ -19,18 +19,18 @@ export const getToday = () => {
 };
 
 export const CalendarHeatmap = (props) => {
-  const { dailyCountMap, formatTooltip } = props;
+  const { dailyCountMap, formatTooltip, onRectClick } = props;
 
   const today = getToday();
   const nextSunday = getNextSunday(today);
 
-  const startDateSec = Number(nextSunday) - WEEKS * WEEKDAY * MS_OF_DAY;
+  const startDateMiliSec = Number(nextSunday) - WEEKS * WEEKDAY * MS_OF_DAY;
 
   const tableData = [...Array(WEEKS * WEEKDAY).keys()]
-    .map((i) => startDateSec + i * MS_OF_DAY)
-    .reduce((ar, dateSec) => {
-      if (dateSec in dailyCountMap) ar.push({ date: dateSec, count: dailyCountMap[dateSec] });
-      else ar.push({ date: dateSec, count: 0 });
+    .map((i) => startDateMiliSec + i * MS_OF_DAY)
+    .reduce((ar, dateMiliSec) => {
+      if (dateMiliSec in dailyCountMap) ar.push({ date: dateMiliSec, count: dailyCountMap[dateMiliSec] });
+      else ar.push({ date: dateMiliSec, count: 0 });
       return ar;
     }, [])
     .sort((a, b) => a.date - b.date);
@@ -54,6 +54,7 @@ export const CalendarHeatmap = (props) => {
               width={blockWidth}
               height={blockWidth}
               fill={color}
+              onClick={() => onRectClick(date)}
             />
           );
         })}

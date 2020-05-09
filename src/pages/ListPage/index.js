@@ -184,6 +184,8 @@ export const ListPage = (props) => {
         </ButtonGroup>
 
         <DateRangePicker
+          minDate={INITIAL_FROM_DATE}
+          maxDate={INITIAL_TO_DATE}
           fromDate={fromDate}
           toDate={toDate}
           onFromDateChange={(date) => {

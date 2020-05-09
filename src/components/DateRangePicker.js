@@ -16,10 +16,10 @@ import { range } from '../utils';
 
 export const INITIAL_FROM_DATE = new Date('2014/07/20');
 export const INITIAL_TO_DATE = new Date(new Date().setHours(23, 59, 59, 999));
-const years = range(2014, INITIAL_TO_DATE.getFullYear());
-const months = range(0, 11);
 
 const DatePickerCustomHeader = ({
+  minDate,
+  maxDate,
   date,
   changeYear,
   changeMonth,
@@ -27,57 +27,61 @@ const DatePickerCustomHeader = ({
   increaseMonth,
   prevMonthButtonDisabled,
   nextMonthButtonDisabled,
-}) => (
-  <>
-    <Button
-      outline
-      onClick={decreaseMonth}
-      disabled={prevMonthButtonDisabled}
-      className="next-prev-month"
-    >
-      &lt;
-    </Button>
-    {' '}
-    <UncontrolledButtonDropdown>
-      <DropdownToggle caret className="year-month-dropdown-toggle">
-        {date.getFullYear()}
-      </DropdownToggle>
-      <DropdownMenu>
-        {years.map((year) => (
-          <DropdownItem key={year} onClick={() => changeYear(year)}>
-            {year}
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
-    </UncontrolledButtonDropdown>
-    {' / '}
-    <UncontrolledButtonDropdown>
-      <DropdownToggle caret className="year-month-dropdown-toggle">
-        {date.getMonth() + 1}
-      </DropdownToggle>
-      <DropdownMenu>
-        {months.map((month) => (
-          <DropdownItem key={month} onClick={() => changeMonth(month)}>
-            {month + 1}
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
-    </UncontrolledButtonDropdown>
-    {' '}
-    <Button
-      outline
-      onClick={increaseMonth}
-      disabled={nextMonthButtonDisabled}
-      className="next-prev-month"
-    >
-      &gt;
-    </Button>
-  </>
-);
+}) => {
+  const years = range(minDate.getFullYear(), maxDate.getFullYear());
+  const months = range(0, 11);
+  return (
+    <>
+      <Button
+        outline
+        onClick={decreaseMonth}
+        disabled={prevMonthButtonDisabled}
+        className="next-prev-month"
+      >
+        &lt;
+      </Button>
+      {' '}
+      <UncontrolledButtonDropdown>
+        <DropdownToggle caret className="year-month-dropdown-toggle">
+          {date.getFullYear()}
+        </DropdownToggle>
+        <DropdownMenu>
+          {years.map((year) => (
+            <DropdownItem key={year} onClick={() => changeYear(year)}>
+              {year}
+            </DropdownItem>
+          ))}
+        </DropdownMenu>
+      </UncontrolledButtonDropdown>
+      {' / '}
+      <UncontrolledButtonDropdown>
+        <DropdownToggle caret className="year-month-dropdown-toggle">
+          {date.getMonth() + 1}
+        </DropdownToggle>
+        <DropdownMenu>
+          {months.map((month) => (
+            <DropdownItem key={month} onClick={() => changeMonth(month)}>
+              {month + 1}
+            </DropdownItem>
+          ))}
+        </DropdownMenu>
+      </UncontrolledButtonDropdown>
+      {' '}
+      <Button
+        outline
+        onClick={increaseMonth}
+        disabled={nextMonthButtonDisabled}
+        className="next-prev-month"
+      >
+        &gt;
+      </Button>
+    </>
+  );
+};
 
 export const DateRangePicker = (props) => {
   const {
-    fromDate, toDate, onFromDateChange, onToDateChange,
+    fromDate, toDate, onFromDateChange, onToDateChange, minDate, maxDate,
   } = props;
 
   const popperModifiers = {
@@ -97,19 +101,23 @@ export const DateRangePicker = (props) => {
           selected={fromDate}
           customInput={(
             <DropdownToggle caret>
-              {fromDate === INITIAL_FROM_DATE ? 'Date From' : dataFormat(fromDate, 'yyyy/mm/dd -')}
+              {fromDate.getTime() === minDate.getTime()
+                ? 'Date From'
+                : dataFormat(fromDate, 'yyyy/mm/dd -')}
             </DropdownToggle>
           )}
           onChange={onFromDateChange}
           selectsStart
-          minDate={INITIAL_FROM_DATE}
+          minDate={minDate}
           maxDate={INITIAL_TO_DATE}
           startDate={fromDate}
           endDate={toDate}
           todayButton="Today"
           popperPlacement="bottom-end"
           popperModifiers={popperModifiers}
-          renderCustomHeader={(params) => <DatePickerCustomHeader {...params} />}
+          renderCustomHeader={(params) => (
+            <DatePickerCustomHeader minDate={fromDate} maxDate={INITIAL_TO_DATE} {...params} />
+          )}
         />
       </UncontrolledButtonDropdown>
       <UncontrolledButtonDropdown>
@@ -117,19 +125,23 @@ export const DateRangePicker = (props) => {
           selected={toDate}
           customInput={(
             <DropdownToggle caret>
-              {toDate === INITIAL_TO_DATE ? 'Date To' : dataFormat(toDate, '- yyyy/mm/dd')}
+              {toDate.getTime() === maxDate.getTime()
+                ? 'Date To'
+                : dataFormat(toDate, '- yyyy/mm/dd')}
             </DropdownToggle>
           )}
           onChange={onToDateChange}
           selectsEnd
           minDate={fromDate}
-          maxDate={INITIAL_TO_DATE}
+          maxDate={maxDate}
           startDate={fromDate}
           endDate={toDate}
           todayButton="Today"
           popperPlacement="bottom-end"
           popperModifiers={popperModifiers}
-          renderCustomHeader={(params) => <DatePickerCustomHeader {...params} />}
+          renderCustomHeader={(params) => (
+            <DatePickerCustomHeader minDate={fromDate} maxDate={maxDate} {...params} />
+          )}
         />
       </UncontrolledButtonDropdown>
     </ButtonGroup>

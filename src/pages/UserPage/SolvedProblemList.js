@@ -8,11 +8,21 @@ import { DifficultyStars } from '../../components/DifficultyStars';
 import { ListPaginationPanel } from '../../components/ListPaginationPanel';
 
 export const SolvedProblemList = (props) => {
-  const { solvedProblems, problemContestMap, contestMap } = props;
+  const {
+    solvedProblems, problemContestMap, contestMap, fromDate, toDate,
+  } = props;
 
   return (
     <BootstrapTable
       data={solvedProblems
+        .filter((problem) => {
+          if (fromDate === null && toDate === null) return true;
+          if (problem.Date === null) return false;
+          const solveDate = Date.parse(problem.Date);
+          if (fromDate === null) return solveDate <= toDate;
+          if (toDate === null) return fromDate <= solveDate;
+          return fromDate <= solveDate && solveDate <= toDate;
+        })
         .sort((a, b) => (a.Date < b.Date ? 1 : -1))
         .map((s) => ({ Contest: contestMap[problemContestMap[s.ProblemId]], ...s }))}
       keyField="ProblemId"

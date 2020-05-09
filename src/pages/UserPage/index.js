@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Col, Row } from 'reactstrap';
+import dataFormat from 'dateformat';
 
 import * as CachedApiClient from '../../utils/CachedApiClient';
 import { ordinalSuffixOf } from '../../utils';
@@ -11,7 +12,11 @@ import { ClimbingLineChart } from './ClimbingLineChart';
 import { CalendarHeatmap } from './CalendarHeatmap';
 import { SolvedProblemList } from './SolvedProblemList';
 import { DifficultyStarsFillDefs, NormalStarElement } from '../../components/DifficultyStars';
-import dataFormat from 'dateformat';
+import {
+  DateRangePicker,
+  INITIAL_FROM_DATE,
+  INITIAL_TO_DATE,
+} from '../../components/DateRangePicker';
 
 const MS_OF_HOUR = 1000 * 60 * 60;
 const MS_OF_DAY = MS_OF_HOUR * 24;
@@ -29,6 +34,8 @@ const initialUserState = {
   userInfo: {},
   solvedProblems: [],
   solvedProblemsMap: {},
+  minDate: INITIAL_FROM_DATE,
+  maxDate: INITIAL_TO_DATE,
 };
 
 export const UserPage = (props) => {
@@ -78,11 +85,21 @@ export const UserPage = (props) => {
       ]);
       const solvedProblemsMap = await CachedApiClient.cachedSolvedProblemMap(param, user);
 
+      const dates = solvedProblems
+        .filter((problem) => problem.Date != null)
+        .map((problem) => Date.parse(problem.Date));
+      const minDate = new Date(Math.min.apply(null, dates));
+      const maxDate = new Date(Math.max.apply(null, dates));
+      minDate.setHours(0, 0, 0, 0);
+      maxDate.setHours(23, 59, 59, 999);
+
       if (!unmounted)
         setUserState({
           userInfo,
           solvedProblems,
           solvedProblemsMap,
+          minDate,
+          maxDate,
         });
     };
     getUserInfo();
@@ -100,7 +117,17 @@ export const UserPage = (props) => {
     problems,
     problemContestMap,
   } = universalState;
-  const { userInfo, solvedProblems, solvedProblemsMap } = userState;
+  const { userInfo, solvedProblems, solvedProblemsMap, minDate, maxDate } = userState;
+
+  const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
+  const [toDate, setToDate] = useState(INITIAL_TO_DATE);
+
+  if (fromDate < minDate) {
+    setFromDate(minDate);
+  }
+  if (toDate > maxDate) {
+    setToDate(maxDate);
+  }
 
   const name = userInfo ? userInfo.Name : undefined;
 
@@ -295,19 +322,42 @@ export const UserPage = (props) => {
       <Row className="my-5">
         <CalendarHeatmap
           dailyCountMap={dailyCountMap}
-          formatTooltip={(date, count) =>
-            `${dataFormat(new Date(date), 'yyyy/mm/dd')} ${count} submissions`
-          }
+          formatTooltip={(date, count) => (
+            <>
+              <div>{`${dataFormat(new Date(date), 'yyyy/mm/dd')}`}</div>
+              <div>{`${count} unique AC(s)`}</div>
+            </>
+          )}
+          onRectClick={(miliSec) => {
+            setFromDate(new Date(new Date(miliSec).setHours(0, 0, 0, 0)));
+            setToDate(new Date(new Date(miliSec).setHours(23, 59, 59, 999)));
+          }}
         />
       </Row>
 
       <Row className="my-2 border-bottom">
         <h1>Solved Problems</h1>
       </Row>
+      <Row>
+        <DateRangePicker
+          minDate={minDate}
+          maxDate={maxDate}
+          fromDate={fromDate}
+          toDate={toDate}
+          onFromDateChange={(date) => {
+            setFromDate(date);
+          }}
+          onToDateChange={(date) => {
+            setToDate(date);
+          }}
+        />
+      </Row>
       <SolvedProblemList
         solvedProblems={solvedProblems}
         problemContestMap={problemContestMap}
         contestMap={contestMap}
+        fromDate={fromDate}
+        toDate={toDate}
       />
     </div>
   );
