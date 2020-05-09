@@ -77,7 +77,7 @@ const DatePickerCustomHeader = ({
 
 export const DateRangePicker = (props) => {
   const {
-    fromDate, toDate, onFromDateChange, onToDateChange,
+    fromDate, toDate, onFromDateChange, onToDateChange, minDate, maxDate,
   } = props;
 
   const popperModifiers = {
@@ -97,12 +97,14 @@ export const DateRangePicker = (props) => {
           selected={fromDate}
           customInput={(
             <DropdownToggle caret>
-              {fromDate === INITIAL_FROM_DATE ? 'Date From' : dataFormat(fromDate, 'yyyy/mm/dd -')}
+              {fromDate.getTime() === minDate.getTime()
+                ? 'Date From'
+                : dataFormat(fromDate, 'yyyy/mm/dd -')}
             </DropdownToggle>
           )}
           onChange={onFromDateChange}
           selectsStart
-          minDate={INITIAL_FROM_DATE}
+          minDate={minDate}
           maxDate={INITIAL_TO_DATE}
           startDate={fromDate}
           endDate={toDate}
@@ -117,13 +119,15 @@ export const DateRangePicker = (props) => {
           selected={toDate}
           customInput={(
             <DropdownToggle caret>
-              {toDate === INITIAL_TO_DATE ? 'Date To' : dataFormat(toDate, '- yyyy/mm/dd')}
+              {toDate.getTime() === maxDate.getTime()
+                ? 'Date To'
+                : dataFormat(toDate, '- yyyy/mm/dd')}
             </DropdownToggle>
           )}
           onChange={onToDateChange}
           selectsEnd
           minDate={fromDate}
-          maxDate={INITIAL_TO_DATE}
+          maxDate={maxDate}
           startDate={fromDate}
           endDate={toDate}
           todayButton="Today"
