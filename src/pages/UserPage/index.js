@@ -322,9 +322,16 @@ export const UserPage = (props) => {
       <Row className="my-5">
         <CalendarHeatmap
           dailyCountMap={dailyCountMap}
-          formatTooltip={(date, count) =>
-            `${dataFormat(new Date(date), 'yyyy/mm/dd')} ${count} submissions`
-          }
+          formatTooltip={(date, count) => (
+            <>
+              <div>{`${dataFormat(new Date(date), 'yyyy/mm/dd')}`}</div>
+              <div>{`${count} unique AC(s)`}</div>
+            </>
+          )}
+          onRectClick={(miliSec) => {
+            setFromDate(new Date(new Date(miliSec).setHours(0, 0, 0, 0)));
+            setToDate(new Date(new Date(miliSec).setHours(23, 59, 59, 999)));
+          }}
         />
       </Row>
 
