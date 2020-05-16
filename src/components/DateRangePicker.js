@@ -116,7 +116,7 @@ export const DateRangePicker = (props) => {
           popperPlacement="bottom-end"
           popperModifiers={popperModifiers}
           renderCustomHeader={(params) => (
-            <DatePickerCustomHeader minDate={fromDate} maxDate={INITIAL_TO_DATE} {...params} />
+            <DatePickerCustomHeader minDate={minDate} maxDate={INITIAL_TO_DATE} {...params} />
           )}
         />
       </UncontrolledButtonDropdown>
