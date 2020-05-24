@@ -231,7 +231,8 @@ export const UserPage = (props) => {
     .filter((problem) => problem.ProblemType === 0)
     .map((problem) => problem.Level)
     .reduce((sum, cur) => sum + cur, 0);
-  const userLevel = allProblemsStars > 0 ? (100.0 * userSolvedStars) / allProblemsStars : 0;
+  const origUserLevel = allProblemsStars > 0 ? (100.0 * userSolvedStars) / allProblemsStars : 0;
+  const userLevel = Math.round(origUserLevel * 100) / 100;
   const nextLevel = Math.min(100, Math.floor(userLevel) + 1.0);
   const starsToAdvance = (allProblemsStars * (nextLevel - userLevel)) / 100;
 
@@ -286,8 +287,8 @@ export const UserPage = (props) => {
         ))}
         <Col key="Level" className="text-center" xs="6" md="3">
           <h6>Level</h6>
-          <h3 title={userLevel}>{userLevel.toFixed(2)}</h3>
-          <h6 className="text-muted" title={starsToAdvance}>
+          <h3 title={`${userLevel} (${origUserLevel})`}>{userLevel.toFixed(2)}</h3>
+          <h6 className="text-muted" title={`${starsToAdvance} stars to level ${nextLevel}`}>
             <NormalStarElement /> * {Math.ceil(starsToAdvance * 2) / 2} to advance
           </h6>
         </Col>
