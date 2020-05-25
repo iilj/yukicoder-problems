@@ -9,7 +9,7 @@ import { ordinalSuffixOf } from '../../utils';
 import { PieCharts } from './SmallPieChart';
 import { DailyEffortBarChart } from './DailyEffortBarChart';
 import { ClimbingLineChart } from './ClimbingLineChart';
-import { CalendarHeatmap } from './CalendarHeatmap';
+import { TabbedHeatmap } from './TabbedHeatmap';
 import { SolvedProblemList } from './SolvedProblemList';
 import { DifficultyStarsFillDefs, NormalStarElement } from '../../components/DifficultyStars';
 import {
@@ -320,21 +320,14 @@ export const UserPage = (props) => {
       <Row className="my-2 border-bottom">
         <h1>Heatmap</h1>
       </Row>
-      <Row className="my-5">
-        <CalendarHeatmap
-          dailyCountMap={dailyCountMap}
-          formatTooltip={(date, count) => (
-            <>
-              <div>{`${dataFormat(new Date(date), 'yyyy/mm/dd')}`}</div>
-              <div>{`${count} unique AC(s)`}</div>
-            </>
-          )}
-          onRectClick={(miliSec) => {
-            setFromDate(new Date(new Date(miliSec).setHours(0, 0, 0, 0)));
-            setToDate(new Date(new Date(miliSec).setHours(23, 59, 59, 999)));
-          }}
-        />
-      </Row>
+      <TabbedHeatmap
+        dailyCountMap={dailyCountMap}
+        solvedProblems={solvedProblems}
+        onRectClick={(miliSec) => {
+          setFromDate(new Date(new Date(miliSec).setHours(0, 0, 0, 0)));
+          setToDate(new Date(new Date(miliSec).setHours(23, 59, 59, 999)));
+        }}
+      />
 
       <Row className="my-2 border-bottom">
         <h1>Solved Problems</h1>
