@@ -18,8 +18,11 @@ export const getNextSunday = (t) => {
 };
 
 export const getToday = () => {
-  const cur = Number(new Date());
-  return new Date(cur - (cur % MS_OF_DAY));
+  // const cur = Number(new Date());
+  // return new Date(cur - ((cur + MS_OF_HOUR * 9) % MS_OF_DAY));
+  const cur = new Date();
+  cur.setHours(0, 0, 0, 0);
+  return cur;
 };
 
 export const TabbedHeatmap = (props) => {
@@ -31,8 +34,9 @@ export const TabbedHeatmap = (props) => {
 
   const startDateMiliSec = Number(nextSunday) - WEEKS * WEEKDAY * MS_OF_DAY;
 
-  let tableData; let formatTooltip; let
-    getColor;
+  let tableData;
+  let formatTooltip;
+  let getColor;
   switch (showMode) {
     case 'Unique AC':
       tableData = [...Array(WEEKS * WEEKDAY).keys()]
@@ -53,8 +57,10 @@ export const TabbedHeatmap = (props) => {
       break;
     case 'Max Level':
       const dailyMaxLevelMap = solvedProblems.reduce((map, solvedProblem) => {
-        const sec = Date.parse(solvedProblem.Date) + MS_OF_HOUR * 9;
-        const key = sec - (sec % MS_OF_DAY);
+        const sec = Date.parse(solvedProblem.Date);
+        const date = new Date(sec);
+        date.setHours(0, 0, 0, 0);
+        const key = Number(date); // sec - (sec % MS_OF_DAY);
         if (!(key in map)) {
           map[key] = 0;
         }
@@ -90,7 +96,7 @@ export const TabbedHeatmap = (props) => {
             Unique AC
           </Button>
           <Button onClick={() => setShowMode('Max Level')} active={showMode === 'Max Level'}>
-            Max Difficulty
+            Max Level
           </Button>
         </ButtonGroup>
       </Row>
@@ -102,6 +108,7 @@ export const TabbedHeatmap = (props) => {
           getColor={getColor}
           columns={WEEKS}
           rows={WEEKDAY}
+          today={today}
         />
       </Row>
     </>

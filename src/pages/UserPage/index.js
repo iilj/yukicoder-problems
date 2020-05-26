@@ -181,9 +181,11 @@ export const UserPage = (props) => {
 
   // for daily chart section
   const dailyCountMap = solvedProblems
-    .map((solvedProblem) => Date.parse(solvedProblem.Date) + MS_OF_HOUR * 9)
+    .map((solvedProblem) => Date.parse(solvedProblem.Date))
     .reduce((map, sec) => {
-      const key = sec - (sec % MS_OF_DAY);
+      const date = new Date(sec);
+      date.setHours(0, 0, 0, 0);
+      const key = Number(date); //sec - (sec % MS_OF_DAY);
       if (!(key in map)) {
         map[key] = 0;
       }
