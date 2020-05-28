@@ -12,6 +12,19 @@
 // 6.0 金
 
 /**
+ * 問題のレベル一覧を返す
+ *
+ * @returns {number[]} problem level list
+ */
+export const getLevelList = () => {
+  const ret = [0];
+  for (let i = 1; i <= 6; i += 0.5) {
+    ret.push(i);
+  }
+  return ret;
+};
+
+/**
  * 問題の難易度レベル→色，の変換
  *
  * @param {number} level
