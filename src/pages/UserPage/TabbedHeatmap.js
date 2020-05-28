@@ -57,8 +57,7 @@ export const TabbedHeatmap = (props) => {
       break;
     case 'Max Level':
       const dailyMaxLevelMap = solvedProblems.reduce((map, solvedProblem) => {
-        const sec = Date.parse(solvedProblem.Date);
-        const date = new Date(sec);
+        const date = new Date(solvedProblem.Date);
         date.setHours(0, 0, 0, 0);
         const key = Number(date); // sec - (sec % MS_OF_DAY);
         if (!(key in map)) {

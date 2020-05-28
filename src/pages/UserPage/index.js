@@ -7,8 +7,8 @@ import * as CachedApiClient from '../../utils/CachedApiClient';
 import { ordinalSuffixOf } from '../../utils';
 
 import { PieCharts } from './SmallPieChart';
-import { DailyEffortBarChart } from './DailyEffortBarChart';
-import { ClimbingLineChart } from './ClimbingLineChart';
+import { TabbedDailyEffortBarChart } from './TabbedDailyEffortBarChart';
+import { TabbedClimbingLineChart } from './TabbedClimbingLineChart';
 import { TabbedHeatmap } from './TabbedHeatmap';
 import { SolvedProblemList } from './SolvedProblemList';
 import { DifficultyStarsFillDefs, NormalStarElement } from '../../components/DifficultyStars';
@@ -181,9 +181,9 @@ export const UserPage = (props) => {
 
   // for daily chart section
   const dailyCountMap = solvedProblems
-    .map((solvedProblem) => Date.parse(solvedProblem.Date))
-    .reduce((map, sec) => {
-      const date = new Date(sec);
+    .map((solvedProblem) => solvedProblem.Date)
+    .reduce((map, solveDate) => {
+      const date = new Date(solveDate);
       date.setHours(0, 0, 0, 0);
       const key = Number(date); //sec - (sec % MS_OF_DAY);
       if (!(key in map)) {
@@ -312,12 +312,12 @@ export const UserPage = (props) => {
       <Row className="my-2 border-bottom">
         <h1>Daily Effort</h1>
       </Row>
-      <DailyEffortBarChart dailyData={dailyCount} />
+      <TabbedDailyEffortBarChart dailyData={dailyCount} solvedProblems={solvedProblems} />
 
       <Row className="my-2 border-bottom">
         <h1>Climbing</h1>
       </Row>
-      <ClimbingLineChart climbingData={climbing} />
+      <TabbedClimbingLineChart climbingData={climbing} solvedProblems={solvedProblems} />
 
       <Row className="my-2 border-bottom">
         <h1>Heatmap</h1>

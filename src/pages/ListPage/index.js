@@ -160,7 +160,7 @@ export const ListPage = (props) => {
               {difficultyLevels.map((level) => (
                 <DropdownItem key={level} onClick={() => setFromDifficultyLevel(level)}>
                   <DifficultyStars level={level} showDifficultyLevel />
-                  {level}
+                  {level.toFixed(1)}
                   {' '}
                   -
                 </DropdownItem>
@@ -176,7 +176,7 @@ export const ListPage = (props) => {
                 <DropdownItem key={level} onClick={() => setToDifficultyLevel(level)}>
                   <DifficultyStars level={level} showDifficultyLevel />
                   -
-                  {level}
+                  {level.toFixed(1)}
                 </DropdownItem>
               ))}
             </WellPositionedDropdownMenu>
