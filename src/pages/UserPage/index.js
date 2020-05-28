@@ -7,6 +7,7 @@ import * as CachedApiClient from '../../utils/CachedApiClient';
 import { ordinalSuffixOf } from '../../utils';
 
 import { PieCharts } from './SmallPieChart';
+import { ProblemLevelPieChart } from './ProblemLevelPieChart';
 import { TabbedDailyEffortBarChart } from './TabbedDailyEffortBarChart';
 import { TabbedClimbingLineChart } from './TabbedClimbingLineChart';
 import { TabbedHeatmap } from './TabbedHeatmap';
@@ -301,6 +302,11 @@ export const UserPage = (props) => {
       </Row>
 
       <PieCharts problems={regularContestProblemsCnt} title="yukicoder contest" />
+
+      <Row className="my-2 border-bottom">
+        <h1>Problem Level Pies</h1>
+      </Row>
+      <ProblemLevelPieChart problems={problems} solvedProblems={solvedProblems} />
 
       <Row className="my-2 border-bottom">
         <h1>Daily Effort</h1>
