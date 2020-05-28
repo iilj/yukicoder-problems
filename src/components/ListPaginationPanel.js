@@ -4,6 +4,8 @@ import {
   DropdownMenu,
   DropdownToggle,
   UncontrolledDropdown,
+  Pagination,
+  PaginationItem,
   PaginationLink,
 } from 'reactstrap';
 import { range } from '../utils';
@@ -64,21 +66,15 @@ export const ListPaginationPanel = (props) => {
         </UncontrolledDropdown>
       </div>
       <div className="col-md-10 col-xs-10 col-sm-10 col-lg-10" style={{ display: 'block' }}>
-        <ul
-          className="react-bootstrap-table-page-btns-ul pagination"
-          style={{ flexWrap: 'wrap', justifyContent: 'flex-end' }}
-        >
-          {pageNumbers.map((pageNumber) => {
-            const className = `${pageNumber === props.currPage ? 'active ' : ''}page-item`;
-            return (
-              <li className={className} key={pageNumber} title={pageNumber.toString()}>
-                <PaginationLink onClick={() => props.changePage(pageNumber)}>
-                  {pageNumber}
-                </PaginationLink>
-              </li>
-            );
-          })}
-        </ul>
+        <Pagination style={{ flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          {pageNumbers.map((pageNumber) => (
+            <PaginationItem key={pageNumber} active={pageNumber === props.currPage}>
+              <PaginationLink onClick={() => props.changePage(pageNumber)}>
+                {pageNumber}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+        </Pagination>
       </div>
     </>
   );
