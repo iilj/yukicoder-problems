@@ -122,13 +122,6 @@ export const UserPage = (props) => {
   const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
 
-  if (fromDate < minDate) {
-    setFromDate(minDate);
-  }
-  if (toDate > maxDate) {
-    setToDate(maxDate);
-  }
-
   const name = userInfo ? userInfo.Name : undefined;
 
   // for user info section
