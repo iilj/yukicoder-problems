@@ -18,6 +18,24 @@ export const DailyEffortTooltip = ({ active, payload, label }) => {
       <p className="recharts-tooltip-label" style={{ margin: '0px' }}>
         {dataFormat(new Date(Number(label)), 'yyyy/mm/dd')}
       </p>
+      <ul className="recharts-tooltip-item-list" style={{ padding: '0px', margin: '0px' }}>
+        <li
+          className="recharts-tooltip-item"
+          style={{
+            display: 'block',
+            paddingTop: '4px',
+            paddingBottom: '4px',
+            color: 'rgb(136, 132, 216)',
+          }}
+        >
+          <span className="recharts-tooltip-item-name">count</span>
+          <span className="recharts-tooltip-item-separator"> : </span>
+          <span className="recharts-tooltip-item-value">
+            {payload.reduce((acc, entry) => acc + entry.value, 0)}
+          </span>
+          <span className="recharts-tooltip-item-unit" />
+        </li>
+      </ul>
       <table>
         <tbody>
           {payload
