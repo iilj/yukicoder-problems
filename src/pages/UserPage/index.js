@@ -214,9 +214,11 @@ export const UserPage = (props) => {
         prevDateSecond: 0,
       },
     );
-  const currentDateSecond = Number(new Date());
-  const yesterdaySecond = currentDateSecond - (currentDateSecond % MS_OF_DAY) - MS_OF_DAY;
-  const isIncreasing = prevDateSecond >= yesterdaySecond;
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  const yesterdayDate = new Date(currentDate);
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  const isIncreasing = new Date(prevDateSecond) >= yesterdayDate;
 
   // for user level
   const userSolvedStars = solvedProblems
