@@ -10,7 +10,7 @@ export const ProblemLink = (props) => {
     <a
       href={formatProblemUrl(problemNo)}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
       className={showDifficultyLevel ? getDifficultyLevelColorClass(level) : ''}
       title={problemTitle}
     >
