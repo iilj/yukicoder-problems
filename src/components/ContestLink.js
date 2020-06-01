@@ -6,8 +6,8 @@ export const ContestLink = (props) => {
   return (
     <a
       href={formatContestUrl(contestId)}
-      target="_blank"
-      rel="noopener noreferrer"
+      target="_blank" // eslint-disable-line react/jsx-no-target-blank
+      rel="noopener"
       title={rawContestName ?? contestName}
     >
       {contestName}
