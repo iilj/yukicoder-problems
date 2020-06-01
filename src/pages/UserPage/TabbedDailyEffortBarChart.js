@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Row, ButtonGroup, Button } from 'reactstrap';
 import { getLevelList } from '../../utils';
+import { useLocalStorage } from '../../utils/LocalStorage';
 import { DailyEffortBarChart } from './DailyEffortBarChart';
 import { DailyEffortStackedBarChart } from './DailyEffortStackedBarChart';
 
@@ -9,7 +10,10 @@ const DailyEffortBarChartWrapper = (props) => (
 );
 
 export const TabbedDailyEffortBarChart = (props) => {
-  const [showMode, setShowMode] = useState('Simple');
+  const [showMode, setShowMode] = useLocalStorage(
+    'UserPage_TabbedDailyEffortBarChart_showMode',
+    'Simple',
+  );
   const { dailyData, solvedProblems } = props;
 
   const levelList = getLevelList();

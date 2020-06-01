@@ -9,7 +9,7 @@ export const ProblemLink = (props) => {
   return (
     <a
       href={formatProblemUrl(problemNo)}
-      target="_blank"
+      target="_blank" // eslint-disable-line react/jsx-no-target-blank
       rel="noopener"
       className={showDifficultyLevel ? getDifficultyLevelColorClass(level) : ''}
       title={problemTitle}

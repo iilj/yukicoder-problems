@@ -7,6 +7,7 @@ import {
 import { YukicoderRegularTable } from './YukicoderRegularTable';
 import { ContestTable } from './ContestTable';
 import { TableTabButtons } from './TableTab';
+import { useLocalStorage } from '../../utils/LocalStorage';
 import * as CachedApiClient from '../../utils/CachedApiClient';
 import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
 
@@ -73,9 +74,15 @@ export const TablePage = (props) => {
   const { contests, problemsMap } = universalState;
   const { solvedProblemsMap } = userState;
 
-  const [showDifficultyLevel, setShowDifficultyLevel] = useState(true);
-  const [showContestResult, setShowContestResult] = useState(true);
-  const [activeTab, setActiveTab] = useState(0);
+  const [showDifficultyLevel, setShowDifficultyLevel] = useLocalStorage(
+    'TablePage_showDifficultyLevel',
+    true,
+  );
+  const [showContestResult, setShowContestResult] = useLocalStorage(
+    'TablePage_showContestResult',
+    true,
+  );
+  const [activeTab, setActiveTab] = useLocalStorage('TablePage_activeTab', 0);
 
   const yukicoderRegularContests = [];
   const yukicoderLongContests = [];
