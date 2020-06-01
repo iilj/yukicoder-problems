@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Row, ButtonGroup, Button } from 'reactstrap';
 import dataFormat from 'dateformat';
 import { CalendarHeatmap } from './CalendarHeatmap';
 import { getDifficultyLevelColor } from '../../utils';
+import { useLocalStorage } from '../../utils/LocalStorage';
 
 const WEEKDAY = 7;
 const WEEKS = 53;
@@ -18,15 +19,13 @@ export const getNextSunday = (t) => {
 };
 
 export const getToday = () => {
-  // const cur = Number(new Date());
-  // return new Date(cur - ((cur + MS_OF_HOUR * 9) % MS_OF_DAY));
   const cur = new Date();
   cur.setHours(0, 0, 0, 0);
   return cur;
 };
 
 export const TabbedHeatmap = (props) => {
-  const [showMode, setShowMode] = useState('Unique AC');
+  const [showMode, setShowMode] = useLocalStorage('UserPage_TabbedHeatmap_showMode', 'Unique AC');
   const { dailyCountMap, solvedProblems, onRectClick } = props;
 
   const today = getToday();

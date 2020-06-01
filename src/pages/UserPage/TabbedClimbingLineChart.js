@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Row, ButtonGroup, Button } from 'reactstrap';
 import { getLevelList } from '../../utils';
+import { useLocalStorage } from '../../utils/LocalStorage';
 import { ClimbingLineChart } from './ClimbingLineChart';
 import { ClimbingAreaChart } from './ClimbingAreaChart';
 
@@ -9,7 +10,10 @@ const ClimbingChartWrapper = (props) => (
 );
 
 export const TabbedClimbingLineChart = (props) => {
-  const [showMode, setShowMode] = useState('Simple');
+  const [showMode, setShowMode] = useLocalStorage(
+    'UserPage_TabbedClimbingLineChart_showMode',
+    'Simple',
+  );
   const { climbingData, solvedProblems } = props;
 
   const levelList = getLevelList();
