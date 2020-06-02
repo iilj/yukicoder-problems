@@ -2,8 +2,11 @@ import React from 'react';
 import dataFormat from 'dateformat';
 import { DifficultyStars } from '../../components/DifficultyStars';
 
-export const DailyEffortTooltip = ({ active, payload, label }) => {
+export const DailyEffortTooltip = ({
+  active, payload, label, reverseColorOrder,
+}) => {
   if (!active) return null;
+  console.log(reverseColorOrder);
   return (
     <div
       className="recharts-default-tooltip"
@@ -39,7 +42,7 @@ export const DailyEffortTooltip = ({ active, payload, label }) => {
       <table>
         <tbody>
           {payload
-            .sort((a, b) => b.dataKey - a.dataKey)
+            .sort((a, b) => (reverseColorOrder ? a.dataKey - b.dataKey : b.dataKey - a.dataKey))
             .map((entry) => {
               if (entry.value <= 0) return null;
               return (
