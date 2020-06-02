@@ -38,7 +38,7 @@ export const ClimbingAreaChart = (props) => {
             tickFormatter={(dateSecond) => dataFormat(new Date(dateSecond), 'yyyy/mm/dd')}
           />
           <YAxis />
-          <Tooltip content={<DailyEffortTooltip />} />
+          <Tooltip content={<DailyEffortTooltip reverseColorOrder={props.reverseColorOrder} />} />
 
           {(props.reverseColorOrder ? getLevelList().reverse() : getLevelList()).map((level) => {
             const color = getDifficultyLevelColor(level);
