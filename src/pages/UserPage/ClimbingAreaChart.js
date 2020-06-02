@@ -40,7 +40,7 @@ export const ClimbingAreaChart = (props) => {
           <YAxis />
           <Tooltip content={<DailyEffortTooltip />} />
 
-          {getLevelList().map((level) => {
+          {(props.reverseColorOrder ? getLevelList().reverse() : getLevelList()).map((level) => {
             const color = getDifficultyLevelColor(level);
             return (
               <Area

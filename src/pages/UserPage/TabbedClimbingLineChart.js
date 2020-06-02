@@ -1,5 +1,7 @@
 import React from 'react';
-import { Row, ButtonGroup, Button } from 'reactstrap';
+import {
+  Row, FormGroup, ButtonGroup, Button, Label, Input,
+} from 'reactstrap';
 import { getLevelList } from '../../utils';
 import { useLocalStorage } from '../../utils/LocalStorage';
 import { ClimbingLineChart } from './ClimbingLineChart';
@@ -13,6 +15,10 @@ export const TabbedClimbingLineChart = (props) => {
   const [showMode, setShowMode] = useLocalStorage(
     'UserPage_TabbedClimbingLineChart_showMode',
     'Simple',
+  );
+  const [reverseColorOrder, setReverseColorOrder] = useLocalStorage(
+    'UserPage_TabbedClimbingLineChart_reverseColorOrder',
+    false,
   );
   const { climbingData, solvedProblems } = props;
 
@@ -59,12 +65,23 @@ export const TabbedClimbingLineChart = (props) => {
             Colored
           </Button>
         </ButtonGroup>
+        <FormGroup check inline>
+          <Label check>
+            <Input
+              type="checkbox"
+              checked={reverseColorOrder}
+              onChange={(e) => setReverseColorOrder(e.target.checked)}
+              disabled={showMode !== 'Colored'}
+            />
+            Reverse Color Order
+          </Label>
+        </FormGroup>
       </Row>
       <ClimbingChartWrapper display={showMode === 'Simple'}>
         <ClimbingLineChart climbingData={climbingData} />
       </ClimbingChartWrapper>
       <ClimbingChartWrapper display={showMode === 'Colored'}>
-        <ClimbingAreaChart climbingData={Levelclimbing} />
+        <ClimbingAreaChart climbingData={Levelclimbing} reverseColorOrder={reverseColorOrder} />
       </ClimbingChartWrapper>
     </>
   );
