@@ -33,6 +33,15 @@ export const TableTabButtons = (props) => {
         >
           Other contests
         </Button>
+        <Button
+          color="secondary"
+          onClick={() => {
+            setActive(3);
+          }}
+          active={active === 3}
+        >
+          All Problems
+        </Button>
       </ButtonGroup>
     </Row>
   );

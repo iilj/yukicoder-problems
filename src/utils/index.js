@@ -149,4 +149,11 @@ export const getProblemTypeName = (problemType) => {
   }
 };
 
+/**
+ * returns array [start, start+1, ..., end].
+ *
+ * @param {number} start start number
+ * @param {number} end end number
+ * @returns {number[]} array
+ */
 export const range = (start, end) => Array.from({ length: end - start + 1 }, (v, k) => k + start);

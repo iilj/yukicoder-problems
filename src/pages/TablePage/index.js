@@ -6,18 +6,30 @@ import {
 
 import { YukicoderRegularTable } from './YukicoderRegularTable';
 import { ContestTable } from './ContestTable';
+import { AllProblemsTable } from './AllProblemsTable';
 import { TableTabButtons } from './TableTab';
 import { useLocalStorage } from '../../utils/LocalStorage';
 import * as CachedApiClient from '../../utils/CachedApiClient';
 import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
 
+/**
+ * Wrap element to switch visibility.
+ *
+ * @param {{display: boolean, children: any}} props
+ * @returns {JSX.Element} wrapped element
+ */
 const ContestWrapper = (props) => (
   <div style={{ display: props.display ? '' : 'none' }}>{props.children}</div>
 );
 
+/**
+ * @type {{contests: {Id: number, Name: string, Date: string, EndDate: string, ProblemIdList: number[]}[], problemsMap: any}}
+ */
 const initialUniversalState = {
   contests: [],
+  contestMap: {},
   problemsMap: {},
+  problemContestMap: {},
 };
 
 const initialUserState = {
@@ -38,11 +50,17 @@ export const TablePage = (props) => {
         CachedApiClient.cachedContestArray(),
         CachedApiClient.cachedProblemMap(),
       ]);
+      const [contestMap, problemContestMap] = await Promise.all([
+        CachedApiClient.cachedContestMap(),
+        CachedApiClient.cachedProblemContestMap(),
+      ]);
 
       if (!unmounted) {
         setUniversalState({
           contests,
+          contestMap,
           problemsMap,
+          problemContestMap,
         });
       }
     };
@@ -71,7 +89,9 @@ export const TablePage = (props) => {
     return cleanup;
   }, [param, user, setUserState]);
 
-  const { contests, problemsMap } = universalState;
+  const {
+    contests, contestMap, problemsMap, problemContestMap,
+  } = universalState;
   const { solvedProblemsMap } = userState;
 
   const [showDifficultyLevel, setShowDifficultyLevel] = useLocalStorage(
@@ -144,6 +164,17 @@ export const TablePage = (props) => {
         <ContestTable
           contests={otherContests}
           title="Other contests"
+          problemsMap={problemsMap}
+          solvedProblemsMap={solvedProblemsMap}
+          showDifficultyLevel={showDifficultyLevel}
+          showContestResult={showContestResult}
+        />
+      </ContestWrapper>
+      <ContestWrapper display={activeTab === 3}>
+        <AllProblemsTable
+          contestMap={contestMap}
+          problemContestMap={problemContestMap}
+          title="All Problems"
           problemsMap={problemsMap}
           solvedProblemsMap={solvedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}

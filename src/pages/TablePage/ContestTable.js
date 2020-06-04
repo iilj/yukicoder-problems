@@ -47,7 +47,7 @@ export const ContestTable = (props) => {
       <Row className="my-4">
         <h2>{props.title}</h2>
       </Row>
-      <div>
+      <div className="my-inner-container">
         {contests.map((contest) => (
           <div key={contest.Id} className="contest-table">
             <strong>
