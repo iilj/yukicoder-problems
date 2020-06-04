@@ -11,6 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+.my-inner-container {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
 .list-table tbody tr td,
 .list-table thead th {
   font-size: small;
