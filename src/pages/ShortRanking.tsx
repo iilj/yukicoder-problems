@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Ranking } from '../components/Ranking';
-import * as CachedApiClient from '../utils/CachedApiClient';
+import * as TypedCachedApiClient from '../utils/TypedCachedApiClient';
+import { UserName } from "../interfaces/User";
+import { RankingProblem } from "../interfaces/RankingProblem";
 
 const initialUniversalState = {
-  golferMap: {},
+  golferMap: new Map<UserName, RankingProblem[]>(),
 };
 
 export const ShortRanking = () => {
@@ -12,7 +14,7 @@ export const ShortRanking = () => {
   useEffect(() => {
     let unmounted = false;
     const getUniversalInfo = async () => {
-      const golferMap = await CachedApiClient.cachedGolferMap();
+      const golferMap = await TypedCachedApiClient.cachedGolferMap();
 
       if (!unmounted) {
         setUniversalState({
@@ -29,10 +31,10 @@ export const ShortRanking = () => {
 
   const { golferMap } = universalState;
 
-  const ranking = Object.keys(golferMap).reduce((ar, userName) => {
-    ar.push({ name: userName, count: golferMap[userName].length });
-    return ar;
-  }, []);
+  let ranking = [] as { name: UserName, count: number }[];
+  golferMap.forEach((rankingProblems, userName) => {
+    ranking.push({ name: userName, count: rankingProblems.length });
+  });
 
   return <Ranking title="Top Golfers" ranking={ranking} />;
 };
