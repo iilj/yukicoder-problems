@@ -1415,6 +1415,13 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
 
+"@types/react-bootstrap-table@^4.3.8":
+  version "4.3.8"
+  resolved "https://registry.yarnpkg.com/@types/react-bootstrap-table/-/react-bootstrap-table-4.3.8.tgz#d355a456ca6d1b4660653b74f28302b5fd621cad"
+  integrity sha512-QEJ8QXhl94KmmV9pCeFuDLB+i8viBuTGZfpLyiRNFZul0GnrexstrzHR1UHf7k3U2rjlC6VE6+io9ZAQzHimtw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@*":
   version "16.9.5"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.5.tgz#5de610b04a35d07ffd8f44edad93a71032d9aaa7"

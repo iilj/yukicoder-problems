@@ -4,19 +4,22 @@ import {
 } from 'reactstrap';
 import { Ranking } from '../components/Ranking';
 import { WellPositionedDropdownMenu } from '../components/WellPositionedDropdownMenu';
-import * as CachedApiClient from '../utils/CachedApiClient';
+import * as TypedCachedApiClient from '../utils/TypedCachedApiClient';
+import { Language, LangId } from "../interfaces/Language";
+import { RankingProblem } from "../interfaces/RankingProblem";
+import { UserName } from "../interfaces/User";
 
 const initialUniversalState = {
-  languages: [],
+  languages: [] as Language[],
 };
 
 const initialUserState = {
-  golferPureMap: {},
+  golferPureMap: new Map<UserName, RankingProblem[]>(),
 };
 
 export const PureShortRanking = () => {
   const emptyLangId = '';
-  const [langId, setLangId] = useState(emptyLangId);
+  const [langId, setLangId] = useState<LangId>(emptyLangId);
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
@@ -24,7 +27,7 @@ export const PureShortRanking = () => {
   useEffect(() => {
     let unmounted = false;
     const getUniversalInfo = async () => {
-      const languages = await CachedApiClient.cachedLanguageArray();
+      const languages = await TypedCachedApiClient.cachedLanguageArray();
 
       if (!unmounted) {
         setUniversalState({
@@ -43,8 +46,8 @@ export const PureShortRanking = () => {
     let unmounted = false;
     const getUserInfo = async () => {
       const golferPureMap = langId === emptyLangId
-        ? await CachedApiClient.cachedGolferPureMap()
-        : await CachedApiClient.cachedGolferPureMapLangMap(langId);
+        ? await TypedCachedApiClient.cachedGolferPureMap()
+        : await TypedCachedApiClient.cachedGolferPureMapLangMap(langId);
 
       if (!unmounted) {
         setUserState({
@@ -62,15 +65,19 @@ export const PureShortRanking = () => {
   const { languages } = universalState;
   const { golferPureMap } = userState;
 
-  const ranking = Object.keys(golferPureMap).reduce((ar, userName) => {
-    ar.push({ name: userName, count: golferPureMap[userName].length });
-    return ar;
-  }, []);
+  // const ranking = Object.keys(golferPureMap).reduce((ar, userName) => {
+  //   ar.push({ name: userName, count: golferPureMap[userName].length });
+  //   return ar;
+  // }, []);
 
-  const languagesMap = languages.reduce((map, language) => {
-    map[language.Id] = language;
-    return map;
-  }, {});
+  let ranking = [] as { name: UserName, count: number }[];
+  golferPureMap.forEach((rankingProblems, userName) => {
+    ranking.push({ name: userName, count: rankingProblems.length });
+  });
+
+  const languagesMap = languages.reduce(
+    (map, language) => map.set(language.Id, language),
+    new Map<LangId, Language>());
 
   return (
     <>
@@ -78,7 +85,7 @@ export const PureShortRanking = () => {
         <ButtonGroup className="mr-4">
           <UncontrolledDropdown>
             <DropdownToggle caret>
-              {langId === emptyLangId ? 'Language' : languagesMap[langId].Name}
+              {langId === emptyLangId ? 'Language' : (languagesMap.get(langId) as Language).Name}
             </DropdownToggle>
             <WellPositionedDropdownMenu>
               <DropdownItem header>Language</DropdownItem>
