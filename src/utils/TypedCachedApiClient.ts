@@ -1,8 +1,8 @@
-import { Problem, ProblemNo, ProblemId } from '../interfaces/Problem'
-import { Contest, ContestId } from '../interfaces/Contest'
-import { Language, LangId } from "../interfaces/Language";
-import { RankingProblem } from "../interfaces/RankingProblem";
-import { User, UserName } from "../interfaces/User";
+import { Problem, ProblemNo, ProblemId } from '../interfaces/Problem';
+import { Contest, ContestId } from '../interfaces/Contest';
+import { Language, LangId } from '../interfaces/Language';
+import { RankingProblem } from '../interfaces/RankingProblem';
+import { User, UserName } from '../interfaces/User';
 
 const BASE_URL = 'https://yukicoder.me';
 const STATIC_API_BASE_URL = `${BASE_URL}/api/v1`;
@@ -10,9 +10,7 @@ const STATIC_API_BASE_URL = `${BASE_URL}/api/v1`;
 const assertResultIsValid = (obj: any): void => {
   if ('Message' in obj) throw new Error(obj.Message);
 };
-const fetchJson = async <T>(
-  url: string
-): Promise<T> => {
+const fetchJson = async <T>(url: string): Promise<T> => {
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(res.statusText);
@@ -69,7 +67,10 @@ export const cachedProblemArray = async (): Promise<Problem[]> => {
 let CACHED_SOLVED_PROBLEMS: Problem[];
 let CACHED_SOLVED_PROBLEMS_PARAM: UserParam;
 let CACHED_SOLVED_PROBLEMS_USER: string;
-export const cachedSolvedProblemArray = async (param: UserParam, user: string): Promise<Problem[]> => {
+export const cachedSolvedProblemArray = async (
+  param: UserParam,
+  user: string,
+): Promise<Problem[]> => {
   if (
     CACHED_SOLVED_PROBLEMS === undefined
     || param !== CACHED_SOLVED_PROBLEMS_PARAM
@@ -139,7 +140,9 @@ export const cachedGolferRankingPureArray = async (): Promise<RankingProblem[]> 
 
 // pure shortest code array map (langid -> array of shortest submissions)
 const CACHED_GOLFER_RANKING_PURE_LANG_MAP = new Map<LangId, RankingProblem[]>();
-export const cachedGolferRankingPureLangIdArray = async (langId: LangId): Promise<RankingProblem[]> => {
+export const cachedGolferRankingPureLangIdArray = async (
+  langId: LangId,
+): Promise<RankingProblem[]> => {
   if (!CACHED_GOLFER_RANKING_PURE_LANG_MAP.has(langId)) {
     try {
       CACHED_GOLFER_RANKING_PURE_LANG_MAP.set(langId, await fetchGolferRankingPureLangId(langId));
@@ -213,7 +216,10 @@ export const cachedProblemContestMap = async (): Promise<Map<ProblemId, ContestI
 let CACHED_SOLVED_PROBLEMS_MAP: Map<ProblemId, Problem>;
 let CACHED_SOLVED_PROBLEMS_MAP_PARAM: UserParam;
 let CACHED_SOLVED_PROBLEMS_MAP_USER: string;
-export const cachedSolvedProblemMap = async (param: UserParam, user: string): Promise<Map<ProblemId, Problem>> => {
+export const cachedSolvedProblemMap = async (
+  param: UserParam,
+  user: string,
+): Promise<Map<ProblemId, Problem>> => {
   if (
     CACHED_SOLVED_PROBLEMS_MAP === undefined
     || param !== CACHED_SOLVED_PROBLEMS_MAP_PARAM
@@ -260,7 +266,8 @@ export const cachedGolferPureMap = async (): Promise<Map<UserName, RankingProble
         }
         (map.get(rankingProblem.UserName) as RankingProblem[]).push(rankingProblem);
         return map;
-      }, new Map<UserName, RankingProblem[]>()
+      },
+      new Map<UserName, RankingProblem[]>(),
     );
   }
   return CACHED_GOLFER_RANKING_PURE_MAP;
@@ -268,17 +275,20 @@ export const cachedGolferPureMap = async (): Promise<Map<UserName, RankingProble
 
 // map (langId -> UserName -> RankingProblem array of pure shortest code)
 const CACHED_GOLFER_RANKING_PURE_MAP_LANG_MAP = new Map<LangId, Map<UserName, RankingProblem[]>>();
-export const cachedGolferPureMapLangMap = async (langId: LangId): Promise<Map<UserName, RankingProblem[]>> => {
+export const cachedGolferPureMapLangMap = async (
+  langId: LangId,
+): Promise<Map<UserName, RankingProblem[]>> => {
   if (!CACHED_GOLFER_RANKING_PURE_MAP_LANG_MAP.has(langId)) {
-    CACHED_GOLFER_RANKING_PURE_MAP_LANG_MAP.set(langId, (
-      await cachedGolferRankingPureLangIdArray(langId)
-    ).reduce((map, rankingProblem) => {
-      if (!map.has(rankingProblem.UserName)) {
-        map.set(rankingProblem.UserName, []);
-      }
-      (map.get(rankingProblem.UserName) as RankingProblem[]).push(rankingProblem);
-      return map;
-    }, new Map<UserName, RankingProblem[]>()));
+    CACHED_GOLFER_RANKING_PURE_MAP_LANG_MAP.set(
+      langId,
+      (await cachedGolferRankingPureLangIdArray(langId)).reduce((map, rankingProblem) => {
+        if (!map.has(rankingProblem.UserName)) {
+          map.set(rankingProblem.UserName, []);
+        }
+        (map.get(rankingProblem.UserName) as RankingProblem[]).push(rankingProblem);
+        return map;
+      }, new Map<UserName, RankingProblem[]>()),
+    );
   }
   return CACHED_GOLFER_RANKING_PURE_MAP_LANG_MAP.get(langId) as Map<UserName, RankingProblem[]>;
 };
@@ -297,7 +307,10 @@ export const cachedGolferRankingProblemMap = async (): Promise<Map<ProblemNo, Ra
 
 // map (Problem No -> RankingProblem of pure golfers)
 let CACHED_GOLFER_RANKING_PURE_PROBLEM_MAP: Map<ProblemNo, RankingProblem>;
-export const cachedGolferRankingPureProblemMap = async (): Promise<Map<ProblemNo, RankingProblem>> => {
+export const cachedGolferRankingPureProblemMap = async (): Promise<Map<
+  ProblemNo,
+  RankingProblem
+>> => {
   if (CACHED_GOLFER_RANKING_PURE_PROBLEM_MAP === undefined) {
     CACHED_GOLFER_RANKING_PURE_PROBLEM_MAP = (await cachedGolferRankingPureArray()).reduce(
       (map, rankingProblem) => map.set(rankingProblem.No, rankingProblem),

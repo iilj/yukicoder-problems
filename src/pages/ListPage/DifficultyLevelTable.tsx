@@ -2,30 +2,23 @@ import React from 'react';
 import Table from 'reactstrap/lib/Table';
 import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { getDifficultyLevelColorClass } from '../../utils';
+import { Problem, ProblemLevels, ProblemLevel } from '../../interfaces/Problem';
 
-export const DifficultyLevelTable = (props) => {
+export const DifficultyLevelTable = (props: {
+  problems: Problem[];
+  solvedProblems: Problem[];
+  user: string;
+}) => {
   const { problems, solvedProblems, user } = props;
-  const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
+  // const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 
   const difficultyLevelsSolvedCountMap = solvedProblems.reduce(
-    (map, solvedProblem) => {
-      map[solvedProblem.Level] += 1;
-      return map;
-    },
-    difficultyLevels.reduce((map, dif) => {
-      map[dif] = 0;
-      return map;
-    }, {}),
+    (map, solvedProblem) => map.set(solvedProblem.Level, (map.get(solvedProblem.Level) as ProblemLevel) + 1),
+    ProblemLevels.reduce((map, level) => map.set(level, 0), new Map<ProblemLevel, number>()),
   );
   const difficultyLevelsTotalCountMap = problems.reduce(
-    (map, problem) => {
-      map[problem.Level] += 1;
-      return map;
-    },
-    difficultyLevels.reduce((map, dif) => {
-      map[dif] = 0;
-      return map;
-    }, {}),
+    (map, problem) => map.set(problem.Level, (map.get(problem.Level) as ProblemLevel) + 1),
+    ProblemLevels.reduce((map, level) => map.set(level, 0), new Map<ProblemLevel, number>()),
   );
 
   return (
@@ -34,7 +27,7 @@ export const DifficultyLevelTable = (props) => {
         <thead>
           <tr>
             <th>Level</th>
-            {difficultyLevels.map((level) => (
+            {ProblemLevels.map((level) => (
               <th
                 key={level}
                 style={{ whiteSpace: 'nowrap', position: 'relative', minWidth: '70px' }}
@@ -47,8 +40,8 @@ export const DifficultyLevelTable = (props) => {
           </tr>
           <tr>
             <th>Total</th>
-            {difficultyLevels.map((level) => (
-              <th key={level}>{difficultyLevelsTotalCountMap[level]}</th>
+            {ProblemLevels.map((level) => (
+              <th key={level}>{difficultyLevelsTotalCountMap.get(level)}</th>
             ))}
           </tr>
         </thead>
@@ -56,8 +49,8 @@ export const DifficultyLevelTable = (props) => {
           {!user ? null : (
             <tr key={user}>
               <td>{user}</td>
-              {difficultyLevels.map((level) => (
-                <td key={level}>{difficultyLevelsSolvedCountMap[level]}</td>
+              {ProblemLevels.map((level) => (
+                <td key={level}>{difficultyLevelsSolvedCountMap.get(level)}</td>
               ))}
             </tr>
           )}

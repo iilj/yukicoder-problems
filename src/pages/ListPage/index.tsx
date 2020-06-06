@@ -16,8 +16,9 @@ import { useParams } from 'react-router-dom';
 
 import { DifficultyLevelTable } from './DifficultyLevelTable';
 import { ProblemTypeTable } from './ProblemTypeTable';
-import { ListTable } from './ListTable';
-import * as CachedApiClient from '../../utils/CachedApiClient';
+import { ListTable, FilterState } from './ListTable';
+// import * as CachedApiClient from '../../utils/CachedApiClient';
+import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
 import { WellPositionedDropdownMenu } from '../../components/WellPositionedDropdownMenu';
 import { DifficultyStarsFillDefs, DifficultyStars } from '../../components/DifficultyStars';
 import {
@@ -26,24 +27,34 @@ import {
   INITIAL_TO_DATE,
 } from '../../components/DateRangePicker';
 import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
+import {
+  Problem,
+  ProblemNo,
+  ProblemId,
+  ProblemType,
+  ProblemLevel,
+  ProblemLevels,
+} from '../../interfaces/Problem';
+import { Contest, ContestId } from '../../interfaces/Contest';
+import { RankingProblem } from '../../interfaces/RankingProblem';
 
 const INF_LEVEL = 100;
 
 const initialUniversalState = {
-  problems: [],
-  contestMap: {},
-  problemContestMap: {},
-  golferProblemMap: {},
-  golferPureProblemMap: {},
+  problems: [] as Problem[],
+  contestMap: new Map<ContestId, Contest>(),
+  problemContestMap: new Map<ProblemId, ContestId>(),
+  golferProblemMap: new Map<ProblemNo, RankingProblem>(),
+  golferPureProblemMap: new Map<ProblemNo, RankingProblem>(),
 };
 
 const initialUserState = {
-  solvedProblems: [],
-  solvedProblemsMap: {},
+  solvedProblems: [] as Problem[],
+  solvedProblemsMap: new Map<ProblemId, Problem>(),
 };
 
-export const ListPage = (props) => {
-  let { param, user } = useParams();
+export const ListPage = () => {
+  let { param, user } = useParams<{ param: TypedCachedApiClient.UserParam; user: string }>();
   if (user) user = decodeURIComponent(user);
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
@@ -53,12 +64,12 @@ export const ListPage = (props) => {
     let unmounted = false;
     const getUniversalInfo = async () => {
       const [problems, contestMap, golferProblemMap, golferPureProblemMap] = await Promise.all([
-        CachedApiClient.cachedProblemArray(),
-        CachedApiClient.cachedContestMap(),
-        CachedApiClient.cachedGolferRankingProblemMap(),
-        CachedApiClient.cachedGolferRankingPureProblemMap(),
+        TypedCachedApiClient.cachedProblemArray(),
+        TypedCachedApiClient.cachedContestMap(),
+        TypedCachedApiClient.cachedGolferRankingProblemMap(),
+        TypedCachedApiClient.cachedGolferRankingPureProblemMap(),
       ]);
-      const problemContestMap = await CachedApiClient.cachedProblemContestMap();
+      const problemContestMap = await TypedCachedApiClient.cachedProblemContestMap();
 
       if (!unmounted) {
         setUniversalState({
@@ -80,8 +91,12 @@ export const ListPage = (props) => {
   useEffect(() => {
     let unmounted = false;
     const getUserInfo = async () => {
-      const solvedProblems = param && user ? await CachedApiClient.cachedSolvedProblemArray(param, user) : [];
-      const solvedProblemsMap = param && user ? await CachedApiClient.cachedSolvedProblemMap(param, user) : {};
+      const solvedProblems = param && user
+        ? await TypedCachedApiClient.cachedSolvedProblemArray(param, user)
+        : ([] as Problem[]);
+      const solvedProblemsMap = param && user
+        ? await TypedCachedApiClient.cachedSolvedProblemMap(param, user)
+        : new Map<ProblemId, Problem>();
 
       if (!unmounted) {
         setUserState({
@@ -106,15 +121,15 @@ export const ListPage = (props) => {
   } = universalState;
   const { solvedProblems, solvedProblemsMap } = userState;
 
-  const [statusFilterState, setStatusFilterState] = useState('All');
-  const [fromDifficultyLevel, setFromDifficultyLevel] = useState(-1);
-  const [toDifficultyLevel, setToDifficultyLevel] = useState(INF_LEVEL);
+  const [statusFilterState, setStatusFilterState] = useState<FilterState>('All');
+  const [fromDifficultyLevel, setFromDifficultyLevel] = useState<ProblemLevel | -1>(-1);
+  const [toDifficultyLevel, setToDifficultyLevel] = useState<ProblemLevel | 100>(INF_LEVEL);
   const [showTagsOfTryingProblems, setShowTagsOfTryingProblems] = useState(false);
   const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
-  const [problemTypeFilterState, setProblemTypeFilterState] = useState('All');
+  const [problemTypeFilterState, setProblemTypeFilterState] = useState<ProblemType | 'All'>('All');
 
-  const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
+  // const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 
   return (
     <>
@@ -157,7 +172,7 @@ export const ListPage = (props) => {
               {fromDifficultyLevel === -1 ? 'Level From' : `${fromDifficultyLevel} - `}
             </DropdownToggle>
             <WellPositionedDropdownMenu>
-              {difficultyLevels.map((level) => (
+              {ProblemLevels.map((level) => (
                 <DropdownItem key={level} onClick={() => setFromDifficultyLevel(level)}>
                   <DifficultyStars level={level} showDifficultyLevel />
                   {level.toFixed(1)}
@@ -172,7 +187,7 @@ export const ListPage = (props) => {
               {toDifficultyLevel === INF_LEVEL ? 'Level To' : ` - ${toDifficultyLevel}`}
             </DropdownToggle>
             <WellPositionedDropdownMenu>
-              {difficultyLevels.map((level) => (
+              {ProblemLevels.map((level) => (
                 <DropdownItem key={level} onClick={() => setToDifficultyLevel(level)}>
                   <DifficultyStars level={level} showDifficultyLevel />
                   -
@@ -188,10 +203,10 @@ export const ListPage = (props) => {
           maxDate={INITIAL_TO_DATE}
           fromDate={fromDate}
           toDate={toDate}
-          onFromDateChange={(date) => {
+          onFromDateChange={(date: Date) => {
             setFromDate(date);
           }}
-          onToDateChange={(date) => {
+          onToDateChange={(date: Date) => {
             setToDate(date);
           }}
         />
@@ -201,17 +216,17 @@ export const ListPage = (props) => {
             <DropdownToggle caret>{problemTypeFilterState}</DropdownToggle>
             <DropdownMenu>
               <DropdownItem onClick={() => setProblemTypeFilterState('All')}>All</DropdownItem>
-              <DropdownItem onClick={() => setProblemTypeFilterState('Normal')}>
-                <ProblemTypeIconSpanWithName problemType={0} />
+              <DropdownItem onClick={() => setProblemTypeFilterState(ProblemType.Normal)}>
+                <ProblemTypeIconSpanWithName problemType={ProblemType.Normal} />
               </DropdownItem>
-              <DropdownItem onClick={() => setProblemTypeFilterState('Educational')}>
-                <ProblemTypeIconSpanWithName problemType={1} />
+              <DropdownItem onClick={() => setProblemTypeFilterState(ProblemType.Educational)}>
+                <ProblemTypeIconSpanWithName problemType={ProblemType.Educational} />
               </DropdownItem>
-              <DropdownItem onClick={() => setProblemTypeFilterState('Scoring')}>
-                <ProblemTypeIconSpanWithName problemType={2} />
+              <DropdownItem onClick={() => setProblemTypeFilterState(ProblemType.Scoring)}>
+                <ProblemTypeIconSpanWithName problemType={ProblemType.Scoring} />
               </DropdownItem>
-              <DropdownItem onClick={() => setProblemTypeFilterState('Joke')}>
-                <ProblemTypeIconSpanWithName problemType={3} />
+              <DropdownItem onClick={() => setProblemTypeFilterState(ProblemType.Joke)}>
+                <ProblemTypeIconSpanWithName problemType={ProblemType.Joke} />
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
@@ -254,8 +269,8 @@ export const ListPage = (props) => {
           statusFilterState={statusFilterState}
           fromDifficultyLevel={fromDifficultyLevel}
           toDifficultyLevel={toDifficultyLevel}
-          fromDate={fromDate === INITIAL_FROM_DATE ? null : fromDate}
-          toDate={toDate === INITIAL_TO_DATE ? null : toDate}
+          fromDate={fromDate === INITIAL_FROM_DATE ? undefined : fromDate}
+          toDate={toDate === INITIAL_TO_DATE ? undefined : toDate}
           problemTypeFilterState={problemTypeFilterState}
           showTagsOfTryingProblems={showTagsOfTryingProblems}
         />

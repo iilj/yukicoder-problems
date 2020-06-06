@@ -12,8 +12,22 @@ export enum ProblemType {
   /** スコア形式問題 */
   Scoring = 2,
   /** ネタ問題 */
-  Joke = 3
+  Joke = 3,
 }
+
+/** 問題タイプのリスト */
+export const ProblemTypes = [
+  ProblemType.Normal,
+  ProblemType.Educational,
+  ProblemType.Scoring,
+  ProblemType.Joke,
+];
+
+/** 問題レベルのリスト */
+export const ProblemLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6] as const;
+
+/** 問題レベル */
+export type ProblemLevel = typeof ProblemLevels[number];
 
 /** 問題 */
 export interface Problem {
@@ -28,7 +42,7 @@ export interface Problem {
   /** テスターのユーザーId */
   readonly TesterId: number;
   /** 問題レベル小数あり */
-  readonly Level: number;
+  readonly Level: ProblemLevel;
   /** 問題タイプ */
   readonly ProblemType: ProblemType;
   /** 問題のタグ カンマ区切り */

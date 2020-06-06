@@ -1,4 +1,4 @@
-import { ProblemId } from "./Problem";
+import { ProblemId } from './Problem';
 
 /** コンテストID */
 export type ContestId = number;

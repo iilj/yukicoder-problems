@@ -5,9 +5,9 @@ import {
 import { Ranking } from '../components/Ranking';
 import { WellPositionedDropdownMenu } from '../components/WellPositionedDropdownMenu';
 import * as TypedCachedApiClient from '../utils/TypedCachedApiClient';
-import { Language, LangId } from "../interfaces/Language";
-import { RankingProblem } from "../interfaces/RankingProblem";
-import { UserName } from "../interfaces/User";
+import { Language, LangId } from '../interfaces/Language';
+import { RankingProblem } from '../interfaces/RankingProblem';
+import { UserName } from '../interfaces/User';
 
 const initialUniversalState = {
   languages: [] as Language[],
@@ -70,14 +70,15 @@ export const PureShortRanking = () => {
   //   return ar;
   // }, []);
 
-  let ranking = [] as { name: UserName, count: number }[];
+  const ranking = [] as { name: UserName; count: number }[];
   golferPureMap.forEach((rankingProblems, userName) => {
     ranking.push({ name: userName, count: rankingProblems.length });
   });
 
   const languagesMap = languages.reduce(
     (map, language) => map.set(language.Id, language),
-    new Map<LangId, Language>());
+    new Map<LangId, Language>(),
+  );
 
   return (
     <>

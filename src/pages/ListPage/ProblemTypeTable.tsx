@@ -1,35 +1,22 @@
 import React from 'react';
 import Table from 'reactstrap/lib/Table';
 import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
+import { Problem, ProblemType, ProblemTypes } from '../../interfaces/Problem';
 
-export const ProblemTypeTable = (props) => {
+export const ProblemTypeTable = (props: {
+  problems: Problem[];
+  solvedProblems: Problem[];
+  user: string;
+}) => {
   const { problems, solvedProblems, user } = props;
-  const problemTypes = [0, 1, 2, 3];
 
   const problemTypesTotalCountMap = problems.reduce(
-    (map, problem) => {
-      if (!(problem.ProblemType in map)) {
-        map[problem.ProblemType] = 0;
-        problemTypes.push(problem.ProblemType);
-      }
-      map[problem.ProblemType] += 1;
-      return map;
-    },
-    problemTypes.reduce((map, type) => {
-      map[type] = 0;
-      return map;
-    }, {}),
+    (map, problem) => map.set(problem.ProblemType, (map.get(problem.ProblemType) as ProblemType) + 1),
+    ProblemTypes.reduce((map, type) => map.set(type, 0), new Map<ProblemType, number>()),
   );
-  problemTypes.sort();
   const problemTypesSolvedCountMap = solvedProblems.reduce(
-    (map, solvedProblem) => {
-      map[solvedProblem.ProblemType] += 1;
-      return map;
-    },
-    problemTypes.reduce((map, type) => {
-      map[type] = 0;
-      return map;
-    }, {}),
+    (map, solvedProblem) => map.set(solvedProblem.ProblemType, (map.get(solvedProblem.ProblemType) as ProblemType) + 1),
+    ProblemTypes.reduce((map, type) => map.set(type, 0), new Map<ProblemType, number>()),
   );
 
   return (
@@ -38,7 +25,7 @@ export const ProblemTypeTable = (props) => {
         <thead>
           <tr>
             <th>Type</th>
-            {problemTypes.map((type) => (
+            {ProblemTypes.map((type) => (
               <th
                 key={type}
                 style={{ whiteSpace: 'nowrap', position: 'relative', minWidth: '70px' }}
@@ -49,8 +36,8 @@ export const ProblemTypeTable = (props) => {
           </tr>
           <tr>
             <th>Total</th>
-            {problemTypes.map((type) => (
-              <th key={type}>{problemTypesTotalCountMap[type]}</th>
+            {ProblemTypes.map((type) => (
+              <th key={type}>{problemTypesTotalCountMap.get(type)}</th>
             ))}
           </tr>
         </thead>
@@ -58,8 +45,8 @@ export const ProblemTypeTable = (props) => {
           {!user ? null : (
             <tr key={user}>
               <td>{user}</td>
-              {problemTypes.map((type) => (
-                <td key={type}>{problemTypesSolvedCountMap[type]}</td>
+              {ProblemTypes.map((type) => (
+                <td key={type}>{problemTypesSolvedCountMap.get(type)}</td>
               ))}
             </tr>
           )}

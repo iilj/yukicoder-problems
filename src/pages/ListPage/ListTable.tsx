@@ -7,8 +7,39 @@ import { ContestLink } from '../../components/ContestLink';
 import { ListPaginationPanel } from '../../components/ListPaginationPanel';
 import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
 import { formatSubmissionUrl } from '../../utils/Url';
+import {
+  Problem, ProblemLevel, ProblemId, ProblemNo, ProblemType,
+} from '../../interfaces/Problem';
+import { Contest, ContestId } from '../../interfaces/Contest';
+import { RankingProblem } from '../../interfaces/RankingProblem';
 
-export const ListTable = (props) => {
+export type FilterState = 'All' | 'Only Trying' | 'Only AC';
+
+interface MergedProblem extends Problem {
+  Contest: Contest;
+  SolveDate: string;
+  ShortestRankingProblem: RankingProblem;
+  PureShortestRankingProblem: RankingProblem;
+  ContestName?: string;
+  ShortestRankingUserName?: string;
+  PureShortestRankingUserName?: string;
+}
+
+export const ListTable = (props: {
+  problems: Problem[];
+  contestMap: Map<ContestId, Contest>;
+  problemContestMap: Map<ProblemId, ContestId>;
+  solvedProblemsMap: Map<ProblemId, Problem>;
+  golferProblemMap: Map<ProblemNo, RankingProblem>;
+  golferPureProblemMap: Map<ProblemNo, RankingProblem>;
+  statusFilterState: FilterState;
+  fromDifficultyLevel: ProblemLevel | -1;
+  toDifficultyLevel: ProblemLevel | 100;
+  fromDate?: Date;
+  toDate?: Date;
+  problemTypeFilterState: ProblemType | 'All';
+  showTagsOfTryingProblems: boolean;
+}) => {
   const {
     problems,
     contestMap,
@@ -29,7 +60,7 @@ export const ListTable = (props) => {
       header: 'Date',
       dataField: 'Date',
       dataSort: true,
-      dataFormat: (date) => (
+      dataFormat: (date: string) => (
         <>{date !== null ? dataFormat(new Date(date), 'yyyy/mm/dd HH:MM') : '-'}</>
       ),
     },
@@ -37,7 +68,7 @@ export const ListTable = (props) => {
       header: 'Title',
       dataField: 'Title',
       dataSort: true,
-      dataFormat: (title, row) => (
+      dataFormat: (title: string, row: MergedProblem) => (
         <ProblemLink
           problemTitle={title}
           problemNo={row.No}
@@ -50,31 +81,31 @@ export const ListTable = (props) => {
       header: 'Level',
       dataField: 'Level',
       dataSort: true,
-      dataFormat: (level) => <DifficultyStars level={level} showDifficultyLevel />,
+      dataFormat: (level: ProblemLevel) => <DifficultyStars level={level} showDifficultyLevel />,
     },
     {
       header: 'Contest',
       dataField: 'Contest',
       dataSort: true,
-      dataFormat: (contest) => (contest ? <ContestLink contestId={contest.Id} contestName={contest.Name} /> : null),
+      dataFormat: (contest: Contest): React.ReactElement => (contest ? <ContestLink contestId={contest.Id} contestName={contest.Name} /> : <></>),
     },
     {
       header: 'Solve Date',
       dataField: 'SolveDate',
       dataSort: true,
-      dataFormat: (solveDate) => (solveDate ? <>{dataFormat(new Date(solveDate), 'yyyy/mm/dd HH:MM')}</> : null),
+      dataFormat: (solveDate: string) => (solveDate ? <>{dataFormat(new Date(solveDate), 'yyyy/mm/dd HH:MM')}</> : <></>),
     },
     {
       header: 'Tags',
       dataField: 'Tags',
       dataSort: true,
-      dataFormat: (tags, row) => (showTagsOfTryingProblems || row.SolveDate ? <>{tags}</> : null),
+      dataFormat: (tags: string, row: MergedProblem): React.ReactElement => (showTagsOfTryingProblems || row.SolveDate ? <>{tags}</> : <></>),
     },
     {
       header: 'Shortest',
       dataField: 'ShortestRankingProblem',
       dataSort: true,
-      dataFormat: (shortestRankingProblem) => (shortestRankingProblem ? (
+      dataFormat: (shortestRankingProblem: RankingProblem): React.ReactElement => (shortestRankingProblem ? (
         <a
           href={formatSubmissionUrl(shortestRankingProblem.SubmissionId)}
           target="_blank"
@@ -87,13 +118,15 @@ export const ListTable = (props) => {
           {' '}
           Bytes)
         </a>
-      ) : null),
+      ) : (
+        <></>
+      )),
     },
     {
       header: 'Pure Shortest',
       dataField: 'PureShortestRankingProblem',
       dataSort: true,
-      dataFormat: (pureShortestRankingProblem) => (pureShortestRankingProblem ? (
+      dataFormat: (pureShortestRankingProblem: RankingProblem): React.ReactElement => (pureShortestRankingProblem ? (
         <a
           href={formatSubmissionUrl(pureShortestRankingProblem.SubmissionId)}
           target="_blank"
@@ -106,12 +139,16 @@ export const ListTable = (props) => {
           {' '}
           Bytes)
         </a>
-      ) : null),
+      ) : (
+        <></>
+      )),
     },
     {
       header: 'ProblemType',
       dataField: 'ProblemType',
-      dataFormat: (problemType) => <ProblemTypeIconSpanWithName problemType={problemType} />,
+      dataFormat: (problemType: ProblemType) => (
+        <ProblemTypeIconSpanWithName problemType={problemType} />
+      ),
       dataSort: true,
     },
     {
@@ -158,62 +195,75 @@ export const ListTable = (props) => {
             switch (problemTypeFilterState) {
               case 'All':
                 return true;
-              case 'Normal':
-                return problem.ProblemType === 0;
-              case 'Educational':
-                return problem.ProblemType === 1;
-              case 'Scoring':
-                return problem.ProblemType === 2;
-              case 'Joke':
-                return problem.ProblemType === 3;
               default:
-                return true;
+                return problem.ProblemType === problemTypeFilterState;
             }
           })
           .map((problem) => {
-            problem.Contest = contestMap && problemContestMap
-              ? contestMap[problemContestMap[problem.ProblemId]]
-              : null;
-            problem.SolveDate = solvedProblemsMap && problem.ProblemId in solvedProblemsMap
-              ? solvedProblemsMap[problem.ProblemId].Date
-              : undefined;
-            problem.ShortestRankingProblem = golferProblemMap && problem.No in golferProblemMap
-              ? golferProblemMap[problem.No]
-              : undefined;
-            problem.PureShortestRankingProblem = golferPureProblemMap && problem.No in golferPureProblemMap
-              ? golferPureProblemMap[problem.No]
-              : undefined;
+            const mappedProblem = {
+              ...problem,
+              Contest:
+                contestMap && problemContestMap
+                  ? contestMap.get(problemContestMap.get(problem.ProblemId) as ContestId)
+                  : null,
+              SolveDate:
+                solvedProblemsMap && solvedProblemsMap.has(problem.ProblemId)
+                  ? (solvedProblemsMap.get(problem.ProblemId) as Problem).Date
+                  : undefined,
+              ShortestRankingProblem:
+                golferProblemMap
+                && typeof problem.No === 'number'
+                && golferProblemMap.has(problem.No)
+                  ? golferProblemMap.get(problem.No)
+                  : undefined,
+              PureShortestRankingProblem:
+                golferPureProblemMap
+                && typeof problem.No === 'number'
+                && golferPureProblemMap.has(problem.No)
+                  ? golferPureProblemMap.get(problem.No)
+                  : undefined,
+              ContestName: undefined,
+              ShortestRankingUserName: undefined,
+              PureShortestRankingUserName: undefined,
+            } as MergedProblem;
+
             // props for search
-            problem.ContestName = problem.Contest ? problem.Contest.Name : undefined;
-            problem.ShortestRankingUserName = problem.ShortestRankingProblem
-              ? problem.ShortestRankingProblem.UserName
+            mappedProblem.ContestName = mappedProblem.Contest
+              ? mappedProblem.Contest.Name
               : undefined;
-            problem.PureShortestRankingUserName = problem.PureShortestRankingProblem
-              ? problem.PureShortestRankingProblem.UserName
+            mappedProblem.ShortestRankingUserName = mappedProblem.ShortestRankingProblem
+              ? mappedProblem.ShortestRankingProblem.UserName
               : undefined;
-            return problem;
+            mappedProblem.PureShortestRankingUserName = mappedProblem.PureShortestRankingProblem
+              ? mappedProblem.PureShortestRankingProblem.UserName
+              : undefined;
+            return mappedProblem;
           })
           .filter((problem) => {
             switch (statusFilterState) {
               case 'All':
                 return true;
               case 'Only AC':
-                return !!problem.SolveDate;
+                return problem.SolveDate !== undefined;
               case 'Only Trying':
-                return !problem.SolveDate;
+                return problem.SolveDate === undefined;
               default:
                 return true;
             }
           })
           .filter((problem) => {
-            if (fromDate === null && toDate === null) return true;
-            if (problem.Date === null) return false;
-            const startDate = Date.parse(problem.Date);
-            if (fromDate === null) return startDate <= toDate;
-            if (toDate === null) return fromDate <= startDate;
+            if (fromDate === undefined && toDate === undefined) return true;
+            if (problem.Date === null || problem.Date === undefined) return false;
+            const startDate = new Date(problem.Date);
+            if (fromDate === undefined) return startDate <= (toDate as Date);
+            if (toDate === undefined) return (fromDate as Date) <= startDate;
             return fromDate <= startDate && startDate <= toDate;
           })
-          .sort((a, b) => (a.Date < b.Date ? 1 : -1))}
+          .sort((a, b) => {
+            if (a.Date === undefined) return 1;
+            if (b.Date === undefined) return -1;
+            return a.Date < b.Date ? 1 : -1;
+          })}
         trClassName={(problem) => {
           if (!problem.SolveDate) return 'table-problem';
           if (!problem.Contest) return 'table-problem table-problem-solved';
