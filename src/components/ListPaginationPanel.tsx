@@ -1,4 +1,5 @@
 import React from 'react';
+import { PaginationPanelProps } from 'react-bootstrap-table';
 import {
   DropdownItem,
   DropdownMenu,
@@ -10,7 +11,11 @@ import {
 } from 'reactstrap';
 import { range } from '../utils';
 
-const pageList = (currPage, pageStartIndex, totalPage) => {
+export interface ListPaginationPanelProps extends PaginationPanelProps {
+  totalPages: number;
+}
+
+const pageList = (currPage: number, pageStartIndex: number, totalPage: number): number[] => {
   if (totalPage === 0) {
     return [];
   }
@@ -48,7 +53,7 @@ const pageList = (currPage, pageStartIndex, totalPage) => {
   return pageNumbers;
 };
 
-export const ListPaginationPanel = (props) => {
+export const ListPaginationPanel = (props: ListPaginationPanelProps) => {
   const pageNumbers = pageList(props.currPage, props.pageStartIndex, props.totalPages);
 
   return (
@@ -57,7 +62,7 @@ export const ListPaginationPanel = (props) => {
         <UncontrolledDropdown className="react-bs-table-sizePerPage-dropdown">
           <DropdownToggle caret>{props.sizePerPage}</DropdownToggle>
           <DropdownMenu>
-            {props.sizePerPageList.map((p) => (
+            {(props.sizePerPageList as { text: string; value: number }[]).map((p) => (
               <DropdownItem key={p.text} onClick={() => props.changeSizePerPage(p.value)}>
                 {p.text}
               </DropdownItem>

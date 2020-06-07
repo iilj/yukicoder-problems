@@ -41,7 +41,6 @@ const initialUserState = {
 
 export const UserPage = (props) => {
   let { param, user } = useParams();
-  if (user) user = decodeURIComponent(user);
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
@@ -60,7 +59,7 @@ export const UserPage = (props) => {
         CachedApiClient.cachedProblemContestMap(),
       ]);
 
-      if (!unmounted)
+      if (!unmounted) {
         setUniversalState({
           golferMap,
           pureGolferMap,
@@ -69,6 +68,7 @@ export const UserPage = (props) => {
           problems,
           problemContestMap,
         });
+      }
     };
     getUniversalInfo();
     const cleanup = () => {
@@ -80,7 +80,7 @@ export const UserPage = (props) => {
   useEffect(() => {
     let unmounted = false;
     const getUserInfo = async () => {
-      let [userInfo, solvedProblems] = await Promise.all([
+      const [userInfo, solvedProblems] = await Promise.all([
         CachedApiClient.cachedUserInfo(param, user).then((obj) => (!obj.Message ? obj : {})),
         CachedApiClient.cachedSolvedProblemArray(param, user),
       ]);
@@ -94,7 +94,7 @@ export const UserPage = (props) => {
       minDate.setHours(0, 0, 0, 0);
       maxDate.setHours(23, 59, 59, 999);
 
-      if (!unmounted)
+      if (!unmounted) {
         setUserState({
           userInfo,
           solvedProblems,
@@ -102,6 +102,7 @@ export const UserPage = (props) => {
           minDate,
           maxDate,
         });
+      }
     };
     getUserInfo();
     const cleanup = () => {
@@ -118,7 +119,9 @@ export const UserPage = (props) => {
     problems,
     problemContestMap,
   } = universalState;
-  const { userInfo, solvedProblems, solvedProblemsMap, minDate, maxDate } = userState;
+  const {
+    userInfo, solvedProblems, solvedProblemsMap, minDate, maxDate,
+  } = userState;
 
   const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
@@ -128,37 +131,35 @@ export const UserPage = (props) => {
   // for user info section
   const shortestCount = name && name in golferMap ? golferMap[name].length : 0;
   const golfRankerCount = Object.keys(golferMap).length;
-  const shortestRank =
-    golfRankerCount === 0
-      ? 0
-      : shortestCount === 0
+  const shortestRank = golfRankerCount === 0
+    ? 0
+    : shortestCount === 0
       ? 1 + golfRankerCount
-      : 1 +
-        Object.keys(golferMap).reduce((cnt, userName) => {
-          if (golferMap[userName].length > shortestCount) {
-            ++cnt;
-          }
-          return cnt;
-        }, 0);
+      : 1
+      + Object.keys(golferMap).reduce((cnt, userName) => {
+        if (golferMap[userName].length > shortestCount) {
+          ++cnt;
+        }
+        return cnt;
+      }, 0);
 
   const pureShortestCount = name && name in pureGolferMap ? pureGolferMap[name].length : 0;
   const pureGolfRankerCount = Object.keys(pureGolferMap).length;
-  const pureShortestRank =
-    pureGolfRankerCount === 0
-      ? 0
-      : pureShortestCount === 0
+  const pureShortestRank = pureGolfRankerCount === 0
+    ? 0
+    : pureShortestCount === 0
       ? 1 + pureGolfRankerCount
-      : 1 +
-        Object.keys(pureGolferMap).reduce((cnt, userName) => {
-          if (pureGolferMap[userName].length > pureShortestCount) {
-            ++cnt;
-          }
-          return cnt;
-        }, 0);
+      : 1
+      + Object.keys(pureGolferMap).reduce((cnt, userName) => {
+        if (pureGolferMap[userName].length > pureShortestCount) {
+          ++cnt;
+        }
+        return cnt;
+      }, 0);
 
   // for pichart
   const regularContestProblemsCntMap = contests.reduce((map, contest) => {
-    if (contest.Name.match(/^yukicoder contest \d+/))
+    if (contest.Name.match(/^yukicoder contest \d+/)) {
       return contest.ProblemIdList.reduce((map_, problemId, idx) => {
         const key = Math.min(idx, 5);
         if (!(key in map_)) map_[key] = { total: 0, solved: 0 };
@@ -166,7 +167,8 @@ export const UserPage = (props) => {
         map_[key].total++;
         return map_;
       }, map);
-    else return map;
+    }
+    return map;
   }, {});
   const regularContestProblemsCnt = Object.keys(regularContestProblemsCntMap).reduce((ar, key) => {
     ar[key] = regularContestProblemsCntMap[key];
@@ -179,7 +181,7 @@ export const UserPage = (props) => {
     .reduce((map, solveDate) => {
       const date = new Date(solveDate);
       date.setHours(0, 0, 0, 0);
-      const key = Number(date); //sec - (sec % MS_OF_DAY);
+      const key = Number(date); // sec - (sec % MS_OF_DAY);
       if (!(key in map)) {
         map[key] = 0;
       }
@@ -287,19 +289,32 @@ export const UserPage = (props) => {
           <h6>Level</h6>
           <h3 title={`${userLevel} (${origUserLevel})`}>{userLevel.toFixed(2)}</h3>
           <h6 className="text-muted" title={`${starsToAdvance} stars to level ${nextLevel}`}>
-            <NormalStarElement /> * {Math.ceil(starsToAdvance * 2) / 2} to advance
+            <NormalStarElement />
+            {' '}
+            *
+            {Math.ceil(starsToAdvance * 2) / 2}
+            {' '}
+            to advance
           </h6>
         </Col>
         <Col key="Longest Streak" className="text-center" xs="6" md="3">
           <h6>Longest Streak</h6>
-          <h3>{longestStreak} days</h3>
+          <h3>
+            {longestStreak}
+            {' '}
+            days
+          </h3>
         </Col>
         <Col key="Current Streak" className="text-center" xs="6" md="3">
           <h6>Current Streak</h6>
-          <h3>{isIncreasing ? currentStreak : 0} days</h3>
-          <h6 className="text-muted">{`Last AC: ${
-            prevDateSecond > 0 ? dataFormat(prevDateSecond, 'yyyy/mm/dd') : ''
-          }`}</h6>
+          <h3>
+            {isIncreasing ? currentStreak : 0}
+            {' '}
+            days
+          </h3>
+          <h6 className="text-muted">
+            {`Last AC: ${prevDateSecond > 0 ? dataFormat(prevDateSecond, 'yyyy/mm/dd') : ''}`}
+          </h6>
         </Col>
       </Row>
 

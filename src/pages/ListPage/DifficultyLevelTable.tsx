@@ -30,7 +30,11 @@ export const DifficultyLevelTable = (props: {
             {ProblemLevels.map((level) => (
               <th
                 key={level}
-                style={{ whiteSpace: 'nowrap', position: 'relative', minWidth: '70px' }}
+                style={{
+                  whiteSpace: 'nowrap',
+                  position: 'relative',
+                  minWidth: '70px',
+                }}
                 className={getDifficultyLevelColorClass(level)}
               >
                 <DifficultyStarsAbsoluteSpan level={level} showDifficultyLevel />

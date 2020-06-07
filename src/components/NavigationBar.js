@@ -21,13 +21,14 @@ import {
 const extractPageKind = (pathname) => {
   if (pathname.match(/^\/user/)) {
     return 'user';
-  } else if (pathname.match(/^\/list/)) {
-    return 'list';
-  } else if (pathname.match(/^\/table/)) {
-    return 'table';
-  } else {
-    return undefined;
   }
+  if (pathname.match(/^\/list/)) {
+    return 'list';
+  }
+  if (pathname.match(/^\/table/)) {
+    return 'table';
+  }
+  return undefined;
 };
 
 const extractParams = (pathname) => {
@@ -37,14 +38,12 @@ const extractParams = (pathname) => {
   return { param, user };
 };
 
-const generatePath = (kind, param, user) => {
-  return user && user !== '' ? `/${kind}/${param}/${encodeURIComponent(user)}` : `/${kind}/`;
-};
+const generatePath = (kind, param, user) => (user && user !== '' ? `/${kind}/${param}/${encodeURIComponent(user)}` : `/${kind}/`);
 
 export const NavigationBar = (props) => {
   const location = useLocation();
   // console.log(location);
-  const pathname = location.pathname;
+  const { pathname } = location;
   const navigate = useNavigate();
   // const { pathname } = props.location;
   const initialPageKind = extractPageKind(pathname);

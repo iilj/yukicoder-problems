@@ -28,7 +28,11 @@ export const ProblemTypeTable = (props: {
             {ProblemTypes.map((type) => (
               <th
                 key={type}
-                style={{ whiteSpace: 'nowrap', position: 'relative', minWidth: '70px' }}
+                style={{
+                  whiteSpace: 'nowrap',
+                  position: 'relative',
+                  minWidth: '70px',
+                }}
               >
                 <ProblemTypeIconSpanWithName problemType={type} />
               </th>

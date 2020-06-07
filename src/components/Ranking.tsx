@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { ListPaginationPanel } from './ListPaginationPanel';
+import { ListPaginationPanel, ListPaginationPanelProps } from './ListPaginationPanel';
 import { UserName } from '../interfaces/User';
 
 const refineRanking = (ranking: { name: UserName; count: number }[]) => ranking
@@ -51,7 +51,7 @@ export const Ranking = (props: { title: string; ranking: { name: UserName; count
             value: props.ranking.length,
           },
         ],
-        paginationPanel: (paginationPanelProps) => (
+        paginationPanel: (paginationPanelProps: ListPaginationPanelProps) => (
           <ListPaginationPanel {...paginationPanelProps} />
         ),
       }}

@@ -34,7 +34,12 @@ export const ProblemLevelPieChart = (props) => {
     const totalCount = colorCount[level];
     const solved = solvedCount[level];
     const color = getDifficultyLevelColor(level);
-    return { color, totalCount, solved, level };
+    return {
+      color,
+      totalCount,
+      solved,
+      level,
+    };
   });
 
   return (

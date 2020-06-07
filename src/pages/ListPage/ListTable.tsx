@@ -4,7 +4,10 @@ import dataFormat from 'dateformat';
 import { DifficultyStars } from '../../components/DifficultyStars';
 import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
-import { ListPaginationPanel } from '../../components/ListPaginationPanel';
+import {
+  ListPaginationPanel,
+  ListPaginationPanelProps,
+} from '../../components/ListPaginationPanel';
 import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
 import { formatSubmissionUrl } from '../../utils/Url';
 import {
@@ -71,7 +74,7 @@ export const ListTable = (props: {
       dataFormat: (title: string, row: MergedProblem) => (
         <ProblemLink
           problemTitle={title}
-          problemNo={row.No}
+          problemNo={row.No as ProblemNo}
           level={row.Level}
           showDifficultyLevel
         />
@@ -299,7 +302,7 @@ export const ListTable = (props: {
               value: problems.length,
             },
           ],
-          paginationPanel: (paginationPanelProps) => (
+          paginationPanel: (paginationPanelProps: ListPaginationPanelProps) => (
             <ListPaginationPanel {...paginationPanelProps} />
           ),
         }}

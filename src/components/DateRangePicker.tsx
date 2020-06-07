@@ -11,23 +11,35 @@ import dataFormat from 'dateformat';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './DateRangePicker.css';
+import Popper from 'popper.js';
 
 import { range } from '../utils';
 
 export const INITIAL_FROM_DATE = new Date('2014/07/20');
 export const INITIAL_TO_DATE = new Date(new Date().setHours(23, 59, 59, 999));
 
-const DatePickerCustomHeader = ({
-  minDate,
-  maxDate,
-  date,
-  changeYear,
-  changeMonth,
-  decreaseMonth,
-  increaseMonth,
-  prevMonthButtonDisabled,
-  nextMonthButtonDisabled,
+const DatePickerCustomHeader = (params: {
+  minDate: Date;
+  maxDate: Date;
+  date: Date;
+  changeYear: (year: number) => void;
+  changeMonth: (month: number) => void;
+  decreaseMonth: () => void;
+  increaseMonth: () => void;
+  prevMonthButtonDisabled: boolean;
+  nextMonthButtonDisabled: boolean;
 }) => {
+  const {
+    minDate,
+    maxDate,
+    date,
+    changeYear,
+    changeMonth,
+    decreaseMonth,
+    increaseMonth,
+    prevMonthButtonDisabled,
+    nextMonthButtonDisabled,
+  } = params;
   const years = range(minDate.getFullYear(), maxDate.getFullYear());
   const months = range(0, 11);
   return (
@@ -79,7 +91,14 @@ const DatePickerCustomHeader = ({
   );
 };
 
-export const DateRangePicker = (props) => {
+export const DateRangePicker = (props: {
+  fromDate: Date;
+  toDate: Date;
+  onFromDateChange: (date: Date) => void;
+  onToDateChange: (date: Date) => void;
+  minDate: Date;
+  maxDate: Date;
+}) => {
   const {
     fromDate, toDate, onFromDateChange, onToDateChange, minDate, maxDate,
   } = props;
@@ -92,7 +111,7 @@ export const DateRangePicker = (props) => {
       enabled: true,
       escapeWithReference: false,
     },
-  };
+  } as Popper.Modifiers;
 
   return (
     <ButtonGroup className="mr-4">

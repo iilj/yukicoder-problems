@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getDifficultyLevelColor } from '../utils';
+import { ProblemLevel } from '../interfaces/Problem';
 
 export const DifficultyStarsFillDefs = () => (
   <svg style={{ height: 0 }}>
@@ -24,14 +25,19 @@ export const DifficultyStarsFillDefs = () => (
   </svg>
 );
 
-export const DifficultyStars = (props) => {
+interface DifficultyStarsProps {
+  level: ProblemLevel;
+  showDifficultyLevel: boolean;
+}
+
+export const DifficultyStars = (props: DifficultyStarsProps) => {
   const { level, showDifficultyLevel } = props;
   if (!showDifficultyLevel) return null;
 
   const half = level % 1;
   const full = level - half;
 
-  const stars = [];
+  const stars = [] as [number, number][];
   for (let i = 0; i < full; ++i) {
     stars.push([i, 1]);
   }
@@ -59,10 +65,12 @@ export const DifficultyStars = (props) => {
   );
 };
 
-export const DifficultyStarsAbsoluteSpan = (props) => (
+export const DifficultyStarsAbsoluteSpan = (props: DifficultyStarsProps) => (
   <span className="table-problem-stars">
     <DifficultyStars {...props} />
   </span>
 );
 
-export const NormalStarElement = (props) => <FontAwesomeIcon icon="star" {...props} />;
+export const NormalStarElement = (props: DifficultyStarsProps) => (
+  <FontAwesomeIcon icon="star" {...props} />
+);
