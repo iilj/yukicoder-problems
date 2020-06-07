@@ -87,38 +87,38 @@ export const AllProblemsTable = (props: {
                           const elementId = `AllProblems_td_${problem.No}`;
                           return (
                             <td key={pid} className={className} id={elementId}>
-                                <ProblemLink
-                                  problemNo={problem.No as ProblemNo}
-                                  problemTitle={`${problem.No}`}
-                                  level={problem.Level}
-                                  showDifficultyLevel={showDifficultyLevel}
-                                  id={`AllProblems_td_${problem.No}`}
-                                />
-                                <UncontrolledTooltip
-                                  target={elementId}
-                                  style={{
-                                    backgroundColor: 'rgba(240, 240, 240, 1.0)',
-                                    border: '1px solid #808080',
-                                    opacity: '1.0',
-                                  }}
-                                >
-                                  <div>
-                                    <ProblemLink
-                                      problemNo={problem.No as ProblemNo}
-                                      problemTitle={`${problem.Title}`}
-                                      level={problem.Level}
-                                      showDifficultyLevel={showDifficultyLevel}
-                                      id={`AllProblems_td_${problem.No}`}
-                                    />
-                                  </div>
-                                  <div>
-                                    <DifficultyStars
-                                      level={problem.Level}
-                                      showDifficultyLevel={showDifficultyLevel}
-                                    />
-                                  </div>
-                                </UncontrolledTooltip>
-                              </td>
+                              <ProblemLink
+                                problemNo={problem.No as ProblemNo}
+                                problemTitle={`${problem.No}`}
+                                level={problem.Level}
+                                showDifficultyLevel={showDifficultyLevel}
+                                id={`AllProblems_td_${problem.No}`}
+                              />
+                              <UncontrolledTooltip
+                                target={elementId}
+                                style={{
+                                  backgroundColor: 'rgba(240, 240, 240, 1.0)',
+                                  border: '1px solid #808080',
+                                  opacity: '1.0',
+                                }}
+                              >
+                                <div>
+                                  <ProblemLink
+                                    problemNo={problem.No as ProblemNo}
+                                    problemTitle={`${problem.Title}`}
+                                    level={problem.Level}
+                                    showDifficultyLevel={showDifficultyLevel}
+                                    id={`AllProblems_td_${problem.No}`}
+                                  />
+                                </div>
+                                <div>
+                                  <DifficultyStars
+                                    level={problem.Level}
+                                    showDifficultyLevel={showDifficultyLevel}
+                                  />
+                                </div>
+                              </UncontrolledTooltip>
+                            </td>
                           );
                         })}
                       </tr>

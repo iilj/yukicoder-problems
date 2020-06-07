@@ -1,3 +1,5 @@
+import { ProblemLevel, ProblemType } from '../interfaces/Problem';
+
 // 0.0 黒
 // 1.0 灰
 // 1.5 茶
@@ -16,7 +18,7 @@
  *
  * @returns {number[]} problem level list
  */
-export const getLevelList = () => {
+export const getLevelList = (): number[] => {
   const ret = [0];
   for (let i = 1; i <= 6; i += 0.5) {
     ret.push(i);
@@ -27,10 +29,10 @@ export const getLevelList = () => {
 /**
  * 問題の難易度レベル→色，の変換
  *
- * @param {number} level
+ * @param {ProblemLevel} level 問題の難易度レベル
  * @returns color code string
  */
-export const getDifficultyLevelColor = (level) => {
+export const getDifficultyLevelColor = (level: ProblemLevel) => {
   if (!level) {
     return '';
   }
@@ -73,10 +75,10 @@ export const getDifficultyLevelColor = (level) => {
 /**
  * 問題の難易度レベル→色クラス，の変換
  *
- * @param {number} level
+ * @param {ProblemLevel} level 問題の難易度レベル
  * @returns 色クラス名
  */
-export const getDifficultyLevelColorClass = (level) => {
+export const getDifficultyLevelColorClass = (level: ProblemLevel) => {
   if (!level) {
     return '';
   }
@@ -113,7 +115,7 @@ export const getDifficultyLevelColorClass = (level) => {
  * @param {number} i number representing order
  * @returns suffix string of order
  */
-export const ordinalSuffixOf = (i) => {
+export const ordinalSuffixOf = (i: number) => {
   const j = i % 10;
   const k = i % 100;
   if (j === 1 && k !== 11) {
@@ -131,18 +133,18 @@ export const ordinalSuffixOf = (i) => {
 /**
  * returns string representing the problem type
  *
- * @param {number} problemType Problem Type number
+ * @param {ProblemType} problemType Problem Type number
  * @returns string representing the problem type
  */
-export const getProblemTypeName = (problemType) => {
+export const getProblemTypeName = (problemType: ProblemType) => {
   switch (problemType) {
-    case 0:
+    case ProblemType.Normal:
       return 'Normal';
-    case 1:
+    case ProblemType.Educational:
       return 'Educational';
-    case 2:
+    case ProblemType.Scoring:
       return 'Scoring';
-    case 3:
+    case ProblemType.Joke:
       return 'Joke';
     default:
       return `${problemType}`;
@@ -156,4 +158,4 @@ export const getProblemTypeName = (problemType) => {
  * @param {number} end end number
  * @returns {number[]} array
  */
-export const range = (start, end) => Array.from({ length: end - start + 1 }, (v, k) => k + start);
+export const range = (start: number, end: number): number[] => Array.from({ length: end - start + 1 }, (v, k) => k + start);

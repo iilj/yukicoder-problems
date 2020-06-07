@@ -1,7 +1,9 @@
 import React from 'react';
+import { Contest } from '../interfaces/Contest';
+import { Problem } from '../interfaces/Problem';
 
-const formatTimespan = (sec) => {
-  let sign;
+const formatTimespan = (sec: number): string => {
+  let sign: string;
   if (sec >= 0) {
     sign = '';
   } else {
@@ -14,7 +16,11 @@ const formatTimespan = (sec) => {
   )}:${`0${sec % 60}`.slice(-2)}`;
 };
 
-export const SubmitTimespan = (props) => {
+export const SubmitTimespan = (props: {
+  contest: Contest;
+  solvedProblem?: Problem;
+  showContestResult: boolean;
+}) => {
   const { contest, solvedProblem, showContestResult } = props;
   if (!showContestResult) {
     return null;
@@ -22,9 +28,11 @@ export const SubmitTimespan = (props) => {
 
   return (
     <div className="table-problem-timespan">
-      {!solvedProblem || Date.parse(solvedProblem.Date) > Date.parse(contest.EndDate)
+      {!solvedProblem || Date.parse(solvedProblem.Date as string) > Date.parse(contest.EndDate)
         ? ''
-        : formatTimespan((Date.parse(solvedProblem.Date) - Date.parse(contest.Date)) / 1000)}
+        : formatTimespan(
+          (Date.parse(solvedProblem.Date as string) - Date.parse(contest.Date)) / 1000,
+        )}
     </div>
   );
 };

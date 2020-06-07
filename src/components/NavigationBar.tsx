@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { NavLink as RouterLink, useLocation, useNavigate } from 'react-router-dom';
-// import { withRouter } from 'react-router';
-// import { useHistory } from 'react-router-dom';
 import {
   Collapse,
   Navbar,
@@ -18,7 +16,7 @@ import {
   FormGroup,
 } from 'reactstrap';
 
-const extractPageKind = (pathname) => {
+const extractPageKind = (pathname: string) => {
   if (pathname.match(/^\/user/)) {
     return 'user';
   }
@@ -31,21 +29,19 @@ const extractPageKind = (pathname) => {
   return undefined;
 };
 
-const extractParams = (pathname) => {
+const extractParams = (pathname: string) => {
   const params = pathname.split('/');
   const param = params.length >= 4 ? params[2] : '';
   const user = params.length >= 4 ? decodeURIComponent(params[3]) : '';
   return { param, user };
 };
 
-const generatePath = (kind, param, user) => (user && user !== '' ? `/${kind}/${param}/${encodeURIComponent(user)}` : `/${kind}/`);
+const generatePath = (kind: string, param: string, user: string) => (user && user !== '' ? `/${kind}/${param}/${encodeURIComponent(user)}` : `/${kind}/`);
 
-export const NavigationBar = (props) => {
+export const NavigationBar = () => {
   const location = useLocation();
-  // console.log(location);
   const { pathname } = location;
   const navigate = useNavigate();
-  // const { pathname } = props.location;
   const initialPageKind = extractPageKind(pathname);
   const initialState = extractParams(pathname);
 
@@ -54,7 +50,7 @@ export const NavigationBar = (props) => {
   const [user, setUser] = useState(initialState.user || '');
   const [isOpen, setIsOpen] = useState(false);
 
-  const submit = (nextKind) => {
+  const submit = (nextKind: string) => {
     navigate(generatePath(nextKind, param, user));
     setPageKind(nextKind);
   };
@@ -179,5 +175,3 @@ export const NavigationBar = (props) => {
     </Navbar>
   );
 };
-
-// export const NavigationBar = withRouter(NavigationBar2);

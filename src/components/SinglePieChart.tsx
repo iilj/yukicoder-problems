@@ -3,7 +3,15 @@ import {
   PieChart, Pie, ResponsiveContainer, Cell, Tooltip, Legend,
 } from 'recharts';
 
-export const SinglePieChart = ({ data }) => (
+export const SinglePieChart = ({
+  data,
+}: {
+  data: {
+    value: number;
+    color: string;
+    name: string;
+  }[];
+}) => (
   <div>
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>
