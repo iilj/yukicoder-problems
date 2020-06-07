@@ -40,7 +40,7 @@ const initialUserState = {
 };
 
 export const UserPage = (props) => {
-  let { param, user } = useParams();
+  const { param, user } = useParams();
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
@@ -136,12 +136,12 @@ export const UserPage = (props) => {
     : shortestCount === 0
       ? 1 + golfRankerCount
       : 1
-      + Object.keys(golferMap).reduce((cnt, userName) => {
-        if (golferMap[userName].length > shortestCount) {
-          ++cnt;
-        }
-        return cnt;
-      }, 0);
+        + Object.keys(golferMap).reduce((cnt, userName) => {
+          if (golferMap[userName].length > shortestCount) {
+            ++cnt;
+          }
+          return cnt;
+        }, 0);
 
   const pureShortestCount = name && name in pureGolferMap ? pureGolferMap[name].length : 0;
   const pureGolfRankerCount = Object.keys(pureGolferMap).length;
@@ -150,12 +150,12 @@ export const UserPage = (props) => {
     : pureShortestCount === 0
       ? 1 + pureGolfRankerCount
       : 1
-      + Object.keys(pureGolferMap).reduce((cnt, userName) => {
-        if (pureGolferMap[userName].length > pureShortestCount) {
-          ++cnt;
-        }
-        return cnt;
-      }, 0);
+        + Object.keys(pureGolferMap).reduce((cnt, userName) => {
+          if (pureGolferMap[userName].length > pureShortestCount) {
+            ++cnt;
+          }
+          return cnt;
+        }, 0);
 
   // for pichart
   const regularContestProblemsCntMap = contests.reduce((map, contest) => {

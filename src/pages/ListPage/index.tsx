@@ -54,7 +54,7 @@ const initialUserState = {
 };
 
 export const ListPage = () => {
-  let { param, user } = useParams() as { param: TypedCachedApiClient.UserParam; user: string };
+  const { param, user } = useParams() as { param: TypedCachedApiClient.UserParam; user: string };
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);

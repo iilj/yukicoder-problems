@@ -7,37 +7,34 @@ import {
 import { YukicoderRegularTable } from './YukicoderRegularTable';
 import { ContestTable } from './ContestTable';
 import { AllProblemsTable } from './AllProblemsTable';
-import { TableTabButtons } from './TableTab';
+import { TableTabButtons, ContestTableTab } from './TableTab';
 import { useLocalStorage } from '../../utils/LocalStorage';
-import * as CachedApiClient from '../../utils/CachedApiClient';
+import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
 import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
+import { Contest, ContestId } from '../../interfaces/Contest';
+import { Problem, ProblemId } from '../../interfaces/Problem';
 
 /**
  * Wrap element to switch visibility.
- *
- * @param {{display: boolean, children: any}} props
- * @returns {JSX.Element} wrapped element
  */
-const ContestWrapper = (props) => (
+const ContestWrapper = (props: { display: boolean; children: React.ReactNode }) => (
   <div style={{ display: props.display ? '' : 'none' }}>{props.children}</div>
 );
 
-/**
- * @type {{contests: {Id: number, Name: string, Date: string, EndDate: string, ProblemIdList: number[]}[], problemsMap: any}}
- */
 const initialUniversalState = {
-  contests: [],
-  contestMap: {},
-  problemsMap: {},
-  problemContestMap: {},
+  problems: [] as Problem[],
+  contests: [] as Contest[],
+  contestMap: new Map<ContestId, Contest>(),
+  problemsMap: new Map<ProblemId, Problem>(),
+  problemContestMap: new Map<ProblemId, ContestId>(),
 };
 
 const initialUserState = {
-  solvedProblemsMap: {},
+  solvedProblemsMap: new Map<ProblemId, Problem>(),
 };
 
-export const TablePage = (props) => {
-  let { param, user } = useParams();
+export const TablePage = () => {
+  const { param, user } = useParams() as { param: TypedCachedApiClient.UserParam; user: string };
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
@@ -45,17 +42,19 @@ export const TablePage = (props) => {
   useEffect(() => {
     let unmounted = false;
     const getUniversalInfo = async () => {
-      const [contests, problemsMap] = await Promise.all([
-        CachedApiClient.cachedContestArray(),
-        CachedApiClient.cachedProblemMap(),
+      const [problems, contests] = await Promise.all([
+        TypedCachedApiClient.cachedProblemArray(),
+        TypedCachedApiClient.cachedContestArray(),
       ]);
-      const [contestMap, problemContestMap] = await Promise.all([
-        CachedApiClient.cachedContestMap(),
-        CachedApiClient.cachedProblemContestMap(),
+      const [problemsMap, contestMap, problemContestMap] = await Promise.all([
+        TypedCachedApiClient.cachedProblemMap(),
+        TypedCachedApiClient.cachedContestMap(),
+        TypedCachedApiClient.cachedProblemContestMap(),
       ]);
 
       if (!unmounted) {
         setUniversalState({
+          problems,
           contests,
           contestMap,
           problemsMap,
@@ -73,7 +72,9 @@ export const TablePage = (props) => {
   useEffect(() => {
     let unmounted = false;
     const getUserInfo = async () => {
-      const solvedProblemsMap = param && user ? await CachedApiClient.cachedSolvedProblemMap(param, user) : {};
+      const solvedProblemsMap = param && user
+        ? await TypedCachedApiClient.cachedSolvedProblemMap(param, user)
+        : new Map<ProblemId, Problem>();
 
       if (!unmounted) {
         setUserState({
@@ -89,7 +90,7 @@ export const TablePage = (props) => {
   }, [param, user, setUserState]);
 
   const {
-    contests, contestMap, problemsMap, problemContestMap,
+    problems, contests, contestMap, problemsMap, problemContestMap,
   } = universalState;
   const { solvedProblemsMap } = userState;
 
@@ -101,11 +102,11 @@ export const TablePage = (props) => {
     'TablePage_showContestResult',
     true,
   );
-  const [activeTab, setActiveTab] = useLocalStorage('TablePage_activeTab', 0);
+  const [activeTab, setActiveTab] = useLocalStorage('TablePage_activeTab', ContestTableTab.regular);
 
-  const yukicoderRegularContests = [];
-  const yukicoderLongContests = [];
-  const otherContests = [];
+  const yukicoderRegularContests = [] as Contest[];
+  const yukicoderLongContests = [] as Contest[];
+  const otherContests = [] as Contest[];
   contests.forEach((contest) => {
     if (contest.Name.match(/^yukicoder contest \d+/)) {
       if (contest.ProblemIdList.length <= 6) yukicoderRegularContests.push(contest);
@@ -171,10 +172,10 @@ export const TablePage = (props) => {
       </ContestWrapper>
       <ContestWrapper display={activeTab === 3}>
         <AllProblemsTable
+          problems={problems}
           contestMap={contestMap}
           problemContestMap={problemContestMap}
           title="All Problems"
-          problemsMap={problemsMap}
           solvedProblemsMap={solvedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}

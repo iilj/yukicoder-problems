@@ -5,8 +5,17 @@ import { ContestLink } from '../../components/ContestLink';
 import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { SubmitTimespan } from '../../components/SubmitTimespan';
 import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
+import { Contest } from '../../interfaces/Contest';
+import { Problem, ProblemId, ProblemNo } from '../../interfaces/Problem';
 
-export const ContestTable = (props) => {
+export const ContestTable = (props: {
+  title: string;
+  contests: Contest[];
+  problemsMap: Map<ProblemId, Problem>;
+  solvedProblemsMap: Map<ProblemId, Problem>;
+  showDifficultyLevel: boolean;
+  showContestResult: boolean;
+}) => {
   const {
     contests,
     problemsMap,
@@ -56,19 +65,19 @@ export const ContestTable = (props) => {
             <Table striped bordered hover className="contest-other-table">
               <tbody>
                 <tr>
-                  {contest.ProblemIdList.map((pid, i) => {
-                    if (problemsMap !== undefined && pid in problemsMap) {
-                      const problem = problemsMap[pid];
-                      const solvedProblem = solvedProblemsMap && pid in solvedProblemsMap
-                        ? solvedProblemsMap[pid]
+                  {contest.ProblemIdList.map((pid: ProblemId, i) => {
+                    if (problemsMap !== undefined && problemsMap.has(pid)) {
+                      const problem = problemsMap.get(pid) as Problem;
+                      const solvedProblem = solvedProblemsMap && solvedProblemsMap.has(pid)
+                        ? solvedProblemsMap.get(pid)
                         : undefined;
-                      let className;
+                      let className: string;
                       if (!solvedProblem) {
                         className = 'table-problem';
                       } else {
-                        const solvedDate = Date.parse(solvedProblem.Date);
-                        const startDate = Date.parse(contest.Date);
-                        const endDate = Date.parse(contest.EndDate);
+                        const solvedDate = Date.parse(solvedProblem.Date as string);
+                        const startDate = Date.parse((contest as Contest).Date);
+                        const endDate = Date.parse((contest as Contest).EndDate);
                         if (!showContestResult || solvedDate > endDate) className = 'table-problem table-problem-solved';
                         else if (solvedDate >= startDate) className = 'table-problem table-problem-solved-intime';
                         else className = 'table-problem table-problem-solved-before-contest';
@@ -84,7 +93,7 @@ export const ContestTable = (props) => {
                           />
                           <ProblemTypeIconAbsoluteSpan problemType={problem.ProblemType} />
                           <ProblemLink
-                            problemNo={problem.No}
+                            problemNo={problem.No as ProblemNo}
                             problemTitle={problemTitle}
                             level={problem.Level}
                             showDifficultyLevel={showDifficultyLevel}

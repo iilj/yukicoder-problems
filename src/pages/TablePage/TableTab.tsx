@@ -1,7 +1,17 @@
 import React from 'react';
 import { Row, ButtonGroup, Button } from 'reactstrap';
 
-export const TableTabButtons = (props) => {
+export enum ContestTableTab {
+  'regular' = 0,
+  'long' = 1,
+  'other' = 2,
+  'all' = 3,
+}
+
+export const TableTabButtons = (props: {
+  active: ContestTableTab;
+  setActive: (next: ContestTableTab) => void;
+}) => {
   const { active, setActive } = props;
   return (
     <Row>
@@ -9,36 +19,36 @@ export const TableTabButtons = (props) => {
         <Button
           color="secondary"
           onClick={() => {
-            setActive(0);
+            setActive(ContestTableTab.regular);
           }}
-          active={active === 0}
+          active={active === ContestTableTab.regular}
         >
           yukicoder contest (regular)
         </Button>
         <Button
           color="secondary"
           onClick={() => {
-            setActive(1);
+            setActive(ContestTableTab.long);
           }}
-          active={active === 1}
+          active={active === ContestTableTab.long}
         >
           yukicoder contest (long)
         </Button>
         <Button
           color="secondary"
           onClick={() => {
-            setActive(2);
+            setActive(ContestTableTab.other);
           }}
-          active={active === 2}
+          active={active === ContestTableTab.other}
         >
           Other contests
         </Button>
         <Button
           color="secondary"
           onClick={() => {
-            setActive(3);
+            setActive(ContestTableTab.all);
           }}
-          active={active === 3}
+          active={active === ContestTableTab.all}
         >
           All Problems
         </Button>

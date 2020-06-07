@@ -8,9 +8,10 @@ export const ProblemLink = (props: {
   problemTitle: string;
   level: ProblemLevel;
   showDifficultyLevel: boolean;
+  id?: string;
 }) => {
   const {
-    problemNo, problemTitle, level, showDifficultyLevel,
+    problemNo, problemTitle, level, showDifficultyLevel, id,
   } = props;
   return (
     <a
@@ -19,6 +20,7 @@ export const ProblemLink = (props: {
       rel="noopener"
       className={showDifficultyLevel ? getDifficultyLevelColorClass(level) : ''}
       title={problemTitle}
+      id={id}
     >
       {problemTitle}
     </a>

@@ -6,8 +6,17 @@ import { ContestLink } from '../../components/ContestLink';
 import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { SubmitTimespan } from '../../components/SubmitTimespan';
 import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
+import { Contest } from '../../interfaces/Contest';
+import { Problem, ProblemId, ProblemNo } from '../../interfaces/Problem';
 
-export const YukicoderRegularTable = (props) => {
+export const YukicoderRegularTable = (props: {
+  title: string;
+  contests: Contest[];
+  problemsMap: Map<ProblemId, Problem>;
+  solvedProblemsMap: Map<ProblemId, Problem>;
+  showDifficultyLevel: boolean;
+  showContestResult: boolean;
+}) => {
   const {
     contests,
     problemsMap,
@@ -31,15 +40,17 @@ export const YukicoderRegularTable = (props) => {
         <TableHeaderColumn
           isKey
           dataField="Name"
-          columnClassName={(_, contest) => {
+          columnClassName={(_, contest: Contest) => {
             const startDate = Date.parse(contest.Date);
             const endDate = Date.parse(contest.EndDate);
-            const ls = contest.ProblemIdList.map((pid) => {
-              const problem = problemsMap && pid in problemsMap ? problemsMap[pid] : undefined;
+            const ls = contest.ProblemIdList.map((pid: ProblemId) => {
+              const problem = problemsMap && problemsMap.has(pid) ? problemsMap.get(pid) : undefined;
               if (!problem) return 0;
-              const solvedProblem = solvedProblemsMap && pid in solvedProblemsMap ? solvedProblemsMap[pid] : undefined;
+              const solvedProblem = solvedProblemsMap && solvedProblemsMap.has(pid)
+                ? solvedProblemsMap.get(pid)
+                : undefined;
               if (!solvedProblem) return 0;
-              const solvedDate = Date.parse(solvedProblem.Date);
+              const solvedDate = Date.parse(solvedProblem.Date as string);
               if (solvedDate > endDate) return 1;
               // solved
               if (solvedDate >= startDate) return 2;
@@ -51,7 +62,7 @@ export const YukicoderRegularTable = (props) => {
             if (ls.every((stat) => stat >= 1)) return 'table-problem table-problem-solved';
             return 'table-problem';
           }}
-          dataFormat={(_, contest) => (
+          dataFormat={(_, contest: Contest) => (
             <ContestLink
               contestId={contest.Id}
               contestName={contest.Name.replace(/^yukicoder contest /, '')}
@@ -65,13 +76,13 @@ export const YukicoderRegularTable = (props) => {
           <TableHeaderColumn
             dataField={c}
             key={c}
-            columnClassName={(_, contest) => {
+            columnClassName={(_, contest: Contest) => {
               const pid = i in contest.ProblemIdList ? contest.ProblemIdList[i] : undefined;
-              const problem = pid !== undefined && problemsMap && pid in problemsMap
-                ? problemsMap[pid]
+              const problem = pid !== undefined && problemsMap && problemsMap.has(pid)
+                ? problemsMap.get(pid)
                 : undefined;
-              const solvedProblem = pid !== undefined && solvedProblemsMap && pid in solvedProblemsMap
-                ? solvedProblemsMap[pid]
+              const solvedProblem = pid !== undefined && solvedProblemsMap && solvedProblemsMap.has(pid)
+                ? solvedProblemsMap.get(pid)
                 : undefined;
               if (!pid) {
                 return 'table-problem-empty';
@@ -79,20 +90,20 @@ export const YukicoderRegularTable = (props) => {
               if (!problem || !solvedProblem) {
                 return 'table-problem';
               }
-              const solvedDate = Date.parse(solvedProblem.Date);
+              const solvedDate = Date.parse(solvedProblem.Date as string);
               const startDate = Date.parse(contest.Date);
               const endDate = Date.parse(contest.EndDate);
               if (!showContestResult || solvedDate > endDate) return 'table-problem table-problem-solved';
               if (solvedDate >= startDate) return 'table-problem table-problem-solved-intime';
               return 'table-problem table-problem-solved-before-contest';
             }}
-            dataFormat={(_, contest) => {
+            dataFormat={(_, contest: Contest) => {
               const pid = i in contest.ProblemIdList ? contest.ProblemIdList[i] : undefined;
-              const problem = pid !== undefined && problemsMap && pid in problemsMap
-                ? problemsMap[pid]
+              const problem = pid !== undefined && problemsMap && problemsMap.has(pid)
+                ? problemsMap.get(pid)
                 : undefined;
-              const solvedProblem = pid !== undefined && solvedProblemsMap && pid in solvedProblemsMap
-                ? solvedProblemsMap[pid]
+              const solvedProblem = pid !== undefined && solvedProblemsMap && solvedProblemsMap.has(pid)
+                ? solvedProblemsMap.get(pid)
                 : undefined;
               if (!pid) {
                 return '';
@@ -117,7 +128,7 @@ export const YukicoderRegularTable = (props) => {
                   />
                   <ProblemTypeIconAbsoluteSpan problemType={problem.ProblemType} />
                   <ProblemLink
-                    problemNo={problem.No}
+                    problemNo={problem.No as ProblemNo}
                     problemTitle={problemTitle}
                     level={problem.Level}
                     showDifficultyLevel={showDifficultyLevel}

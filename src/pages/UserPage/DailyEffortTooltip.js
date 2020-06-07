@@ -6,7 +6,6 @@ export const DailyEffortTooltip = ({
   active, payload, label, reverseColorOrder,
 }) => {
   if (!active) return null;
-  console.log(reverseColorOrder);
   return (
     <div
       className="recharts-default-tooltip"

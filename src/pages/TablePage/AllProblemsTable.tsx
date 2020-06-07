@@ -6,25 +6,41 @@ import { ProblemLink } from '../../components/ProblemLink';
 import { DifficultyStars } from '../../components/DifficultyStars';
 import { range } from '../../utils';
 import './AllProblemsTable.css';
+import { Contest, ContestId } from '../../interfaces/Contest';
+import { Problem, ProblemId, ProblemNo } from '../../interfaces/Problem';
 
-export const AllProblemsTable = (props) => {
+export const AllProblemsTable = (props: {
+  title: string;
+  problems: Problem[];
+  contestMap: Map<ContestId, Contest>;
+  problemContestMap: Map<ProblemId, ContestId>;
+  solvedProblemsMap: Map<ProblemId, Problem>;
+  showDifficultyLevel: boolean;
+  showContestResult: boolean;
+}) => {
   const {
+    problems,
     contestMap,
     problemContestMap,
-    problemsMap,
     solvedProblemsMap,
     showDifficultyLevel,
     showContestResult,
   } = props;
-  const problems = Object.values(problemsMap).sort((a, b) => a.No - b.No);
-  const problemTables = problems.reduce((prevMap, problem) => {
-    const key = Math.min(Math.floor((problem.No - 1) / 100), 29);
-    if (!(key in prevMap)) {
-      prevMap[key] = [];
-    }
-    prevMap[key].push(problem);
-    return prevMap;
-  }, {});
+  const problemTables = problems
+    .filter((a) => a.No !== undefined)
+    .sort((a, b) => (a.No as ProblemNo) - (b.No as ProblemNo))
+    .reduce((prevMap, problem) => {
+      const key = Math.min(Math.floor(((problem.No as ProblemNo) - 1) / 100), 29);
+      if (!prevMap.has(key)) {
+        prevMap.set(key, []);
+      }
+      (prevMap.get(key) as Problem[]).push(problem);
+      return prevMap;
+    }, new Map<number, Problem[]>());
+  const problemTableEntries = [] as [number, Problem[]][];
+  problemTables.forEach((problems, key) => {
+    problemTableEntries.push([key, problems]);
+  });
   return (
     <>
       <Row className="my-4">
@@ -32,49 +48,47 @@ export const AllProblemsTable = (props) => {
       </Row>
       <div className="my-inner-container">
         <Row className="my-4">
-          {Object.keys(problemTables).map((key) => {
-            const curTableProblems = problemTables[key];
-            return (
-              <Col key={key} className="text-center" xs="12" sm="12" md="6" lg="6" xl="4">
-                <Table striped bordered hover className="problemsTable">
-                  <tbody>
-                    {range(0, 9).map((rowidx) => {
-                      const offset = rowidx * 10;
-                      if (curTableProblems.length <= offset) {
-                        return null;
-                      }
-                      return (
-                        <tr key={offset}>
-                          {range(0, 9).map((colidx) => {
-                            const idx = offset + colidx;
-                            if (idx >= curTableProblems.length) return null;
-                            const problem = curTableProblems[idx];
-                            const pid = problem.ProblemId;
-                            const solvedProblem = solvedProblemsMap && pid in solvedProblemsMap
-                              ? solvedProblemsMap[pid]
-                              : undefined;
-                            const contestId = problemContestMap && pid in problemContestMap
-                              ? problemContestMap[pid]
-                              : undefined;
-                            const contest = contestId ? contestMap[contestId] : undefined;
-                            let className;
-                            if (!solvedProblem) {
-                              className = 'table-problem';
-                            } else if (!contestId) {
-                              className = 'table-problem table-problem-solved';
-                            } else {
-                              const solvedDate = Date.parse(solvedProblem.Date);
-                              const startDate = Date.parse(contest.Date);
-                              const endDate = Date.parse(contest.EndDate);
-                              if (!showContestResult || solvedDate > endDate) className = 'table-problem table-problem-solved';
-                              else if (solvedDate >= startDate) className = 'table-problem table-problem-solved-intime';
-                              else className = 'table-problem table-problem-solved-before-contest';
-                            }
-                            const elementId = `AllProblems_td_${problem.No}`;
-                            return (
-                              <td key={pid} className={className} id={elementId}>
+          {problemTableEntries.map(([key, curTableProblems]) => (
+            <Col key={key} className="text-center" xs="12" sm="12" md="6" lg="6" xl="4">
+              <Table striped bordered hover className="problemsTable">
+                <tbody>
+                  {range(0, 9).map((rowidx: number) => {
+                    const offset = rowidx * 10;
+                    if (curTableProblems.length <= offset) {
+                      return null;
+                    }
+                    return (
+                      <tr key={offset}>
+                        {range(0, 9).map((colidx) => {
+                          const idx = offset + colidx;
+                          if (idx >= curTableProblems.length) return null;
+                          const problem = curTableProblems[idx];
+                          const pid = problem.ProblemId;
+                          const solvedProblem = solvedProblemsMap && solvedProblemsMap.has(pid)
+                            ? solvedProblemsMap.get(pid)
+                            : undefined;
+                          const contestId = problemContestMap && problemContestMap.has(pid)
+                            ? problemContestMap.get(pid)
+                            : undefined;
+                          const contest = contestId ? contestMap.get(contestId) : undefined;
+                          let className: string;
+                          if (!solvedProblem) {
+                            className = 'table-problem';
+                          } else if (!contestId) {
+                            className = 'table-problem table-problem-solved';
+                          } else {
+                            const solvedDate = Date.parse(solvedProblem.Date as string);
+                            const startDate = Date.parse((contest as Contest).Date);
+                            const endDate = Date.parse((contest as Contest).EndDate);
+                            if (!showContestResult || solvedDate > endDate) className = 'table-problem table-problem-solved';
+                            else if (solvedDate >= startDate) className = 'table-problem table-problem-solved-intime';
+                            else className = 'table-problem table-problem-solved-before-contest';
+                          }
+                          const elementId = `AllProblems_td_${problem.No}`;
+                          return (
+                            <td key={pid} className={className} id={elementId}>
                                 <ProblemLink
-                                  problemNo={problem.No}
+                                  problemNo={problem.No as ProblemNo}
                                   problemTitle={`${problem.No}`}
                                   level={problem.Level}
                                   showDifficultyLevel={showDifficultyLevel}
@@ -90,7 +104,7 @@ export const AllProblemsTable = (props) => {
                                 >
                                   <div>
                                     <ProblemLink
-                                      problemNo={problem.No}
+                                      problemNo={problem.No as ProblemNo}
                                       problemTitle={`${problem.Title}`}
                                       level={problem.Level}
                                       showDifficultyLevel={showDifficultyLevel}
@@ -105,16 +119,15 @@ export const AllProblemsTable = (props) => {
                                   </div>
                                 </UncontrolledTooltip>
                               </td>
-                            );
-                          })}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </Table>
-              </Col>
-            );
-          })}
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </Col>
+          ))}
         </Row>
       </div>
     </>
