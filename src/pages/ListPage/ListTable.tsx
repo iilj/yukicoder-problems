@@ -122,8 +122,8 @@ export const ListTable = (props: {
           Bytes)
         </a>
       ) : (
-        <></>
-      )),
+          <></>
+        )),
     },
     {
       header: 'Pure Shortest',
@@ -143,8 +143,8 @@ export const ListTable = (props: {
           Bytes)
         </a>
       ) : (
-        <></>
-      )),
+          <></>
+        )),
     },
     {
       header: 'ProblemType',
@@ -215,14 +215,14 @@ export const ListTable = (props: {
                   : undefined,
               ShortestRankingProblem:
                 golferProblemMap
-                && typeof problem.No === 'number'
-                && golferProblemMap.has(problem.No)
+                  && typeof problem.No === 'number'
+                  && golferProblemMap.has(problem.No)
                   ? golferProblemMap.get(problem.No)
                   : undefined,
               PureShortestRankingProblem:
                 golferPureProblemMap
-                && typeof problem.No === 'number'
-                && golferPureProblemMap.has(problem.No)
+                  && typeof problem.No === 'number'
+                  && golferPureProblemMap.has(problem.No)
                   ? golferPureProblemMap.get(problem.No)
                   : undefined,
               ContestName: undefined,
@@ -256,15 +256,15 @@ export const ListTable = (props: {
           })
           .filter((problem) => {
             if (fromDate === undefined && toDate === undefined) return true;
-            if (problem.Date === null || problem.Date === undefined) return false;
+            if (problem.Date === null) return false;
             const startDate = new Date(problem.Date);
             if (fromDate === undefined) return startDate <= (toDate as Date);
             if (toDate === undefined) return (fromDate as Date) <= startDate;
             return fromDate <= startDate && startDate <= toDate;
           })
           .sort((a, b) => {
-            if (a.Date === undefined) return 1;
-            if (b.Date === undefined) return -1;
+            if (a.Date === null) return 1;
+            if (b.Date === null) return -1;
             return a.Date < b.Date ? 1 : -1;
           })}
         trClassName={(problem) => {

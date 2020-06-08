@@ -32,7 +32,7 @@ export type ProblemLevel = typeof ProblemLevels[number];
 /** 問題 */
 export interface Problem {
   /** 問題No */
-  readonly No?: ProblemNo;
+  readonly No: ProblemNo | null;
   /** 問題Id */
   readonly ProblemId: ProblemId;
   /** 問題名 */
@@ -48,5 +48,5 @@ export interface Problem {
   /** 問題のタグ カンマ区切り */
   readonly Tags: string;
   /** 最初に正答された時間（RFC 3339） */
-  readonly Date?: string;
+  readonly Date: string | null;
 }

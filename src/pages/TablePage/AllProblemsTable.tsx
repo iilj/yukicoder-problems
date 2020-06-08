@@ -27,7 +27,7 @@ export const AllProblemsTable = (props: {
     showContestResult,
   } = props;
   const problemTables = problems
-    .filter((a) => a.No !== undefined)
+    .filter((a) => a.No !== null)
     .sort((a, b) => (a.No as ProblemNo) - (b.No as ProblemNo))
     .reduce((prevMap, problem) => {
       const key = Math.min(Math.floor(((problem.No as ProblemNo) - 1) / 100), 29);
