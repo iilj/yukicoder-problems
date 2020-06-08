@@ -13,6 +13,7 @@ import { formatSubmissionUrl } from '../../utils/Url';
 import {
   Problem, ProblemLevel, ProblemId, ProblemNo, ProblemType,
 } from '../../interfaces/Problem';
+import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { RankingProblem } from '../../interfaces/RankingProblem';
 
@@ -32,7 +33,7 @@ export const ListTable = (props: {
   problems: Problem[];
   contestMap: Map<ContestId, Contest>;
   problemContestMap: Map<ProblemId, ContestId>;
-  solvedProblemsMap: Map<ProblemId, Problem>;
+  solvedProblemsMap: Map<ProblemId, SolvedProblem>;
   golferProblemMap: Map<ProblemNo, RankingProblem>;
   golferPureProblemMap: Map<ProblemNo, RankingProblem>;
   statusFilterState: FilterState;
@@ -122,8 +123,8 @@ export const ListTable = (props: {
           Bytes)
         </a>
       ) : (
-          <></>
-        )),
+        <></>
+      )),
     },
     {
       header: 'Pure Shortest',
@@ -143,8 +144,8 @@ export const ListTable = (props: {
           Bytes)
         </a>
       ) : (
-          <></>
-        )),
+        <></>
+      )),
     },
     {
       header: 'ProblemType',
@@ -211,18 +212,18 @@ export const ListTable = (props: {
                   : null,
               SolveDate:
                 solvedProblemsMap && solvedProblemsMap.has(problem.ProblemId)
-                  ? (solvedProblemsMap.get(problem.ProblemId) as Problem).Date
+                  ? (solvedProblemsMap.get(problem.ProblemId) as SolvedProblem).Date
                   : undefined,
               ShortestRankingProblem:
                 golferProblemMap
-                  && typeof problem.No === 'number'
-                  && golferProblemMap.has(problem.No)
+                && typeof problem.No === 'number'
+                && golferProblemMap.has(problem.No)
                   ? golferProblemMap.get(problem.No)
                   : undefined,
               PureShortestRankingProblem:
                 golferPureProblemMap
-                  && typeof problem.No === 'number'
-                  && golferPureProblemMap.has(problem.No)
+                && typeof problem.No === 'number'
+                && golferPureProblemMap.has(problem.No)
                   ? golferPureProblemMap.get(problem.No)
                   : undefined,
               ContestName: undefined,

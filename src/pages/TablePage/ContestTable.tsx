@@ -7,12 +7,13 @@ import { SubmitTimespan } from '../../components/SubmitTimespan';
 import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
 import { Contest } from '../../interfaces/Contest';
 import { Problem, ProblemId, ProblemNo } from '../../interfaces/Problem';
+import { SolvedProblem } from '../../interfaces/SolvedProblem';
 
 export const ContestTable = (props: {
   title: string;
   contests: Contest[];
   problemsMap: Map<ProblemId, Problem>;
-  solvedProblemsMap: Map<ProblemId, Problem>;
+  solvedProblemsMap: Map<ProblemId, SolvedProblem>;
   showDifficultyLevel: boolean;
   showContestResult: boolean;
 }) => {
@@ -75,7 +76,7 @@ export const ContestTable = (props: {
                       if (!solvedProblem) {
                         className = 'table-problem';
                       } else {
-                        const solvedDate = Date.parse(solvedProblem.Date as string);
+                        const solvedDate = Date.parse(solvedProblem.Date);
                         const startDate = Date.parse((contest as Contest).Date);
                         const endDate = Date.parse((contest as Contest).EndDate);
                         if (!showContestResult || solvedDate > endDate) className = 'table-problem table-problem-solved';

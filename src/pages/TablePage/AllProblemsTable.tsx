@@ -8,13 +8,14 @@ import { range } from '../../utils';
 import './AllProblemsTable.css';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { Problem, ProblemId, ProblemNo } from '../../interfaces/Problem';
+import { SolvedProblem } from '../../interfaces/SolvedProblem';
 
 export const AllProblemsTable = (props: {
   title: string;
   problems: Problem[];
   contestMap: Map<ContestId, Contest>;
   problemContestMap: Map<ProblemId, ContestId>;
-  solvedProblemsMap: Map<ProblemId, Problem>;
+  solvedProblemsMap: Map<ProblemId, SolvedProblem>;
   showDifficultyLevel: boolean;
   showContestResult: boolean;
 }) => {
@@ -77,7 +78,7 @@ export const AllProblemsTable = (props: {
                           } else if (!contestId) {
                             className = 'table-problem table-problem-solved';
                           } else {
-                            const solvedDate = Date.parse(solvedProblem.Date as string);
+                            const solvedDate = Date.parse(solvedProblem.Date);
                             const startDate = Date.parse((contest as Contest).Date);
                             const endDate = Date.parse((contest as Contest).EndDate);
                             if (!showContestResult || solvedDate > endDate) className = 'table-problem table-problem-solved';

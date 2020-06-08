@@ -13,6 +13,7 @@ import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
 import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { Problem, ProblemId } from '../../interfaces/Problem';
+import { SolvedProblem } from '../../interfaces/SolvedProblem';
 
 /**
  * Wrap element to switch visibility.
@@ -30,7 +31,7 @@ const initialUniversalState = {
 };
 
 const initialUserState = {
-  solvedProblemsMap: new Map<ProblemId, Problem>(),
+  solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
 };
 
 export const TablePage = () => {
@@ -74,7 +75,7 @@ export const TablePage = () => {
     const getUserInfo = async () => {
       const solvedProblemsMap = param && user
         ? await TypedCachedApiClient.cachedSolvedProblemMap(param, user)
-        : new Map<ProblemId, Problem>();
+        : new Map<ProblemId, SolvedProblem>();
 
       if (!unmounted) {
         setUserState({

@@ -9,6 +9,13 @@ import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
 import { Contest } from '../../interfaces/Contest';
 import { Problem, ProblemId, ProblemNo } from '../../interfaces/Problem';
 
+enum ProblemSolveStatus {
+  Trying = 0,
+  Solved = 1,
+  Intime = 2,
+  BeforeContest = 3,
+}
+
 export const YukicoderRegularTable = (props: {
   title: string;
   contests: Contest[];
@@ -45,21 +52,19 @@ export const YukicoderRegularTable = (props: {
             const endDate = Date.parse(contest.EndDate);
             const ls = contest.ProblemIdList.map((pid: ProblemId) => {
               const problem = problemsMap && problemsMap.has(pid) ? problemsMap.get(pid) : undefined;
-              if (!problem) return 0;
+              if (!problem) return ProblemSolveStatus.Trying;
               const solvedProblem = solvedProblemsMap && solvedProblemsMap.has(pid)
                 ? solvedProblemsMap.get(pid)
                 : undefined;
-              if (!solvedProblem) return 0;
+              if (!solvedProblem) return ProblemSolveStatus.Trying;
               const solvedDate = Date.parse(solvedProblem.Date as string);
-              if (solvedDate > endDate) return 1;
-              // solved
-              if (solvedDate >= startDate) return 2;
-              // intime
-              return 3; // before contest
+              if (solvedDate > endDate) return ProblemSolveStatus.Solved;
+              if (solvedDate >= startDate) return ProblemSolveStatus.Intime;
+              return ProblemSolveStatus.BeforeContest;
             });
-            if (showContestResult && ls.every((stat) => stat === 3)) return 'table-problem table-problem-solved-before-contest';
-            if (showContestResult && ls.every((stat) => stat >= 2)) return 'table-problem table-problem-solved-intime';
-            if (ls.every((stat) => stat >= 1)) return 'table-problem table-problem-solved';
+            if (showContestResult && ls.every((stat) => stat === ProblemSolveStatus.BeforeContest)) return 'table-problem table-problem-solved-before-contest';
+            if (showContestResult && ls.every((stat) => stat >= ProblemSolveStatus.Intime)) return 'table-problem table-problem-solved-intime';
+            if (ls.every((stat) => stat >= ProblemSolveStatus.Solved)) return 'table-problem table-problem-solved';
             return 'table-problem';
           }}
           dataFormat={(_, contest: Contest) => (

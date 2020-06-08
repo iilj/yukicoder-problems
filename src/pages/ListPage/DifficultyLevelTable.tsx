@@ -3,14 +3,14 @@ import Table from 'reactstrap/lib/Table';
 import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { getDifficultyLevelColorClass } from '../../utils';
 import { Problem, ProblemLevels, ProblemLevel } from '../../interfaces/Problem';
+import { SolvedProblem } from '../../interfaces/SolvedProblem';
 
 export const DifficultyLevelTable = (props: {
   problems: Problem[];
-  solvedProblems: Problem[];
+  solvedProblems: SolvedProblem[];
   user: string;
 }) => {
   const { problems, solvedProblems, user } = props;
-  // const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 
   const difficultyLevelsSolvedCountMap = solvedProblems.reduce(
     (map, solvedProblem) => map.set(solvedProblem.Level, (map.get(solvedProblem.Level) as ProblemLevel) + 1),

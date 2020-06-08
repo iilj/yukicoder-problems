@@ -35,6 +35,7 @@ import {
   ProblemLevel,
   ProblemLevels,
 } from '../../interfaces/Problem';
+import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { RankingProblem } from '../../interfaces/RankingProblem';
 
@@ -49,8 +50,8 @@ const initialUniversalState = {
 };
 
 const initialUserState = {
-  solvedProblems: [] as Problem[],
-  solvedProblemsMap: new Map<ProblemId, Problem>(),
+  solvedProblems: [] as SolvedProblem[],
+  solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
 };
 
 export const ListPage = () => {
@@ -92,10 +93,10 @@ export const ListPage = () => {
     const getUserInfo = async () => {
       const solvedProblems = param && user
         ? await TypedCachedApiClient.cachedSolvedProblemArray(param, user)
-        : ([] as Problem[]);
+        : ([] as SolvedProblem[]);
       const solvedProblemsMap = param && user
         ? await TypedCachedApiClient.cachedSolvedProblemMap(param, user)
-        : new Map<ProblemId, Problem>();
+        : new Map<ProblemId, SolvedProblem>();
 
       if (!unmounted) {
         setUserState({

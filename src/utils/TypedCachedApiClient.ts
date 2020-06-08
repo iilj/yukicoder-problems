@@ -1,4 +1,5 @@
 import { Problem, ProblemNo, ProblemId } from '../interfaces/Problem';
+import { SolvedProblem } from '../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../interfaces/Contest';
 import { Language, LangId } from '../interfaces/Language';
 import { RankingProblem } from '../interfaces/RankingProblem';
@@ -29,7 +30,7 @@ const fetchGolferRanking = () => fetchJson<RankingProblem[]>(`${STATIC_API_BASE_
 const fetchGolferRankingPure = () => fetchJson<RankingProblem[]>(`${STATIC_API_BASE_URL}/ranking/golfer/pure`);
 const fetchGolferRankingPureLangId = (landId: LangId) => fetchJson<RankingProblem[]>(`${STATIC_API_BASE_URL}/ranking/golfer/pure/${landId}`);
 const fetchUserInfo = (param: UserParam, user: UserName) => fetchJson<User>(`${STATIC_API_BASE_URL}/user/${param}/${encodeURIComponent(user)}`);
-const fetchSolvedProblems = (param: UserParam, user: UserName) => fetchJson<Problem[]>(`${STATIC_API_BASE_URL}/solved/${param}/${encodeURIComponent(user)}`);
+const fetchSolvedProblems = (param: UserParam, user: UserName) => fetchJson<SolvedProblem[]>(`${STATIC_API_BASE_URL}/solved/${param}/${encodeURIComponent(user)}`);
 
 // //////////////////
 // Raw Data
@@ -64,13 +65,13 @@ export const cachedProblemArray = async (): Promise<Problem[]> => {
 };
 
 // solved problems raw array
-let CACHED_SOLVED_PROBLEMS: Problem[];
+let CACHED_SOLVED_PROBLEMS: SolvedProblem[];
 let CACHED_SOLVED_PROBLEMS_PARAM: UserParam;
 let CACHED_SOLVED_PROBLEMS_USER: string;
 export const cachedSolvedProblemArray = async (
   param: UserParam,
   user: string,
-): Promise<Problem[]> => {
+): Promise<SolvedProblem[]> => {
   if (
     CACHED_SOLVED_PROBLEMS === undefined
     || param !== CACHED_SOLVED_PROBLEMS_PARAM
@@ -213,13 +214,13 @@ export const cachedProblemContestMap = async (): Promise<Map<ProblemId, ContestI
 };
 
 // map (problem id -> solved problem object)
-let CACHED_SOLVED_PROBLEMS_MAP: Map<ProblemId, Problem>;
+let CACHED_SOLVED_PROBLEMS_MAP: Map<ProblemId, SolvedProblem>;
 let CACHED_SOLVED_PROBLEMS_MAP_PARAM: UserParam;
 let CACHED_SOLVED_PROBLEMS_MAP_USER: string;
 export const cachedSolvedProblemMap = async (
   param: UserParam,
   user: string,
-): Promise<Map<ProblemId, Problem>> => {
+): Promise<Map<ProblemId, SolvedProblem>> => {
   if (
     CACHED_SOLVED_PROBLEMS_MAP === undefined
     || param !== CACHED_SOLVED_PROBLEMS_MAP_PARAM
@@ -230,9 +231,9 @@ export const cachedSolvedProblemMap = async (
       CACHED_SOLVED_PROBLEMS_MAP = cachedSolvedProblems.reduce((map, problem) => {
         if (problem === undefined) return map;
         return map.set(problem.ProblemId, problem);
-      }, new Map<ProblemId, Problem>());
+      }, new Map<ProblemId, SolvedProblem>());
     } else {
-      CACHED_SOLVED_PROBLEMS_MAP = new Map<ProblemId, Problem>();
+      CACHED_SOLVED_PROBLEMS_MAP = new Map<ProblemId, SolvedProblem>();
     }
     CACHED_SOLVED_PROBLEMS_MAP_PARAM = param;
     CACHED_SOLVED_PROBLEMS_MAP_USER = user;
