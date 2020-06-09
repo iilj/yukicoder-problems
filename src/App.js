@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  HashRouter as Router, Route, Routes, Redirect,
+  HashRouter as Router, Route, Routes, Navigate,
 } from 'react-router-dom';
 import { Container } from 'reactstrap';
 
@@ -36,7 +36,7 @@ function App() {
           <Route path="/list/:param/:user" element={<ListPage />} />
           <Route path="/list/" element={<ListPage />} />
           <Route path="/user/:param/:user" element={<UserPage />} />
-          <Redirect path="/" to="/table/" />
+          <Route path="/" element={<Navigate to="/table/" />} />
         </Routes>
       </Container>
     </Router>
