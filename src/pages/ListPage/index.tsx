@@ -17,7 +17,6 @@ import { useParams } from 'react-router-dom';
 import { DifficultyLevelTable } from './DifficultyLevelTable';
 import { ProblemTypeTable } from './ProblemTypeTable';
 import { ListTable, FilterState } from './ListTable';
-// import * as CachedApiClient from '../../utils/CachedApiClient';
 import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
 import { WellPositionedDropdownMenu } from '../../components/WellPositionedDropdownMenu';
 import { DifficultyStarsFillDefs, DifficultyStars } from '../../components/DifficultyStars';
@@ -128,8 +127,6 @@ export const ListPage = () => {
   const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
   const [problemTypeFilterState, setProblemTypeFilterState] = useState<ProblemType | 'All'>('All');
-
-  // const difficultyLevels = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 
   return (
     <>

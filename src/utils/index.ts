@@ -16,12 +16,12 @@ import { ProblemLevel, ProblemType } from '../interfaces/Problem';
 /**
  * 問題のレベル一覧を返す
  *
- * @returns {number[]} problem level list
+ * @returns {ProblemLevel[]} problem level list
  */
-export const getLevelList = (): number[] => {
-  const ret = [0];
+export const getLevelList = (): ProblemLevel[] => {
+  const ret = [0] as ProblemLevel[];
   for (let i = 1; i <= 6; i += 0.5) {
-    ret.push(i);
+    ret.push(i as ProblemLevel);
   }
   return ret;
 };
@@ -159,3 +159,5 @@ export const getProblemTypeName = (problemType: ProblemType) => {
  * @returns {number[]} array
  */
 export const range = (start: number, end: number): number[] => Array.from({ length: end - start + 1 }, (v, k) => k + start);
+
+export const mapToObject = <T>(map: Map<string | number | symbol, T>): {} => Array.from(map.entries()).reduce((l, [k, v]) => Object.assign(l, { [k]: v }), {});

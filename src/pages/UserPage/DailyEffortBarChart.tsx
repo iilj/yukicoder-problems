@@ -5,7 +5,9 @@ import {
 } from 'recharts';
 import dataFormat from 'dateformat';
 
-export const DailyEffortBarChart = (props) => {
+export const DailyEffortBarChart = (props: {
+  dailyData: { dateSecond: number; count: number }[];
+}) => {
   if (props.dailyData.length === 0) return null;
 
   return (
@@ -25,11 +27,11 @@ export const DailyEffortBarChart = (props) => {
             dataKey="dateSecond"
             type="number"
             domain={['dataMin', 'dataMax']}
-            tickFormatter={(dateSecond) => dataFormat(new Date(dateSecond), 'yyyy/mm/dd')}
+            tickFormatter={(dateSecond: number) => dataFormat(new Date(dateSecond), 'yyyy/mm/dd')}
           />
           <YAxis />
           <Tooltip
-            labelFormatter={(dateSecond) => dataFormat(new Date(Number(dateSecond)), 'yyyy/mm/dd')}
+            labelFormatter={(dateSecond: number) => dataFormat(new Date(Number(dateSecond)), 'yyyy/mm/dd')}
           />
           <Bar dataKey="count" fill="#8884d8" />
         </BarChart>

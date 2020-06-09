@@ -1,11 +1,24 @@
 import React from 'react';
 import dataFormat from 'dateformat';
 import { DifficultyStars } from '../../components/DifficultyStars';
+import { ProblemLevel } from '../../interfaces/Problem';
 
-export const DailyEffortTooltip = ({
-  active, payload, label, reverseColorOrder,
+interface DailyEffortTooltipPayload {
+  value: number;
+  dataKey: ProblemLevel;
+  stroke: string;
+}
+
+export const DailyEffortTooltip = (props: {
+  active?: boolean;
+  payload?: DailyEffortTooltipPayload[];
+  label?: number;
+  reverseColorOrder?: boolean;
 }) => {
-  if (!active) return null;
+  const {
+    active, payload, label, reverseColorOrder,
+  } = props;
+  if (!active || payload === undefined) return null;
   return (
     <div
       className="recharts-default-tooltip"

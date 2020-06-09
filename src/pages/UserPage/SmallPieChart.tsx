@@ -7,7 +7,7 @@ const COLORS = {
   Trying: '#58616a',
 };
 
-const SmallPieChart = (props) => {
+const SmallPieChart = (props: { title: string; trying: number; accepted: number }) => {
   const { title, trying, accepted } = props;
 
   const data = [
@@ -23,11 +23,11 @@ const SmallPieChart = (props) => {
   );
 };
 
-export const PieCharts = (props) => {
-  const {
-    problems, // { total: number; solved: number }[]
-    title,
-  } = props;
+export const PieCharts = (props: {
+  problems: { total: number; solved: number }[];
+  title: string;
+}) => {
+  const { problems, title } = props;
   return (
     <div>
       <Row className="my-2 border-bottom">

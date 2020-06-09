@@ -3,36 +3,29 @@ import { Row, Col } from 'reactstrap';
 import { getLevelList, getDifficultyLevelColor } from '../../utils';
 import { SinglePieChart } from '../../components/SinglePieChart';
 import { DifficultyStars } from '../../components/DifficultyStars';
+import { Problem, ProblemLevel } from '../../interfaces/Problem';
+import { SolvedProblem } from '../../interfaces/SolvedProblem';
 
-export const ProblemLevelPieChart = (props) => {
+export const ProblemLevelPieChart = (props: {
+  problems: Problem[];
+  solvedProblems: SolvedProblem[];
+}) => {
   const { problems, solvedProblems } = props;
   const levelList = getLevelList();
 
   const colorCount = problems.reduce(
-    (map, problem) => {
-      map[problem.Level ?? 0]++;
-      return map;
-    },
-    levelList.reduce((map, level) => {
-      map[level] = 0;
-      return map;
-    }, {}),
+    (map, problem) => map.set(problem.Level, (map.get(problem.Level) as number) + 1),
+    levelList.reduce((map, level) => map.set(level, 0), new Map<ProblemLevel, number>()),
   );
 
   const solvedCount = solvedProblems.reduce(
-    (map, solvedProblem) => {
-      map[solvedProblem.Level ?? 0]++;
-      return map;
-    },
-    levelList.reduce((map, level) => {
-      map[level] = 0;
-      return map;
-    }, {}),
+    (map, solvedProblem) => map.set(solvedProblem.Level, (map.get(solvedProblem.Level) as number) + 1),
+    levelList.reduce((map, level) => map.set(level, 0), new Map<ProblemLevel, number>()),
   );
 
   const data = levelList.map((level) => {
-    const totalCount = colorCount[level];
-    const solved = solvedCount[level];
+    const totalCount = colorCount.get(level) ?? 0;
+    const solved = solvedCount.get(level) ?? 0;
     const color = getDifficultyLevelColor(level);
     return {
       color,

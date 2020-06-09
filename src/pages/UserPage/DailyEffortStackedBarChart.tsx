@@ -8,7 +8,9 @@ import { DailyEffortTooltip } from './DailyEffortTooltip';
 import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
 import { getLevelList, getDifficultyLevelColor } from '../../utils';
 
-export const DailyEffortStackedBarChart = (props) => {
+export const DailyEffortStackedBarChart = (props: {
+  dailyData: { dateSecond: number; [key: number]: number }[];
+}) => {
   if (props.dailyData.length === 0) return null;
 
   return (

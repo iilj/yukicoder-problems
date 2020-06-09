@@ -1,16 +1,21 @@
 import React from 'react';
 import { Row, ButtonGroup, Button } from 'reactstrap';
-import { getLevelList } from '../../utils';
+import { getLevelList, mapToObject } from '../../utils';
 import { useLocalStorage } from '../../utils/LocalStorage';
 import { DailyEffortBarChart } from './DailyEffortBarChart';
 import { DailyEffortStackedBarChart } from './DailyEffortStackedBarChart';
+import { SolvedProblem } from '../../interfaces/SolvedProblem';
+import { ProblemLevel } from '../../interfaces/Problem';
 
-const DailyEffortBarChartWrapper = (props) => (
+const DailyEffortBarChartWrapper = (props: { display: boolean; children: React.ReactNode }) => (
   <div style={{ display: props.display ? '' : 'none' }}>{props.children}</div>
 );
 
-export const TabbedDailyEffortBarChart = (props) => {
-  const [showMode, setShowMode] = useLocalStorage(
+export const TabbedDailyEffortBarChart = (props: {
+  dailyData: { dateSecond: number; count: number }[];
+  solvedProblems: SolvedProblem[];
+}) => {
+  const [showMode, setShowMode] = useLocalStorage<'Simple' | 'Colored'>(
     'UserPage_TabbedDailyEffortBarChart_showMode',
     'Simple',
   );
@@ -21,23 +26,24 @@ export const TabbedDailyEffortBarChart = (props) => {
     const date = new Date(solvedProblem.Date);
     date.setHours(0, 0, 0, 0);
     const key = Number(date); // sec - (sec % MS_OF_DAY);
-    if (!(key in map)) {
-      map[key] = levelList.reduce((map, currentLevel) => {
-        map[currentLevel] = 0;
-        return map;
-      }, {});
+    if (!map.has(key)) {
+      map.set(
+        key,
+        levelList.reduce(
+          (map, currentLevel) => map.set(currentLevel, 0),
+          new Map<ProblemLevel, number>(),
+        ),
+      );
     }
-    map[key][solvedProblem.Level]++;
+    const targetDate = map.get(key) as Map<ProblemLevel, number>;
+    targetDate.set(solvedProblem.Level, (targetDate.get(solvedProblem.Level) as number) + 1);
     return map;
-  }, {});
-  const dailyLevelCount = Object.keys(dailyLevelCountMap)
-    .reduce((ar, key) => {
-      const counts = dailyLevelCountMap[key];
-      counts.dateSecond = Number(key);
-      ar.push(counts);
-      return ar;
-    }, [])
-    .sort((a, b) => a.dateSecond - b.dateSecond);
+  }, new Map<number, Map<ProblemLevel, number>>());
+  let dailyLevelCount = [] as { dateSecond: number; [key: number]: number }[];
+  dailyLevelCountMap.forEach((map, key) => {
+    dailyLevelCount.push({ dateSecond: key, ...mapToObject(map) });
+  });
+  dailyLevelCount = dailyLevelCount.sort((a, b) => a.dateSecond - b.dateSecond);
 
   return (
     <>

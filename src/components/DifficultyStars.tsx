@@ -71,6 +71,4 @@ export const DifficultyStarsAbsoluteSpan = (props: DifficultyStarsProps) => (
   </span>
 );
 
-export const NormalStarElement = (props: DifficultyStarsProps) => (
-  <FontAwesomeIcon icon="star" {...props} />
-);
+export const NormalStarElement = (props: any) => <FontAwesomeIcon icon="star" {...props} />;

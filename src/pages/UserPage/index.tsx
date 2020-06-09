@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Col, Row } from 'reactstrap';
 import dataFormat from 'dateformat';
 
-import * as CachedApiClient from '../../utils/CachedApiClient';
+import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
 import { ordinalSuffixOf } from '../../utils';
 
 import { PieCharts } from './SmallPieChart';
@@ -18,29 +18,34 @@ import {
   INITIAL_FROM_DATE,
   INITIAL_TO_DATE,
 } from '../../components/DateRangePicker';
+import { Contest, ContestId } from '../../interfaces/Contest';
+import { Problem, ProblemId, ProblemType } from '../../interfaces/Problem';
+import { SolvedProblem } from '../../interfaces/SolvedProblem';
+import { User, UserName } from '../../interfaces/User';
+import { RankingProblem } from '../../interfaces/RankingProblem';
 
 const MS_OF_HOUR = 1000 * 60 * 60;
 const MS_OF_DAY = MS_OF_HOUR * 24;
 
 const initialUniversalState = {
-  golferMap: {},
-  pureGolferMap: {},
-  contests: [],
-  contestMap: {},
-  problems: [],
-  problemContestMap: {},
+  golferMap: new Map<UserName, RankingProblem[]>(),
+  pureGolferMap: new Map<UserName, RankingProblem[]>(),
+  contests: [] as Contest[],
+  contestMap: new Map<ContestId, Contest>(),
+  problems: [] as Problem[],
+  problemContestMap: new Map<ProblemId, ContestId>(),
 };
 
 const initialUserState = {
-  userInfo: {},
-  solvedProblems: [],
-  solvedProblemsMap: {},
+  userInfo: {} as User,
+  solvedProblems: [] as SolvedProblem[],
+  solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
   minDate: INITIAL_FROM_DATE,
   maxDate: INITIAL_TO_DATE,
 };
 
-export const UserPage = (props) => {
-  const { param, user } = useParams();
+export const UserPage = () => {
+  const { param, user } = useParams() as { param: TypedCachedApiClient.UserParam; user: string };
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
@@ -49,14 +54,14 @@ export const UserPage = (props) => {
     let unmounted = false;
     const getUniversalInfo = async () => {
       const [golferMap, pureGolferMap, problems, contests] = await Promise.all([
-        CachedApiClient.cachedGolferMap(),
-        CachedApiClient.cachedGolferPureMap(),
-        CachedApiClient.cachedProblemArray(),
-        CachedApiClient.cachedContestArray(),
+        TypedCachedApiClient.cachedGolferMap(),
+        TypedCachedApiClient.cachedGolferPureMap(),
+        TypedCachedApiClient.cachedProblemArray(),
+        TypedCachedApiClient.cachedContestArray(),
       ]);
       const [contestMap, problemContestMap] = await Promise.all([
-        CachedApiClient.cachedContestMap(),
-        CachedApiClient.cachedProblemContestMap(),
+        TypedCachedApiClient.cachedContestMap(),
+        TypedCachedApiClient.cachedProblemContestMap(),
       ]);
 
       if (!unmounted) {
@@ -81,14 +86,12 @@ export const UserPage = (props) => {
     let unmounted = false;
     const getUserInfo = async () => {
       const [userInfo, solvedProblems] = await Promise.all([
-        CachedApiClient.cachedUserInfo(param, user).then((obj) => (!obj.Message ? obj : {})),
-        CachedApiClient.cachedSolvedProblemArray(param, user),
+        TypedCachedApiClient.cachedUserInfo(param, user),
+        TypedCachedApiClient.cachedSolvedProblemArray(param, user),
       ]);
-      const solvedProblemsMap = await CachedApiClient.cachedSolvedProblemMap(param, user);
+      const solvedProblemsMap = await TypedCachedApiClient.cachedSolvedProblemMap(param, user);
 
-      const dates = solvedProblems
-        .filter((problem) => problem.Date != null)
-        .map((problem) => Date.parse(problem.Date));
+      const dates = solvedProblems.map((problem) => Date.parse(problem.Date));
       const minDate = new Date(Math.min.apply(null, dates));
       const maxDate = new Date(Math.max.apply(null, dates));
       minDate.setHours(0, 0, 0, 0);
@@ -129,51 +132,39 @@ export const UserPage = (props) => {
   const name = userInfo ? userInfo.Name : undefined;
 
   // for user info section
-  const shortestCount = name && name in golferMap ? golferMap[name].length : 0;
-  const golfRankerCount = Object.keys(golferMap).length;
-  const shortestRank = golfRankerCount === 0
-    ? 0
-    : shortestCount === 0
-      ? 1 + golfRankerCount
-      : 1
-        + Object.keys(golferMap).reduce((cnt, userName) => {
-          if (golferMap[userName].length > shortestCount) {
-            ++cnt;
-          }
-          return cnt;
-        }, 0);
-
-  const pureShortestCount = name && name in pureGolferMap ? pureGolferMap[name].length : 0;
-  const pureGolfRankerCount = Object.keys(pureGolferMap).length;
-  const pureShortestRank = pureGolfRankerCount === 0
-    ? 0
-    : pureShortestCount === 0
-      ? 1 + pureGolfRankerCount
-      : 1
-        + Object.keys(pureGolferMap).reduce((cnt, userName) => {
-          if (pureGolferMap[userName].length > pureShortestCount) {
-            ++cnt;
-          }
-          return cnt;
-        }, 0);
+  /** returns [shortestCount, shortestRank] */
+  const countRank = (shortestMap: Map<UserName, RankingProblem[]>): [number, number] => {
+    const shortestCount = name && shortestMap.has(name) ? (shortestMap.get(name) as RankingProblem[]).length : 0;
+    if (shortestMap.size === 0) return [shortestCount, 0];
+    if (shortestCount === 0) return [shortestCount, 1 + shortestMap.size];
+    let rank = 1;
+    golferMap.forEach((rankingProblems) => {
+      if (rankingProblems.length > shortestCount) {
+        ++rank;
+      }
+    });
+    return [shortestCount, rank];
+  };
+  const [shortestCount, shortestRank] = countRank(golferMap);
+  const [pureShortestCount, pureShortestRank] = countRank(pureGolferMap);
 
   // for pichart
   const regularContestProblemsCntMap = contests.reduce((map, contest) => {
     if (contest.Name.match(/^yukicoder contest \d+/)) {
       return contest.ProblemIdList.reduce((map_, problemId, idx) => {
-        const key = Math.min(idx, 5);
-        if (!(key in map_)) map_[key] = { total: 0, solved: 0 };
-        if (problemId in solvedProblemsMap) map_[key].solved++;
-        map_[key].total++;
+        const key = Math.min(idx, 5) as 0 | 1 | 2 | 3 | 4 | 5;
+        if (!map_.has(key)) map_.set(key, { total: 0, solved: 0 });
+        if (solvedProblemsMap.has(problemId)) (map_.get(key) as { total: number; solved: number }).solved++;
+        (map_.get(key) as { total: number; solved: number }).total++;
         return map_;
       }, map);
     }
     return map;
-  }, {});
-  const regularContestProblemsCnt = Object.keys(regularContestProblemsCntMap).reduce((ar, key) => {
-    ar[key] = regularContestProblemsCntMap[key];
-    return ar;
-  }, []);
+  }, new Map<0 | 1 | 2 | 3 | 4 | 5, { total: number; solved: number }>());
+  const regularContestProblemsCnt = [] as { total: number; solved: number }[];
+  regularContestProblemsCntMap.forEach((value, key) => {
+    regularContestProblemsCnt[key] = value;
+  });
 
   // for daily chart section
   const dailyCountMap = solvedProblems
@@ -182,24 +173,22 @@ export const UserPage = (props) => {
       const date = new Date(solveDate);
       date.setHours(0, 0, 0, 0);
       const key = Number(date); // sec - (sec % MS_OF_DAY);
-      if (!(key in map)) {
-        map[key] = 0;
+      if (!map.has(key)) {
+        map.set(key, 0);
       }
-      map[key]++;
-      return map;
-    }, {});
-  const dailyCount = Object.keys(dailyCountMap)
-    .reduce((ar, key) => {
-      ar.push({ dateSecond: Number(key), count: dailyCountMap[key] });
-      return ar;
-    }, [])
-    .sort((a, b) => a.dateSecond - b.dateSecond);
+      return map.set(key, (map.get(key) ?? 0) + 1);
+    }, new Map<number, number>());
+  let dailyCount = [] as { dateSecond: number; count: number }[];
+  dailyCountMap.forEach((value, key) => {
+    dailyCount.push({ dateSecond: key, count: value });
+  });
+  dailyCount = dailyCount.sort((a, b) => a.dateSecond - b.dateSecond);
 
   const climbing = dailyCount.reduce((ar, { dateSecond, count }) => {
     const last = ar[ar.length - 1];
     ar.push({ dateSecond, count: last ? last.count + count : count });
     return ar;
-  }, []);
+  }, [] as { dateSecond: number; count: number }[]);
 
   const { longestStreak, currentStreak, prevDateSecond } = dailyCount
     .map((e) => e.dateSecond)
@@ -224,13 +213,13 @@ export const UserPage = (props) => {
 
   // for user level
   const userSolvedStars = solvedProblems
-    .filter((solvedProblem) => solvedProblem.ProblemType === 0)
+    .filter((solvedProblem) => solvedProblem.ProblemType === ProblemType.Normal)
     .map((solvedProblem) => solvedProblem.Level)
-    .reduce((sum, cur) => sum + cur, 0);
+    .reduce((sum, cur) => sum + cur, 0 as number);
   const allProblemsStars = problems
-    .filter((problem) => problem.ProblemType === 0)
+    .filter((problem) => problem.ProblemType === ProblemType.Normal)
     .map((problem) => problem.Level)
-    .reduce((sum, cur) => sum + cur, 0);
+    .reduce((sum, cur) => sum + cur, 0 as number);
   const origUserLevel = allProblemsStars > 0 ? (100.0 * userSolvedStars) / allProblemsStars : 0;
   const userLevel = Math.round(origUserLevel * 100) / 100;
   const nextLevel = Math.min(100, Math.floor(userLevel) + 1.0);

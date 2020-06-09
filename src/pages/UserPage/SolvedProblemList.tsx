@@ -5,9 +5,25 @@ import dataFormat from 'dateformat';
 import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
 import { DifficultyStars } from '../../components/DifficultyStars';
-import { ListPaginationPanel } from '../../components/ListPaginationPanel';
+import {
+  ListPaginationPanel,
+  ListPaginationPanelProps,
+} from '../../components/ListPaginationPanel';
+import { ProblemId, ProblemLevel, ProblemNo } from '../../interfaces/Problem';
+import { SolvedProblem } from '../../interfaces/SolvedProblem';
+import { Contest, ContestId } from '../../interfaces/Contest';
 
-export const SolvedProblemList = (props) => {
+interface Entry extends SolvedProblem {
+  Contest: Contest | undefined;
+}
+
+export const SolvedProblemList = (props: {
+  solvedProblems: SolvedProblem[];
+  problemContestMap: Map<ProblemId, ContestId>;
+  contestMap: Map<ContestId, Contest>;
+  fromDate: Date;
+  toDate: Date;
+}) => {
   const {
     solvedProblems, problemContestMap, contestMap, fromDate, toDate,
   } = props;
@@ -18,13 +34,15 @@ export const SolvedProblemList = (props) => {
         .filter((problem) => {
           if (fromDate === null && toDate === null) return true;
           if (problem.Date === null) return false;
-          const solveDate = Date.parse(problem.Date);
+          const solveDate = new Date(problem.Date);
           if (fromDate === null) return solveDate <= toDate;
           if (toDate === null) return fromDate <= solveDate;
           return fromDate <= solveDate && solveDate <= toDate;
         })
         .sort((a, b) => (a.Date < b.Date ? 1 : -1))
-        .map((s) => ({ Contest: contestMap[problemContestMap[s.ProblemId]], ...s }))}
+        .map(
+          (s) => ({ Contest: contestMap.get(problemContestMap.get(s.ProblemId) ?? -1), ...s } as Entry),
+        )}
       keyField="ProblemId"
       height="auto"
       hover
@@ -56,7 +74,7 @@ export const SolvedProblemList = (props) => {
             value: solvedProblems.length,
           },
         ],
-        paginationPanel: (paginationPanelProps) => (
+        paginationPanel: (paginationPanelProps: ListPaginationPanelProps) => (
           <ListPaginationPanel {...paginationPanelProps} />
         ),
       }}
@@ -64,7 +82,7 @@ export const SolvedProblemList = (props) => {
       <TableHeaderColumn
         dataSort
         dataField="Date"
-        dataFormat={(date) => <>{dataFormat(new Date(date), 'yyyy/mm/dd HH:MM')}</>}
+        dataFormat={(date: string) => <>{dataFormat(new Date(date), 'yyyy/mm/dd HH:MM')}</>}
       >
         Date
       </TableHeaderColumn>
@@ -72,10 +90,10 @@ export const SolvedProblemList = (props) => {
         filterFormatted
         dataSort
         dataField="Title"
-        dataFormat={(title, row) => (
+        dataFormat={(title: string, row: Entry) => (
           <ProblemLink
             problemTitle={title}
-            problemNo={row.No}
+            problemNo={row.No as ProblemNo}
             level={row.Level}
             showDifficultyLevel
           />
@@ -87,7 +105,7 @@ export const SolvedProblemList = (props) => {
         filterFormatted
         dataSort
         dataField="Level"
-        dataFormat={(level) => <DifficultyStars level={level} showDifficultyLevel />}
+        dataFormat={(level: ProblemLevel) => <DifficultyStars level={level} showDifficultyLevel />}
       >
         Level
       </TableHeaderColumn>
@@ -95,7 +113,7 @@ export const SolvedProblemList = (props) => {
         filterFormatted
         dataSort
         dataField="Contest"
-        dataFormat={(contest) => (contest ? <ContestLink contestId={contest.Id} contestName={contest.Name} /> : null)}
+        dataFormat={(contest: Contest) => (contest ? <ContestLink contestId={contest.Id} contestName={contest.Name} /> : <></>)}
       >
         Contest
       </TableHeaderColumn>
