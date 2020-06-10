@@ -1,6 +1,6 @@
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import React from 'react';
-import { Row } from 'reactstrap';
+import { Row, Spinner } from 'reactstrap';
 import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
 import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
@@ -23,6 +23,7 @@ export const YukicoderRegularTable = (props: {
   solvedProblemsMap: Map<ProblemId, Problem>;
   showDifficultyLevel: boolean;
   showContestResult: boolean;
+  universalStateLoaded: boolean;
 }) => {
   const {
     contests,
@@ -30,7 +31,16 @@ export const YukicoderRegularTable = (props: {
     solvedProblemsMap,
     showDifficultyLevel,
     showContestResult,
+    universalStateLoaded,
   } = props;
+  if (!universalStateLoaded) {
+    return (
+      <Row className="my-4">
+        <h2>{props.title}</h2>
+        <Spinner style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }} />
+      </Row>
+    );
+  }
   const maxProblemCount = contests.reduce(
     (currentCount, contest) => Math.max(contest.ProblemIdList.length, currentCount),
     0,

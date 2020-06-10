@@ -11,6 +11,7 @@ import {
   FormGroup,
   Label,
   Input,
+  Spinner,
 } from 'reactstrap';
 import { useParams } from 'react-router-dom';
 
@@ -58,10 +59,13 @@ export const ListPage = () => {
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
+  const [universalStateLoaded, setUniversalStateLoaded] = useState(false);
+  const [userStateLoaded, setUserStateLoaded] = useState(false);
 
   useEffect(() => {
     let unmounted = false;
     const getUniversalInfo = async () => {
+      setUniversalStateLoaded(false);
       const [problems, contestMap, golferProblemMap, golferPureProblemMap] = await Promise.all([
         TypedCachedApiClient.cachedProblemArray(),
         TypedCachedApiClient.cachedContestMap(),
@@ -78,6 +82,7 @@ export const ListPage = () => {
           golferProblemMap,
           golferPureProblemMap,
         });
+        setUniversalStateLoaded(true);
       }
     };
     getUniversalInfo();
@@ -90,6 +95,7 @@ export const ListPage = () => {
   useEffect(() => {
     let unmounted = false;
     const getUserInfo = async () => {
+      setUserStateLoaded(false);
       const solvedProblems = param && user
         ? await TypedCachedApiClient.cachedSolvedProblemArray(param, user)
         : ([] as SolvedProblem[]);
@@ -102,6 +108,7 @@ export const ListPage = () => {
           solvedProblems,
           solvedProblemsMap,
         });
+        setUserStateLoaded(true);
       }
     };
     getUserInfo();
@@ -128,9 +135,27 @@ export const ListPage = () => {
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
   const [problemTypeFilterState, setProblemTypeFilterState] = useState<ProblemType | 'All'>('All');
 
+  if (!universalStateLoaded) {
+    return <Spinner style={{ width: '3rem', height: '3rem' }} />;
+  }
+
   return (
     <>
       <DifficultyStarsFillDefs />
+
+      {userStateLoaded ? (
+        <></>
+      ) : (
+        <Spinner
+          style={{
+            width: '3rem',
+            height: '3rem',
+            position: 'fixed',
+            right: '10px',
+            bottom: '10px',
+          }}
+        />
+      )}
 
       <Row className="my-2 border-bottom">
         <h1>Level Status</h1>

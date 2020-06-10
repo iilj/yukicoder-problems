@@ -31,9 +31,9 @@ export const CalendarHeatmap = (props: {
   } = props;
 
   const blockWidth = 10;
-  const xOffset = blockWidth * 2;
+  const xOffset = blockWidth * 1.6;
   const yOffset = blockWidth;
-  const width = xOffset + blockWidth * columns;
+  const width = xOffset + blockWidth * columns + blockWidth * 0.5;
   const height = yOffset + blockWidth * rows;
 
   return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Col, Row } from 'reactstrap';
+import { Col, Row, Spinner } from 'reactstrap';
 import dataFormat from 'dateformat';
 
 import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
@@ -49,10 +49,13 @@ export const UserPage = () => {
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
+  const [universalStateLoaded, setUniversalStateLoaded] = useState(false);
+  const [userStateLoaded, setUserStateLoaded] = useState(false);
 
   useEffect(() => {
     let unmounted = false;
     const getUniversalInfo = async () => {
+      setUniversalStateLoaded(false);
       const [golferMap, pureGolferMap, problems, contests] = await Promise.all([
         TypedCachedApiClient.cachedGolferMap(),
         TypedCachedApiClient.cachedGolferPureMap(),
@@ -73,6 +76,7 @@ export const UserPage = () => {
           problems,
           problemContestMap,
         });
+        setUniversalStateLoaded(true);
       }
     };
     getUniversalInfo();
@@ -85,6 +89,7 @@ export const UserPage = () => {
   useEffect(() => {
     let unmounted = false;
     const getUserInfo = async () => {
+      setUserStateLoaded(false);
       const [userInfo, solvedProblems] = await Promise.all([
         TypedCachedApiClient.cachedUserInfo(param, user),
         TypedCachedApiClient.cachedSolvedProblemArray(param, user),
@@ -105,6 +110,7 @@ export const UserPage = () => {
           minDate,
           maxDate,
         });
+        setUserStateLoaded(true);
       }
     };
     getUserInfo();
@@ -128,6 +134,10 @@ export const UserPage = () => {
 
   const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
+
+  if (!universalStateLoaded || !userStateLoaded) {
+    return <Spinner style={{ width: '3rem', height: '3rem' }} />;
+  }
 
   const name = userInfo ? userInfo.Name : undefined;
 

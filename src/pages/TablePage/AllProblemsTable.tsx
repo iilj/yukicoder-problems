@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Row, Col, Table, UncontrolledTooltip,
+  Row, Col, Table, UncontrolledTooltip, Spinner,
 } from 'reactstrap';
 import { ProblemLink } from '../../components/ProblemLink';
 import { DifficultyStars } from '../../components/DifficultyStars';
@@ -18,6 +18,7 @@ export const AllProblemsTable = (props: {
   solvedProblemsMap: Map<ProblemId, SolvedProblem>;
   showDifficultyLevel: boolean;
   showContestResult: boolean;
+  universalStateLoaded: boolean;
 }) => {
   const {
     problems,
@@ -26,7 +27,16 @@ export const AllProblemsTable = (props: {
     solvedProblemsMap,
     showDifficultyLevel,
     showContestResult,
+    universalStateLoaded,
   } = props;
+  if (!universalStateLoaded) {
+    return (
+      <Row className="my-4">
+        <h2>{props.title}</h2>
+        <Spinner style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }} />
+      </Row>
+    );
+  }
   const problemTables = problems
     .filter((a) => a.No !== null)
     .sort((a, b) => (a.No as ProblemNo) - (b.No as ProblemNo))
