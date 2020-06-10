@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
-  Row, FormGroup, Label, Input,
+  Row, FormGroup, Label, Input, Spinner,
 } from 'reactstrap';
 
 import { YukicoderRegularTable } from './YukicoderRegularTable';
@@ -39,10 +39,13 @@ export const TablePage = () => {
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
+  const [universalStateLoaded, setUniversalStateLoaded] = useState(false);
+  const [userStateLoaded, setUserStateLoaded] = useState(false);
 
   useEffect(() => {
     let unmounted = false;
     const getUniversalInfo = async () => {
+      setUniversalStateLoaded(false);
       const [problems, contests] = await Promise.all([
         TypedCachedApiClient.cachedProblemArray(),
         TypedCachedApiClient.cachedContestArray(),
@@ -61,6 +64,7 @@ export const TablePage = () => {
           problemsMap,
           problemContestMap,
         });
+        setUniversalStateLoaded(true);
       }
     };
     getUniversalInfo();
@@ -73,6 +77,7 @@ export const TablePage = () => {
   useEffect(() => {
     let unmounted = false;
     const getUserInfo = async () => {
+      setUserStateLoaded(false);
       const solvedProblemsMap = param && user
         ? await TypedCachedApiClient.cachedSolvedProblemMap(param, user)
         : new Map<ProblemId, SolvedProblem>();
@@ -81,6 +86,7 @@ export const TablePage = () => {
         setUserState({
           solvedProblemsMap,
         });
+        setUserStateLoaded(true);
       }
     };
     getUserInfo();
@@ -117,6 +123,19 @@ export const TablePage = () => {
 
   return (
     <>
+      {userStateLoaded ? (
+        <></>
+      ) : (
+        <Spinner
+          style={{
+            width: '3rem',
+            height: '3rem',
+            position: 'fixed',
+            right: '10px',
+            bottom: '10px',
+          }}
+        />
+      )}
       <Row className="my-4">
         <FormGroup check inline>
           <Label check>
@@ -149,6 +168,7 @@ export const TablePage = () => {
           solvedProblemsMap={solvedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}
+          universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
       <ContestWrapper display={activeTab === 1}>
@@ -159,6 +179,7 @@ export const TablePage = () => {
           solvedProblemsMap={solvedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}
+          universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
       <ContestWrapper display={activeTab === 2}>
@@ -169,6 +190,7 @@ export const TablePage = () => {
           solvedProblemsMap={solvedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}
+          universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
       <ContestWrapper display={activeTab === 3}>
@@ -180,6 +202,7 @@ export const TablePage = () => {
           solvedProblemsMap={solvedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}
+          universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
     </>

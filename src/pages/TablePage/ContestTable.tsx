@@ -1,4 +1,4 @@
-import { Table, Row } from 'reactstrap';
+import { Table, Row, Spinner } from 'reactstrap';
 import React from 'react';
 import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
@@ -16,6 +16,7 @@ export const ContestTable = (props: {
   solvedProblemsMap: Map<ProblemId, SolvedProblem>;
   showDifficultyLevel: boolean;
   showContestResult: boolean;
+  universalStateLoaded: boolean;
 }) => {
   const {
     contests,
@@ -23,7 +24,16 @@ export const ContestTable = (props: {
     solvedProblemsMap,
     showDifficultyLevel,
     showContestResult,
+    universalStateLoaded,
   } = props;
+  if (!universalStateLoaded) {
+    return (
+      <Row className="my-4">
+        <h2>{props.title}</h2>
+        <Spinner style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }} />
+      </Row>
+    );
+  }
   const header = [
     'A',
     'B',
