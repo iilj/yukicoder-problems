@@ -33,14 +33,7 @@ export const YukicoderRegularTable = (props: {
     showContestResult,
     universalStateLoaded,
   } = props;
-  if (!universalStateLoaded) {
-    return (
-      <Row className="my-4">
-        <h2>{props.title}</h2>
-        <Spinner style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }} />
-      </Row>
-    );
-  }
+
   const maxProblemCount = contests.reduce(
     (currentCount, contest) => Math.max(contest.ProblemIdList.length, currentCount),
     0,
@@ -50,6 +43,11 @@ export const YukicoderRegularTable = (props: {
   return (
     <Row className="my-4">
       <h2>{props.title}</h2>
+      {universalStateLoaded ? (
+        <></>
+      ) : (
+        <Spinner style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }} />
+      )}
       <BootstrapTable
         data={contests.sort((a, b) => (a.Date < b.Date ? 1 : -1))}
         tableContainerClass="contest-table contest-regular-table"
