@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row } from 'reactstrap';
+import { Row, Spinner } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { ListPaginationPanel, ListPaginationPanelProps } from './ListPaginationPanel';
 import { UserName } from '../interfaces/User';
@@ -16,9 +16,18 @@ const refineRanking = (ranking: { name: UserName; count: number }[]) => ranking
     return list;
   }, [] as { rank: number; name: UserName; count: number }[]);
 
-export const Ranking = (props: { title: string; ranking: { name: UserName; count: number }[] }) => (
+export const Ranking = (props: {
+  title: string;
+  ranking: { name: UserName; count: number }[];
+  universalStateLoaded: boolean;
+}) => (
   <Row>
     <h2>{props.title}</h2>
+    {props.universalStateLoaded ? (
+      <></>
+    ) : (
+      <Spinner style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }} />
+    )}
     <BootstrapTable
       height="auto"
       data={refineRanking(props.ranking)}

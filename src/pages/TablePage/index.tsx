@@ -72,7 +72,7 @@ export const TablePage = () => {
       unmounted = true;
     };
     return cleanup;
-  }, [setUniversalState]);
+  }, []);
 
   useEffect(() => {
     let unmounted = false;
@@ -94,7 +94,7 @@ export const TablePage = () => {
       unmounted = true;
     };
     return cleanup;
-  }, [param, user, setUserState]);
+  }, [param, user]);
 
   const {
     problems, contests, contestMap, problemsMap, problemContestMap,

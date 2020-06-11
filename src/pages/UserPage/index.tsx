@@ -84,7 +84,7 @@ export const UserPage = () => {
       unmounted = true;
     };
     return cleanup;
-  }, [setUniversalState]);
+  }, []);
 
   useEffect(() => {
     let unmounted = false;
@@ -118,7 +118,7 @@ export const UserPage = () => {
       unmounted = true;
     };
     return cleanup;
-  }, [param, user, setUserState]);
+  }, [param, user]);
 
   const {
     golferMap,
@@ -134,10 +134,6 @@ export const UserPage = () => {
 
   const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
-
-  if (!universalStateLoaded || !userStateLoaded) {
-    return <Spinner style={{ width: '3rem', height: '3rem' }} />;
-  }
 
   const name = userInfo ? userInfo.Name : undefined;
 
@@ -272,8 +268,27 @@ export const UserPage = () => {
     <div>
       <Row className="my-2 border-bottom">
         <h1>{name}</h1>
+        {universalStateLoaded ? (
+          <></>
+        ) : (
+          <Spinner style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }} />
+        )}
       </Row>
+      {userStateLoaded ? (
+        <></>
+      ) : (
+        <Spinner
+          style={{
+            width: '3rem',
+            height: '3rem',
+            position: 'fixed',
+            right: '10px',
+            bottom: '10px',
+          }}
+        />
+      )}
       <DifficultyStarsFillDefs />
+
       <Row className="my-3">
         {achievements.map(({ key, value, rank }) => (
           <Col key={key} className="text-center col-achivement" xs="6" md="3">

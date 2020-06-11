@@ -26,14 +26,7 @@ export const ContestTable = (props: {
     showContestResult,
     universalStateLoaded,
   } = props;
-  if (!universalStateLoaded) {
-    return (
-      <Row className="my-4">
-        <h2>{props.title}</h2>
-        <Spinner style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }} />
-      </Row>
-    );
-  }
+
   const header = [
     'A',
     'B',
@@ -66,6 +59,11 @@ export const ContestTable = (props: {
     <>
       <Row className="my-4">
         <h2>{props.title}</h2>
+        {universalStateLoaded ? (
+          <></>
+        ) : (
+          <Spinner style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }} />
+        )}
       </Row>
       <div className="my-inner-container">
         {contests.map((contest) => (

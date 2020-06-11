@@ -29,14 +29,7 @@ export const AllProblemsTable = (props: {
     showContestResult,
     universalStateLoaded,
   } = props;
-  if (!universalStateLoaded) {
-    return (
-      <Row className="my-4">
-        <h2>{props.title}</h2>
-        <Spinner style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }} />
-      </Row>
-    );
-  }
+
   const problemTables = problems
     .filter((a) => a.No !== null)
     .sort((a, b) => (a.No as ProblemNo) - (b.No as ProblemNo))
@@ -56,6 +49,11 @@ export const AllProblemsTable = (props: {
     <>
       <Row className="my-4">
         <h2>{props.title}</h2>
+        {universalStateLoaded ? (
+          <></>
+        ) : (
+          <Spinner style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }} />
+        )}
       </Row>
       <div className="my-inner-container">
         <Row className="my-4">

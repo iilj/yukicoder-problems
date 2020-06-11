@@ -10,16 +10,19 @@ const initialUniversalState = {
 
 export const ShortRanking = () => {
   const [universalState, setUniversalState] = useState(initialUniversalState);
+  const [universalStateLoaded, setUniversalStateLoaded] = useState(false);
 
   useEffect(() => {
     let unmounted = false;
     const getUniversalInfo = async () => {
+      setUniversalStateLoaded(false);
       const golferMap = await TypedCachedApiClient.cachedGolferMap();
 
       if (!unmounted) {
         setUniversalState({
           golferMap,
         });
+        setUniversalStateLoaded(true);
       }
     };
     getUniversalInfo();
@@ -27,7 +30,7 @@ export const ShortRanking = () => {
       unmounted = true;
     };
     return cleanup;
-  }, [setUniversalState]);
+  }, []);
 
   const { golferMap } = universalState;
 
@@ -36,5 +39,7 @@ export const ShortRanking = () => {
     ranking.push({ name: userName, count: rankingProblems.length });
   });
 
-  return <Ranking title="Top Golfers" ranking={ranking} />;
+  return (
+    <Ranking title="Top Golfers" ranking={ranking} universalStateLoaded={universalStateLoaded} />
+  );
 };

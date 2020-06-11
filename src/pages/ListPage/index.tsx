@@ -90,7 +90,7 @@ export const ListPage = () => {
       unmounted = true;
     };
     return cleanup;
-  }, [setUniversalState]);
+  }, []);
 
   useEffect(() => {
     let unmounted = false;
@@ -116,7 +116,7 @@ export const ListPage = () => {
       unmounted = true;
     };
     return cleanup;
-  }, [param, user, setUserState]);
+  }, [param, user]);
 
   const {
     problems,
@@ -135,15 +135,11 @@ export const ListPage = () => {
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
   const [problemTypeFilterState, setProblemTypeFilterState] = useState<ProblemType | 'All'>('All');
 
-  if (!universalStateLoaded) {
-    return <Spinner style={{ width: '3rem', height: '3rem' }} />;
-  }
-
   return (
     <>
       <DifficultyStarsFillDefs />
 
-      {userStateLoaded ? (
+      {universalStateLoaded && userStateLoaded ? (
         <></>
       ) : (
         <Spinner
