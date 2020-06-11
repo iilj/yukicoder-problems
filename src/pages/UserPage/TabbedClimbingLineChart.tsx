@@ -16,6 +16,7 @@ const ClimbingChartWrapper = (props: { display: boolean; children: React.ReactNo
 export const TabbedClimbingLineChart = (props: {
   climbingData: { dateSecond: number; count: number }[];
   solvedProblems: SolvedProblem[];
+  syncId: string;
 }) => {
   const [showMode, setShowMode] = useLocalStorage<'Simple' | 'Colored'>(
     'UserPage_TabbedClimbingLineChart_showMode',
@@ -25,7 +26,7 @@ export const TabbedClimbingLineChart = (props: {
     'UserPage_TabbedClimbingLineChart_reverseColorOrder',
     false,
   );
-  const { climbingData, solvedProblems } = props;
+  const { climbingData, solvedProblems, syncId } = props;
 
   const levelList = getLevelList();
   const mergeCountMap = (
@@ -93,10 +94,14 @@ export const TabbedClimbingLineChart = (props: {
         </FormGroup>
       </Row>
       <ClimbingChartWrapper display={showMode === 'Simple'}>
-        <ClimbingLineChart climbingData={climbingData} />
+        <ClimbingLineChart climbingData={climbingData} syncId={syncId} />
       </ClimbingChartWrapper>
       <ClimbingChartWrapper display={showMode === 'Colored'}>
-        <ClimbingAreaChart climbingData={Levelclimbing} reverseColorOrder={reverseColorOrder} />
+        <ClimbingAreaChart
+          climbingData={Levelclimbing}
+          reverseColorOrder={reverseColorOrder}
+          syncId={syncId}
+        />
       </ClimbingChartWrapper>
     </>
   );

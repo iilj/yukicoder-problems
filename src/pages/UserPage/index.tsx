@@ -342,12 +342,20 @@ export const UserPage = () => {
       <Row className="my-2 border-bottom">
         <h1>Daily Effort</h1>
       </Row>
-      <TabbedDailyEffortBarChart dailyData={dailyCount} solvedProblems={solvedProblems} />
+      <TabbedDailyEffortBarChart
+        dailyData={dailyCount}
+        solvedProblems={solvedProblems}
+        syncId="DailyEffortChart"
+      />
 
       <Row className="my-2 border-bottom">
         <h1>Climbing</h1>
       </Row>
-      <TabbedClimbingLineChart climbingData={climbing} solvedProblems={solvedProblems} />
+      <TabbedClimbingLineChart
+        climbingData={climbing}
+        solvedProblems={solvedProblems}
+        syncId="DailyEffortChart"
+      />
 
       <Row className="my-2 border-bottom">
         <h1>Heatmap</h1>

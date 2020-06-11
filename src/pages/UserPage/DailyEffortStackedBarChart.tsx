@@ -10,6 +10,7 @@ import { getLevelList, getDifficultyLevelColor } from '../../utils';
 
 export const DailyEffortStackedBarChart = (props: {
   dailyData: { dateSecond: number; [key: number]: number }[];
+  syncId: string;
 }) => {
   if (props.dailyData.length === 0) return null;
 
@@ -25,6 +26,7 @@ export const DailyEffortStackedBarChart = (props: {
             left: 20,
             bottom: 5,
           }}
+          syncId={props.syncId}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
