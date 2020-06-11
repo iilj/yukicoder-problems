@@ -14,12 +14,13 @@ const DailyEffortBarChartWrapper = (props: { display: boolean; children: React.R
 export const TabbedDailyEffortBarChart = (props: {
   dailyData: { dateSecond: number; count: number }[];
   solvedProblems: SolvedProblem[];
+  syncId: string;
 }) => {
   const [showMode, setShowMode] = useLocalStorage<'Simple' | 'Colored'>(
     'UserPage_TabbedDailyEffortBarChart_showMode',
     'Simple',
   );
-  const { dailyData, solvedProblems } = props;
+  const { dailyData, solvedProblems, syncId } = props;
 
   const levelList = getLevelList();
   const dailyLevelCountMap = solvedProblems.reduce((map, solvedProblem) => {
@@ -58,10 +59,10 @@ export const TabbedDailyEffortBarChart = (props: {
         </ButtonGroup>
       </Row>
       <DailyEffortBarChartWrapper display={showMode === 'Simple'}>
-        <DailyEffortBarChart dailyData={dailyData} />
+        <DailyEffortBarChart dailyData={dailyData} syncId={syncId} />
       </DailyEffortBarChartWrapper>
       <DailyEffortBarChartWrapper display={showMode === 'Colored'}>
-        <DailyEffortStackedBarChart dailyData={dailyLevelCount} />
+        <DailyEffortStackedBarChart dailyData={dailyLevelCount} syncId={syncId} />
       </DailyEffortBarChartWrapper>
     </>
   );

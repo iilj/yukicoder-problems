@@ -13,6 +13,7 @@ import dataFormat from 'dateformat';
 
 export const ClimbingLineChart = (props: {
   climbingData: { dateSecond: number; count: number }[];
+  syncId: string;
 }) => {
   if (props.climbingData.length === 0) return null;
 
@@ -27,6 +28,7 @@ export const ClimbingLineChart = (props: {
             left: 20,
             bottom: 5,
           }}
+          syncId={props.syncId}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
