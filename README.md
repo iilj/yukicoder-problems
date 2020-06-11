@@ -2,7 +2,7 @@
 
 ## Overview
 
-[yukicoder problems](https://iilj.github.io/yukicoder-problems/) is a web application, to manage competitive programming problems on [yukicoder](https://yukicoder.me/), written in JavaScript with React.
+[yukicoder problems](https://iilj.github.io/yukicoder-problems/) is a web application, to manage competitive programming problems on [yukicoder](https://yukicoder.me/), written in TypeScript with React.
 
 Some components were constructed based on corresponding components of [AtCoderProblems](https://github.com/kenkoooo/AtCoderProblems).
 
