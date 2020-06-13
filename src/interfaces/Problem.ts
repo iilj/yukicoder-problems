@@ -1,4 +1,4 @@
-import { UserId } from "./User";
+import { UserId } from './User';
 
 /** 問題No */
 export type ProblemNo = number;
