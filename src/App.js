@@ -1,6 +1,9 @@
 import React from 'react';
 import {
-  HashRouter as Router, Route, Routes, Navigate,
+  HashRouter as Router,
+  Route,
+  Routes,
+  Navigate,
 } from 'react-router-dom';
 import { Container } from 'reactstrap';
 

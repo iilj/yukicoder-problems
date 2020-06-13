@@ -18,7 +18,7 @@ export const ClimbingAreaChart = (props: {
   climbingData: { dateSecond: number; [key: number]: number }[];
   reverseColorOrder: boolean;
   syncId: string;
-}) => {
+}): JSX.Element => {
   if (props.climbingData.length === 0) return null;
 
   return (
@@ -40,12 +40,21 @@ export const ClimbingAreaChart = (props: {
             dataKey="dateSecond"
             type="number"
             domain={['dataMin', 'dataMax']}
-            tickFormatter={(dateSecond) => dataFormat(new Date(dateSecond), 'yyyy/mm/dd')}
+            tickFormatter={(dateSecond) =>
+              dataFormat(new Date(dateSecond), 'yyyy/mm/dd')
+            }
           />
           <YAxis />
-          <Tooltip content={<DailyEffortTooltip reverseColorOrder={props.reverseColorOrder} />} />
+          <Tooltip
+            content={
+              <DailyEffortTooltip reverseColorOrder={props.reverseColorOrder} />
+            }
+          />
 
-          {(props.reverseColorOrder ? getLevelList().reverse() : getLevelList()).map((level) => {
+          {(props.reverseColorOrder
+            ? getLevelList().reverse()
+            : getLevelList()
+          ).map((level) => {
             const color = getDifficultyLevelColor(level);
             return (
               <Area

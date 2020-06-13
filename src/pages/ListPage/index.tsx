@@ -20,7 +20,10 @@ import { ProblemTypeTable } from './ProblemTypeTable';
 import { ListTable, FilterState } from './ListTable';
 import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
 import { WellPositionedDropdownMenu } from '../../components/WellPositionedDropdownMenu';
-import { DifficultyStarsFillDefs, DifficultyStars } from '../../components/DifficultyStars';
+import {
+  DifficultyStarsFillDefs,
+  DifficultyStars,
+} from '../../components/DifficultyStars';
 import {
   DateRangePicker,
   INITIAL_FROM_DATE,
@@ -54,8 +57,11 @@ const initialUserState = {
   solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
 };
 
-export const ListPage = () => {
-  const { param, user } = useParams() as { param: TypedCachedApiClient.UserParam; user: string };
+export const ListPage = (): JSX.Element => {
+  const { param, user } = useParams() as {
+    param: TypedCachedApiClient.UserParam;
+    user: string;
+  };
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
@@ -66,7 +72,12 @@ export const ListPage = () => {
     let unmounted = false;
     const getUniversalInfo = async () => {
       setUniversalStateLoaded(false);
-      const [problems, contestMap, golferProblemMap, golferPureProblemMap] = await Promise.all([
+      const [
+        problems,
+        contestMap,
+        golferProblemMap,
+        golferPureProblemMap,
+      ] = await Promise.all([
         TypedCachedApiClient.cachedProblemArray(),
         TypedCachedApiClient.cachedContestMap(),
         TypedCachedApiClient.cachedGolferRankingProblemMap(),
@@ -96,12 +107,14 @@ export const ListPage = () => {
     let unmounted = false;
     const getUserInfo = async () => {
       setUserStateLoaded(false);
-      const solvedProblems = param && user
-        ? await TypedCachedApiClient.cachedSolvedProblemArray(param, user)
-        : ([] as SolvedProblem[]);
-      const solvedProblemsMap = param && user
-        ? await TypedCachedApiClient.cachedSolvedProblemMap(param, user)
-        : new Map<ProblemId, SolvedProblem>();
+      const solvedProblems =
+        param && user
+          ? await TypedCachedApiClient.cachedSolvedProblemArray(param, user)
+          : ([] as SolvedProblem[]);
+      const solvedProblemsMap =
+        param && user
+          ? await TypedCachedApiClient.cachedSolvedProblemMap(param, user)
+          : new Map<ProblemId, SolvedProblem>();
 
       if (!unmounted) {
         setUserState({
@@ -127,13 +140,23 @@ export const ListPage = () => {
   } = universalState;
   const { solvedProblems, solvedProblemsMap } = userState;
 
-  const [statusFilterState, setStatusFilterState] = useState<FilterState>('All');
-  const [fromDifficultyLevel, setFromDifficultyLevel] = useState<ProblemLevel | -1>(-1);
-  const [toDifficultyLevel, setToDifficultyLevel] = useState<ProblemLevel | 100>(INF_LEVEL);
-  const [showTagsOfTryingProblems, setShowTagsOfTryingProblems] = useState(false);
+  const [statusFilterState, setStatusFilterState] = useState<FilterState>(
+    'All'
+  );
+  const [fromDifficultyLevel, setFromDifficultyLevel] = useState<
+    ProblemLevel | -1
+  >(-1);
+  const [toDifficultyLevel, setToDifficultyLevel] = useState<
+    ProblemLevel | 100
+  >(INF_LEVEL);
+  const [showTagsOfTryingProblems, setShowTagsOfTryingProblems] = useState(
+    false
+  );
   const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
-  const [problemTypeFilterState, setProblemTypeFilterState] = useState<ProblemType | 'All'>('All');
+  const [problemTypeFilterState, setProblemTypeFilterState] = useState<
+    ProblemType | 'All'
+  >('All');
 
   return (
     <>
@@ -157,14 +180,22 @@ export const ListPage = () => {
         <h1>Level Status</h1>
       </Row>
       <Row>
-        <DifficultyLevelTable problems={problems} solvedProblems={solvedProblems} user={user} />
+        <DifficultyLevelTable
+          problems={problems}
+          solvedProblems={solvedProblems}
+          user={user}
+        />
       </Row>
 
       <Row className="my-2 border-bottom">
         <h1>Type Status</h1>
       </Row>
       <Row>
-        <ProblemTypeTable problems={problems} solvedProblems={solvedProblems} user={user} />
+        <ProblemTypeTable
+          problems={problems}
+          solvedProblems={solvedProblems}
+          user={user}
+        />
       </Row>
 
       <Row className="my-2 border-bottom">
@@ -175,11 +206,15 @@ export const ListPage = () => {
           <UncontrolledDropdown>
             <DropdownToggle caret>{statusFilterState}</DropdownToggle>
             <DropdownMenu>
-              <DropdownItem onClick={() => setStatusFilterState('All')}>All</DropdownItem>
+              <DropdownItem onClick={() => setStatusFilterState('All')}>
+                All
+              </DropdownItem>
               <DropdownItem onClick={() => setStatusFilterState('Only Trying')}>
                 Only Trying
               </DropdownItem>
-              <DropdownItem onClick={() => setStatusFilterState('Only AC')}>Only AC</DropdownItem>
+              <DropdownItem onClick={() => setStatusFilterState('Only AC')}>
+                Only AC
+              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </ButtonGroup>
@@ -187,28 +222,35 @@ export const ListPage = () => {
         <ButtonGroup className="mr-4">
           <UncontrolledButtonDropdown>
             <DropdownToggle caret>
-              {fromDifficultyLevel === -1 ? 'Level From' : `${fromDifficultyLevel} - `}
+              {fromDifficultyLevel === -1
+                ? 'Level From'
+                : `${fromDifficultyLevel} - `}
             </DropdownToggle>
             <WellPositionedDropdownMenu>
               {ProblemLevels.map((level) => (
-                <DropdownItem key={level} onClick={() => setFromDifficultyLevel(level)}>
+                <DropdownItem
+                  key={level}
+                  onClick={() => setFromDifficultyLevel(level)}
+                >
                   <DifficultyStars level={level} showDifficultyLevel />
-                  {level.toFixed(1)}
-                  {' '}
-                  -
+                  {level.toFixed(1)} -
                 </DropdownItem>
               ))}
             </WellPositionedDropdownMenu>
           </UncontrolledButtonDropdown>
           <UncontrolledButtonDropdown>
             <DropdownToggle caret>
-              {toDifficultyLevel === INF_LEVEL ? 'Level To' : ` - ${toDifficultyLevel}`}
+              {toDifficultyLevel === INF_LEVEL
+                ? 'Level To'
+                : ` - ${toDifficultyLevel}`}
             </DropdownToggle>
             <WellPositionedDropdownMenu>
               {ProblemLevels.map((level) => (
-                <DropdownItem key={level} onClick={() => setToDifficultyLevel(level)}>
-                  <DifficultyStars level={level} showDifficultyLevel />
-                  -
+                <DropdownItem
+                  key={level}
+                  onClick={() => setToDifficultyLevel(level)}
+                >
+                  <DifficultyStars level={level} showDifficultyLevel />-
                   {level.toFixed(1)}
                 </DropdownItem>
               ))}
@@ -233,17 +275,33 @@ export const ListPage = () => {
           <UncontrolledDropdown>
             <DropdownToggle caret>{problemTypeFilterState}</DropdownToggle>
             <DropdownMenu>
-              <DropdownItem onClick={() => setProblemTypeFilterState('All')}>All</DropdownItem>
-              <DropdownItem onClick={() => setProblemTypeFilterState(ProblemType.Normal)}>
+              <DropdownItem onClick={() => setProblemTypeFilterState('All')}>
+                All
+              </DropdownItem>
+              <DropdownItem
+                onClick={() => setProblemTypeFilterState(ProblemType.Normal)}
+              >
                 <ProblemTypeIconSpanWithName problemType={ProblemType.Normal} />
               </DropdownItem>
-              <DropdownItem onClick={() => setProblemTypeFilterState(ProblemType.Educational)}>
-                <ProblemTypeIconSpanWithName problemType={ProblemType.Educational} />
+              <DropdownItem
+                onClick={() =>
+                  setProblemTypeFilterState(ProblemType.Educational)
+                }
+              >
+                <ProblemTypeIconSpanWithName
+                  problemType={ProblemType.Educational}
+                />
               </DropdownItem>
-              <DropdownItem onClick={() => setProblemTypeFilterState(ProblemType.Scoring)}>
-                <ProblemTypeIconSpanWithName problemType={ProblemType.Scoring} />
+              <DropdownItem
+                onClick={() => setProblemTypeFilterState(ProblemType.Scoring)}
+              >
+                <ProblemTypeIconSpanWithName
+                  problemType={ProblemType.Scoring}
+                />
               </DropdownItem>
-              <DropdownItem onClick={() => setProblemTypeFilterState(ProblemType.Joke)}>
+              <DropdownItem
+                onClick={() => setProblemTypeFilterState(ProblemType.Joke)}
+              >
                 <ProblemTypeIconSpanWithName problemType={ProblemType.Joke} />
               </DropdownItem>
             </DropdownMenu>

@@ -13,14 +13,14 @@ const COLORS = ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196127'];
 const MS_OF_HOUR = 1000 * 60 * 60;
 const MS_OF_DAY = MS_OF_HOUR * 24;
 
-export const getNextSunday = (t: Date) => {
+export const getNextSunday = (t: Date): Date => {
   const date = new Date(t);
   const diff = 7 - date.getDay();
   date.setDate(date.getDate() + diff);
   return date;
 };
 
-export const getToday = () => {
+export const getToday = (): Date => {
   const cur = new Date();
   cur.setHours(0, 0, 0, 0);
   return cur;
@@ -30,10 +30,10 @@ export const TabbedHeatmap = (props: {
   dailyCountMap: Map<number, number>;
   solvedProblems: SolvedProblem[];
   onRectClick: (date: number) => void;
-}) => {
+}): JSX.Element => {
   const [showMode, setShowMode] = useLocalStorage<'Unique AC' | 'Max Level'>(
     'UserPage_TabbedHeatmap_showMode',
-    'Unique AC',
+    'Unique AC'
   );
   const { dailyCountMap, solvedProblems, onRectClick } = props;
 
@@ -50,45 +50,60 @@ export const TabbedHeatmap = (props: {
       tableData = Array.from(Array(WEEKS * WEEKDAY).keys())
         .map((i) => startDateMiliSec + i * MS_OF_DAY)
         .reduce((ar, dateMiliSec) => {
-          if (dailyCountMap.has(dateMiliSec)) ar.push({ date: dateMiliSec, count: dailyCountMap.get(dateMiliSec) ?? 0 });
+          if (dailyCountMap.has(dateMiliSec))
+            ar.push({
+              date: dateMiliSec,
+              count: dailyCountMap.get(dateMiliSec) ?? 0,
+            });
           else ar.push({ date: dateMiliSec, count: 0 });
           return ar;
         }, [] as { date: number; count: number }[])
         .sort((a, b) => a.date - b.date);
-      formatTooltip = (date: number, count: number) => (
-        <>
-          <div>{`${dataFormat(new Date(date), 'yyyy/mm/dd')}`}</div>
-          <div>{`${count} unique AC(s)`}</div>
-        </>
-      );
+      formatTooltip = function _formatTooltip(date: number, count: number) {
+        return (
+          <>
+            <div>{`${dataFormat(new Date(date), 'yyyy/mm/dd')}`}</div>
+            <div>{`${count} unique AC(s)`}</div>
+          </>
+        );
+      };
       getColor = (count: number) => COLORS[Math.min(count, COLORS.length - 1)];
       break;
     case 'Max Level':
-      const dailyMaxLevelMap = solvedProblems.reduce((map, solvedProblem) => {
-        const date = new Date(solvedProblem.Date);
-        date.setHours(0, 0, 0, 0);
-        const key = Number(date); // sec - (sec % MS_OF_DAY);
-        if (!map.has(key)) {
-          map.set(key, 0);
-        }
-        map.set(key, Math.max(map.get(key) ?? 0, solvedProblem.Level));
-        return map;
-      }, new Map<number, number>());
-      tableData = Array.from(Array(WEEKS * WEEKDAY).keys())
-        .map((i) => startDateMiliSec + i * MS_OF_DAY)
-        .reduce((ar, dateMiliSec) => {
-          if (dailyMaxLevelMap.has(dateMiliSec)) ar.push({ date: dateMiliSec, count: dailyMaxLevelMap.get(dateMiliSec) ?? 0 });
-          else ar.push({ date: dateMiliSec, count: -1 });
-          return ar;
-        }, [] as { date: number; count: number }[])
-        .sort((a, b) => a.date - b.date);
-      formatTooltip = (date: number, count: number) => (
-        <>
-          <div>{`${dataFormat(new Date(date), 'yyyy/mm/dd')}`}</div>
-          <div>{`Max Level: ${count < 0 ? '-' : count}`}</div>
-        </>
-      );
-      getColor = (count: number) => (count < 0 ? '#ebedf0' : getDifficultyLevelColor(count as ProblemLevel));
+      {
+        const dailyMaxLevelMap = solvedProblems.reduce((map, solvedProblem) => {
+          const date = new Date(solvedProblem.Date);
+          date.setHours(0, 0, 0, 0);
+          const key = Number(date); // sec - (sec % MS_OF_DAY);
+          if (!map.has(key)) {
+            map.set(key, 0);
+          }
+          map.set(key, Math.max(map.get(key) ?? 0, solvedProblem.Level));
+          return map;
+        }, new Map<number, number>());
+        tableData = Array.from(Array(WEEKS * WEEKDAY).keys())
+          .map((i) => startDateMiliSec + i * MS_OF_DAY)
+          .reduce((ar, dateMiliSec) => {
+            if (dailyMaxLevelMap.has(dateMiliSec))
+              ar.push({
+                date: dateMiliSec,
+                count: dailyMaxLevelMap.get(dateMiliSec) ?? 0,
+              });
+            else ar.push({ date: dateMiliSec, count: -1 });
+            return ar;
+          }, [] as { date: number; count: number }[])
+          .sort((a, b) => a.date - b.date);
+      }
+      formatTooltip = function _formatTooltip(date: number, count: number) {
+        return (
+          <>
+            <div>{`${dataFormat(new Date(date), 'yyyy/mm/dd')}`}</div>
+            <div>{`Max Level: ${count < 0 ? '-' : count}`}</div>
+          </>
+        );
+      };
+      getColor = (count: number) =>
+        count < 0 ? '#ebedf0' : getDifficultyLevelColor(count as ProblemLevel);
 
       break;
 
@@ -102,10 +117,16 @@ export const TabbedHeatmap = (props: {
     <>
       <Row className="my-3">
         <ButtonGroup className="mr-3">
-          <Button onClick={() => setShowMode('Unique AC')} active={showMode === 'Unique AC'}>
+          <Button
+            onClick={() => setShowMode('Unique AC')}
+            active={showMode === 'Unique AC'}
+          >
             Unique AC
           </Button>
-          <Button onClick={() => setShowMode('Max Level')} active={showMode === 'Max Level'}>
+          <Button
+            onClick={() => setShowMode('Max Level')}
+            active={showMode === 'Max Level'}
+          >
             Max Level
           </Button>
         </ButtonGroup>

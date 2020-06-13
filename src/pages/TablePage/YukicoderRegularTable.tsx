@@ -24,7 +24,7 @@ export const YukicoderRegularTable = (props: {
   showDifficultyLevel: boolean;
   showContestResult: boolean;
   universalStateLoaded: boolean;
-}) => {
+}): JSX.Element => {
   const {
     contests,
     problemsMap,
@@ -35,18 +35,24 @@ export const YukicoderRegularTable = (props: {
   } = props;
 
   const maxProblemCount = contests.reduce(
-    (currentCount, contest) => Math.max(contest.ProblemIdList.length, currentCount),
-    0,
+    (currentCount, contest) =>
+      Math.max(contest.ProblemIdList.length, currentCount),
+    0
   );
 
-  const header = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].slice(0, maxProblemCount);
+  const header = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].slice(
+    0,
+    maxProblemCount
+  );
   return (
     <Row className="my-4">
       <h2>{props.title}</h2>
       {universalStateLoaded ? (
         <></>
       ) : (
-        <Spinner style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }} />
+        <Spinner
+          style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }}
+        />
       )}
       <BootstrapTable
         data={contests.sort((a, b) => (a.Date < b.Date ? 1 : -1))}
@@ -59,20 +65,33 @@ export const YukicoderRegularTable = (props: {
             const startDate = Date.parse(contest.Date);
             const endDate = Date.parse(contest.EndDate);
             const ls = contest.ProblemIdList.map((pid: ProblemId) => {
-              const problem = problemsMap && problemsMap.has(pid) ? problemsMap.get(pid) : undefined;
+              const problem =
+                problemsMap && problemsMap.has(pid)
+                  ? problemsMap.get(pid)
+                  : undefined;
               if (!problem) return ProblemSolveStatus.Trying;
-              const solvedProblem = solvedProblemsMap && solvedProblemsMap.has(pid)
-                ? solvedProblemsMap.get(pid)
-                : undefined;
+              const solvedProblem =
+                solvedProblemsMap && solvedProblemsMap.has(pid)
+                  ? solvedProblemsMap.get(pid)
+                  : undefined;
               if (!solvedProblem) return ProblemSolveStatus.Trying;
               const solvedDate = Date.parse(solvedProblem.Date as string);
               if (solvedDate > endDate) return ProblemSolveStatus.Solved;
               if (solvedDate >= startDate) return ProblemSolveStatus.Intime;
               return ProblemSolveStatus.BeforeContest;
             });
-            if (showContestResult && ls.every((stat) => stat === ProblemSolveStatus.BeforeContest)) return 'table-problem table-problem-solved-before-contest';
-            if (showContestResult && ls.every((stat) => stat >= ProblemSolveStatus.Intime)) return 'table-problem table-problem-solved-intime';
-            if (ls.every((stat) => stat >= ProblemSolveStatus.Solved)) return 'table-problem table-problem-solved';
+            if (
+              showContestResult &&
+              ls.every((stat) => stat === ProblemSolveStatus.BeforeContest)
+            )
+              return 'table-problem table-problem-solved-before-contest';
+            if (
+              showContestResult &&
+              ls.every((stat) => stat >= ProblemSolveStatus.Intime)
+            )
+              return 'table-problem table-problem-solved-intime';
+            if (ls.every((stat) => stat >= ProblemSolveStatus.Solved))
+              return 'table-problem table-problem-solved';
             return 'table-problem';
           }}
           dataFormat={(_, contest: Contest) => (
@@ -90,13 +109,20 @@ export const YukicoderRegularTable = (props: {
             dataField={c}
             key={c}
             columnClassName={(_, contest: Contest) => {
-              const pid = i in contest.ProblemIdList ? contest.ProblemIdList[i] : undefined;
-              const problem = pid !== undefined && problemsMap && problemsMap.has(pid)
-                ? problemsMap.get(pid)
-                : undefined;
-              const solvedProblem = pid !== undefined && solvedProblemsMap && solvedProblemsMap.has(pid)
-                ? solvedProblemsMap.get(pid)
-                : undefined;
+              const pid =
+                i in contest.ProblemIdList
+                  ? contest.ProblemIdList[i]
+                  : undefined;
+              const problem =
+                pid !== undefined && problemsMap && problemsMap.has(pid)
+                  ? problemsMap.get(pid)
+                  : undefined;
+              const solvedProblem =
+                pid !== undefined &&
+                solvedProblemsMap &&
+                solvedProblemsMap.has(pid)
+                  ? solvedProblemsMap.get(pid)
+                  : undefined;
               if (!pid) {
                 return 'table-problem-empty';
               }
@@ -106,18 +132,27 @@ export const YukicoderRegularTable = (props: {
               const solvedDate = Date.parse(solvedProblem.Date as string);
               const startDate = Date.parse(contest.Date);
               const endDate = Date.parse(contest.EndDate);
-              if (!showContestResult || solvedDate > endDate) return 'table-problem table-problem-solved';
-              if (solvedDate >= startDate) return 'table-problem table-problem-solved-intime';
+              if (!showContestResult || solvedDate > endDate)
+                return 'table-problem table-problem-solved';
+              if (solvedDate >= startDate)
+                return 'table-problem table-problem-solved-intime';
               return 'table-problem table-problem-solved-before-contest';
             }}
             dataFormat={(_, contest: Contest) => {
-              const pid = i in contest.ProblemIdList ? contest.ProblemIdList[i] : undefined;
-              const problem = pid !== undefined && problemsMap && problemsMap.has(pid)
-                ? problemsMap.get(pid)
-                : undefined;
-              const solvedProblem = pid !== undefined && solvedProblemsMap && solvedProblemsMap.has(pid)
-                ? solvedProblemsMap.get(pid)
-                : undefined;
+              const pid =
+                i in contest.ProblemIdList
+                  ? contest.ProblemIdList[i]
+                  : undefined;
+              const problem =
+                pid !== undefined && problemsMap && problemsMap.has(pid)
+                  ? problemsMap.get(pid)
+                  : undefined;
+              const solvedProblem =
+                pid !== undefined &&
+                solvedProblemsMap &&
+                solvedProblemsMap.has(pid)
+                  ? solvedProblemsMap.get(pid)
+                  : undefined;
               if (!pid) {
                 return '';
               }
@@ -125,8 +160,7 @@ export const YukicoderRegularTable = (props: {
                 return (
                   <span>
                     (Id=
-                    {pid}
-                    )
+                    {pid})
                   </span>
                 );
               }
@@ -139,7 +173,9 @@ export const YukicoderRegularTable = (props: {
                     level={problem.Level}
                     showDifficultyLevel={showDifficultyLevel}
                   />
-                  <ProblemTypeIconAbsoluteSpan problemType={problem.ProblemType} />
+                  <ProblemTypeIconAbsoluteSpan
+                    problemType={problem.ProblemType}
+                  />
                   <ProblemLink
                     problemNo={problem.No as ProblemNo}
                     problemTitle={problemTitle}

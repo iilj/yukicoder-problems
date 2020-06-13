@@ -11,7 +11,11 @@ import {
 import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
 import { formatSubmissionUrl } from '../../utils/Url';
 import {
-  Problem, ProblemLevel, ProblemId, ProblemNo, ProblemType,
+  Problem,
+  ProblemLevel,
+  ProblemId,
+  ProblemNo,
+  ProblemType,
 } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../../interfaces/Contest';
@@ -43,7 +47,7 @@ export const ListTable = (props: {
   toDate?: Date;
   problemTypeFilterState: ProblemType | 'All';
   showTagsOfTryingProblems: boolean;
-}) => {
+}): JSX.Element => {
   const {
     problems,
     contestMap,
@@ -64,95 +68,122 @@ export const ListTable = (props: {
       header: 'Date',
       dataField: 'Date',
       dataSort: true,
-      dataFormat: (date: string) => (
-        <>{date !== null ? dataFormat(new Date(date), 'yyyy/mm/dd HH:MM') : '-'}</>
-      ),
+      dataFormat: function _dataFormat(date: string) {
+        return (
+          <>
+            {date !== null
+              ? dataFormat(new Date(date), 'yyyy/mm/dd HH:MM')
+              : '-'}
+          </>
+        );
+      },
     },
     {
       header: 'Title',
       dataField: 'Title',
       dataSort: true,
-      dataFormat: (title: string, row: MergedProblem) => (
-        <ProblemLink
-          problemTitle={title}
-          problemNo={row.No as ProblemNo}
-          level={row.Level}
-          showDifficultyLevel
-        />
-      ),
+      dataFormat: function _dataFormat(title: string, row: MergedProblem) {
+        return (
+          <ProblemLink
+            problemTitle={title}
+            problemNo={row.No as ProblemNo}
+            level={row.Level}
+            showDifficultyLevel
+          />
+        );
+      },
     },
     {
       header: 'Level',
       dataField: 'Level',
       dataSort: true,
-      dataFormat: (level: ProblemLevel) => <DifficultyStars level={level} showDifficultyLevel />,
+      dataFormat: function _dataFormat(level: ProblemLevel) {
+        return <DifficultyStars level={level} showDifficultyLevel />;
+      },
     },
     {
       header: 'Contest',
       dataField: 'Contest',
       dataSort: true,
-      dataFormat: (contest: Contest): React.ReactElement => (contest ? <ContestLink contestId={contest.Id} contestName={contest.Name} /> : <></>),
+      dataFormat: function _dataFormat(contest: Contest): React.ReactElement {
+        return contest ? (
+          <ContestLink contestId={contest.Id} contestName={contest.Name} />
+        ) : (
+          <></>
+        );
+      },
     },
     {
       header: 'Solve Date',
       dataField: 'SolveDate',
       dataSort: true,
-      dataFormat: (solveDate: string) => (solveDate ? <>{dataFormat(new Date(solveDate), 'yyyy/mm/dd HH:MM')}</> : <></>),
+      dataFormat: function _dataFormat(solveDate: string) {
+        return solveDate ? (
+          <>{dataFormat(new Date(solveDate), 'yyyy/mm/dd HH:MM')}</>
+        ) : (
+          <></>
+        );
+      },
     },
     {
       header: 'Tags',
       dataField: 'Tags',
       dataSort: true,
-      dataFormat: (tags: string, row: MergedProblem): React.ReactElement => (showTagsOfTryingProblems || row.SolveDate ? <>{tags}</> : <></>),
+      dataFormat: function _dataFormat(
+        tags: string,
+        row: MergedProblem
+      ): React.ReactElement {
+        return showTagsOfTryingProblems || row.SolveDate ? <>{tags}</> : <></>;
+      },
     },
     {
       header: 'Shortest',
       dataField: 'ShortestRankingProblem',
       dataSort: true,
-      dataFormat: (shortestRankingProblem: RankingProblem): React.ReactElement => (shortestRankingProblem ? (
-        <a
-          href={formatSubmissionUrl(shortestRankingProblem.SubmissionId)}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {shortestRankingProblem.UserName}
-          {' '}
-          (
-          {shortestRankingProblem.Length}
-          {' '}
-          Bytes)
-        </a>
-      ) : (
-        <></>
-      )),
+      dataFormat: function _dataFormat(
+        shortestRankingProblem: RankingProblem
+      ): React.ReactElement {
+        return shortestRankingProblem ? (
+          <a
+            href={formatSubmissionUrl(shortestRankingProblem.SubmissionId)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {shortestRankingProblem.UserName} ({shortestRankingProblem.Length}{' '}
+            Bytes)
+          </a>
+        ) : (
+          <></>
+        );
+      },
     },
     {
       header: 'Pure Shortest',
       dataField: 'PureShortestRankingProblem',
       dataSort: true,
-      dataFormat: (pureShortestRankingProblem: RankingProblem): React.ReactElement => (pureShortestRankingProblem ? (
-        <a
-          href={formatSubmissionUrl(pureShortestRankingProblem.SubmissionId)}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {pureShortestRankingProblem.UserName}
-          {' '}
-          (
-          {pureShortestRankingProblem.Length}
-          {' '}
-          Bytes)
-        </a>
-      ) : (
-        <></>
-      )),
+      dataFormat: function _dataFormat(
+        pureShortestRankingProblem: RankingProblem
+      ): React.ReactElement {
+        return pureShortestRankingProblem ? (
+          <a
+            href={formatSubmissionUrl(pureShortestRankingProblem.SubmissionId)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {pureShortestRankingProblem.UserName} (
+            {pureShortestRankingProblem.Length} Bytes)
+          </a>
+        ) : (
+          <></>
+        );
+      },
     },
     {
       header: 'ProblemType',
       dataField: 'ProblemType',
-      dataFormat: (problemType: ProblemType) => (
-        <ProblemTypeIconSpanWithName problemType={problemType} />
-      ),
+      dataFormat: function _dataFormat(problemType: ProblemType) {
+        return <ProblemTypeIconSpanWithName problemType={problemType} />;
+      },
       dataSort: true,
     },
     {
@@ -193,7 +224,9 @@ export const ListTable = (props: {
         tableContainerClass="list-table"
         data={problems
           .filter(
-            (problem) => fromDifficultyLevel <= problem.Level && problem.Level <= toDifficultyLevel,
+            (problem) =>
+              fromDifficultyLevel <= problem.Level &&
+              problem.Level <= toDifficultyLevel
           )
           .filter((problem) => {
             switch (problemTypeFilterState) {
@@ -208,22 +241,25 @@ export const ListTable = (props: {
               ...problem,
               Contest:
                 contestMap && problemContestMap
-                  ? contestMap.get(problemContestMap.get(problem.ProblemId) as ContestId)
+                  ? contestMap.get(
+                      problemContestMap.get(problem.ProblemId) as ContestId
+                    )
                   : null,
               SolveDate:
                 solvedProblemsMap && solvedProblemsMap.has(problem.ProblemId)
-                  ? (solvedProblemsMap.get(problem.ProblemId) as SolvedProblem).Date
+                  ? (solvedProblemsMap.get(problem.ProblemId) as SolvedProblem)
+                      .Date
                   : undefined,
               ShortestRankingProblem:
-                golferProblemMap
-                && typeof problem.No === 'number'
-                && golferProblemMap.has(problem.No)
+                golferProblemMap &&
+                typeof problem.No === 'number' &&
+                golferProblemMap.has(problem.No)
                   ? golferProblemMap.get(problem.No)
                   : undefined,
               PureShortestRankingProblem:
-                golferPureProblemMap
-                && typeof problem.No === 'number'
-                && golferPureProblemMap.has(problem.No)
+                golferPureProblemMap &&
+                typeof problem.No === 'number' &&
+                golferPureProblemMap.has(problem.No)
                   ? golferPureProblemMap.get(problem.No)
                   : undefined,
               ContestName: undefined,
@@ -275,7 +311,8 @@ export const ListTable = (props: {
           const startDate = Date.parse(problem.Contest.Date);
           const endDate = Date.parse(problem.Contest.EndDate);
           if (solveDate > endDate) return 'table-problem table-problem-solved';
-          if (solveDate >= startDate) return 'table-problem table-problem-solved-intime';
+          if (solveDate >= startDate)
+            return 'table-problem table-problem-solved-intime';
           return 'table-problem table-problem-solved-before-contest';
         }}
         options={{
@@ -303,13 +340,19 @@ export const ListTable = (props: {
               value: problems.length,
             },
           ],
-          paginationPanel: (paginationPanelProps: ListPaginationPanelProps) => (
-            <ListPaginationPanel {...paginationPanelProps} />
-          ),
+          paginationPanel: function _paginationPanel(
+            paginationPanelProps: ListPaginationPanelProps
+          ) {
+            return <ListPaginationPanel {...paginationPanelProps} />;
+          },
         }}
       >
         {columns.map((c) => (
-          <TableHeaderColumn key={c.header} tdAttr={{ 'data-col-name': c.header }} {...c}>
+          <TableHeaderColumn
+            key={c.header}
+            tdAttr={{ 'data-col-name': c.header }}
+            {...c}
+          >
             {c.header}
           </TableHeaderColumn>
         ))}

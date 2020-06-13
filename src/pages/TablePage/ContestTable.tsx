@@ -17,7 +17,7 @@ export const ContestTable = (props: {
   showDifficultyLevel: boolean;
   showContestResult: boolean;
   universalStateLoaded: boolean;
-}) => {
+}): JSX.Element => {
   const {
     contests,
     problemsMap,
@@ -62,7 +62,9 @@ export const ContestTable = (props: {
         {universalStateLoaded ? (
           <></>
         ) : (
-          <Spinner style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }} />
+          <Spinner
+            style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }}
+          />
         )}
       </Row>
       <div className="my-inner-container">
@@ -77,19 +79,27 @@ export const ContestTable = (props: {
                   {contest.ProblemIdList.map((pid: ProblemId, i) => {
                     if (problemsMap !== undefined && problemsMap.has(pid)) {
                       const problem = problemsMap.get(pid) as Problem;
-                      const solvedProblem = solvedProblemsMap && solvedProblemsMap.has(pid)
-                        ? solvedProblemsMap.get(pid)
-                        : undefined;
+                      const solvedProblem =
+                        solvedProblemsMap && solvedProblemsMap.has(pid)
+                          ? solvedProblemsMap.get(pid)
+                          : undefined;
                       let className: string;
                       if (!solvedProblem) {
                         className = 'table-problem';
                       } else {
                         const solvedDate = Date.parse(solvedProblem.Date);
                         const startDate = Date.parse((contest as Contest).Date);
-                        const endDate = Date.parse((contest as Contest).EndDate);
-                        if (!showContestResult || solvedDate > endDate) className = 'table-problem table-problem-solved';
-                        else if (solvedDate >= startDate) className = 'table-problem table-problem-solved-intime';
-                        else className = 'table-problem table-problem-solved-before-contest';
+                        const endDate = Date.parse(
+                          (contest as Contest).EndDate
+                        );
+                        if (!showContestResult || solvedDate > endDate)
+                          className = 'table-problem table-problem-solved';
+                        else if (solvedDate >= startDate)
+                          className =
+                            'table-problem table-problem-solved-intime';
+                        else
+                          className =
+                            'table-problem table-problem-solved-before-contest';
                       }
 
                       const problemTitle = `${header[i]}. ${problem.Title}`;
@@ -100,7 +110,9 @@ export const ContestTable = (props: {
                             level={problem.Level}
                             showDifficultyLevel={showDifficultyLevel}
                           />
-                          <ProblemTypeIconAbsoluteSpan problemType={problem.ProblemType} />
+                          <ProblemTypeIconAbsoluteSpan
+                            problemType={problem.ProblemType}
+                          />
                           <ProblemLink
                             problemNo={problem.No as ProblemNo}
                             problemTitle={problemTitle}
@@ -118,8 +130,7 @@ export const ContestTable = (props: {
                     return (
                       <td key={pid}>
                         (Id=
-                        {pid}
-                        )
+                        {pid})
                       </td>
                     );
                   })}

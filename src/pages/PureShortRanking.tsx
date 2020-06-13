@@ -22,7 +22,7 @@ const initialUserState = {
   golferPureMap: new Map<UserName, RankingProblem[]>(),
 };
 
-export const PureShortRanking = () => {
+export const PureShortRanking = (): JSX.Element => {
   const emptyLangId = '';
   const [langId, setLangId] = useState<LangId>(emptyLangId);
 
@@ -55,9 +55,10 @@ export const PureShortRanking = () => {
     let unmounted = false;
     const getUserInfo = async () => {
       setUserStateLoaded(false);
-      const golferPureMap = langId === emptyLangId
-        ? await TypedCachedApiClient.cachedGolferPureMap()
-        : await TypedCachedApiClient.cachedGolferPureMapLangMap(langId);
+      const golferPureMap =
+        langId === emptyLangId
+          ? await TypedCachedApiClient.cachedGolferPureMap()
+          : await TypedCachedApiClient.cachedGolferPureMapLangMap(langId);
 
       if (!unmounted) {
         setUserState({
@@ -83,7 +84,7 @@ export const PureShortRanking = () => {
 
   const languagesMap = languages.reduce(
     (map, language) => map.set(language.Id, language),
-    new Map<LangId, Language>(),
+    new Map<LangId, Language>()
   );
 
   return (
@@ -105,7 +106,9 @@ export const PureShortRanking = () => {
         <ButtonGroup className="mr-4">
           <UncontrolledDropdown>
             <DropdownToggle caret>
-              {langId === emptyLangId ? 'Language' : (languagesMap.get(langId) as Language).Name}
+              {langId === emptyLangId
+                ? 'Language'
+                : (languagesMap.get(langId) as Language).Name}
             </DropdownToggle>
             <WellPositionedDropdownMenu>
               <DropdownItem header>Language</DropdownItem>
@@ -113,7 +116,10 @@ export const PureShortRanking = () => {
                 All
               </DropdownItem>
               {languages.map((language) => (
-                <DropdownItem key={language.Id} onClick={() => setLangId(language.Id)}>
+                <DropdownItem
+                  key={language.Id}
+                  onClick={() => setLangId(language.Id)}
+                >
                   {language.Name}
                 </DropdownItem>
               ))}

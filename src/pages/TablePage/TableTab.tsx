@@ -11,7 +11,7 @@ export enum ContestTableTab {
 export const TableTabButtons = (props: {
   active: ContestTableTab;
   setActive: (next: ContestTableTab) => void;
-}) => {
+}): JSX.Element => {
   const { active, setActive } = props;
   return (
     <Row>

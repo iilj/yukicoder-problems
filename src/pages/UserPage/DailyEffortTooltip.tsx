@@ -14,10 +14,8 @@ export const DailyEffortTooltip = (props: {
   payload?: DailyEffortTooltipPayload[];
   label?: number;
   reverseColorOrder?: boolean;
-}) => {
-  const {
-    active, payload, label, reverseColorOrder,
-  } = props;
+}): JSX.Element => {
+  const { active, payload, label, reverseColorOrder } = props;
   if (!active || payload === undefined) return null;
   return (
     <div
@@ -33,7 +31,10 @@ export const DailyEffortTooltip = (props: {
       <p className="recharts-tooltip-label" style={{ margin: '0px' }}>
         {dataFormat(new Date(Number(label)), 'yyyy/mm/dd')}
       </p>
-      <ul className="recharts-tooltip-item-list" style={{ padding: '0px', margin: '0px' }}>
+      <ul
+        className="recharts-tooltip-item-list"
+        style={{ padding: '0px', margin: '0px' }}
+      >
         <li
           className="recharts-tooltip-item"
           style={{
@@ -54,7 +55,9 @@ export const DailyEffortTooltip = (props: {
       <table>
         <tbody>
           {payload
-            .sort((a, b) => (reverseColorOrder ? a.dataKey - b.dataKey : b.dataKey - a.dataKey))
+            .sort((a, b) =>
+              reverseColorOrder ? a.dataKey - b.dataKey : b.dataKey - a.dataKey
+            )
             .map((entry) => {
               if (entry.value <= 0) return null;
               return (
@@ -62,7 +65,10 @@ export const DailyEffortTooltip = (props: {
                   <td align="right">{entry.value}</td>
                   <td>{' * '}</td>
                   <td>
-                    <DifficultyStars level={entry.dataKey} showDifficultyLevel />
+                    <DifficultyStars
+                      level={entry.dataKey}
+                      showDifficultyLevel
+                    />
                   </td>
                 </tr>
               );

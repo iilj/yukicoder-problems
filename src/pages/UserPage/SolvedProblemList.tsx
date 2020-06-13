@@ -23,9 +23,13 @@ export const SolvedProblemList = (props: {
   contestMap: Map<ContestId, Contest>;
   fromDate: Date;
   toDate: Date;
-}) => {
+}): JSX.Element => {
   const {
-    solvedProblems, problemContestMap, contestMap, fromDate, toDate,
+    solvedProblems,
+    problemContestMap,
+    contestMap,
+    fromDate,
+    toDate,
   } = props;
 
   return (
@@ -41,7 +45,11 @@ export const SolvedProblemList = (props: {
         })
         .sort((a, b) => (a.Date < b.Date ? 1 : -1))
         .map(
-          (s) => ({ Contest: contestMap.get(problemContestMap.get(s.ProblemId) ?? -1), ...s } as Entry),
+          (s) =>
+            ({
+              Contest: contestMap.get(problemContestMap.get(s.ProblemId) ?? -1),
+              ...s,
+            } as Entry)
         )}
       keyField="ProblemId"
       height="auto"
@@ -74,15 +82,19 @@ export const SolvedProblemList = (props: {
             value: solvedProblems.length,
           },
         ],
-        paginationPanel: (paginationPanelProps: ListPaginationPanelProps) => (
-          <ListPaginationPanel {...paginationPanelProps} />
-        ),
+        paginationPanel: function _paginationPanel(
+          paginationPanelProps: ListPaginationPanelProps
+        ) {
+          return <ListPaginationPanel {...paginationPanelProps} />;
+        },
       }}
     >
       <TableHeaderColumn
         dataSort
         dataField="Date"
-        dataFormat={(date: string) => <>{dataFormat(new Date(date), 'yyyy/mm/dd HH:MM')}</>}
+        dataFormat={(date: string) => (
+          <>{dataFormat(new Date(date), 'yyyy/mm/dd HH:MM')}</>
+        )}
       >
         Date
       </TableHeaderColumn>
@@ -105,7 +117,9 @@ export const SolvedProblemList = (props: {
         filterFormatted
         dataSort
         dataField="Level"
-        dataFormat={(level: ProblemLevel) => <DifficultyStars level={level} showDifficultyLevel />}
+        dataFormat={(level: ProblemLevel) => (
+          <DifficultyStars level={level} showDifficultyLevel />
+        )}
       >
         Level
       </TableHeaderColumn>
@@ -113,7 +127,13 @@ export const SolvedProblemList = (props: {
         filterFormatted
         dataSort
         dataField="Contest"
-        dataFormat={(contest: Contest) => (contest ? <ContestLink contestId={contest.Id} contestName={contest.Name} /> : <></>)}
+        dataFormat={(contest: Contest) =>
+          contest ? (
+            <ContestLink contestId={contest.Id} contestName={contest.Name} />
+          ) : (
+            <></>
+          )
+        }
       >
         Contest
       </TableHeaderColumn>

@@ -1,32 +1,38 @@
 import React from 'react';
 import { Row, Spinner } from 'reactstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { ListPaginationPanel, ListPaginationPanelProps } from './ListPaginationPanel';
+import {
+  ListPaginationPanel,
+  ListPaginationPanelProps,
+} from './ListPaginationPanel';
 import { UserName } from '../interfaces/User';
 
-const refineRanking = (ranking: { name: UserName; count: number }[]) => ranking
-  .sort((a, b) => b.count - a.count)
-  .reduce((list, entry, index) => {
-    const last = list[list.length - 1];
-    list.push({
-      rank: last && last.count === entry.count ? last.rank : index + 1,
-      name: entry.name,
-      count: entry.count,
-    });
-    return list;
-  }, [] as { rank: number; name: UserName; count: number }[]);
+const refineRanking = (ranking: { name: UserName; count: number }[]) =>
+  ranking
+    .sort((a, b) => b.count - a.count)
+    .reduce((list, entry, index) => {
+      const last = list[list.length - 1];
+      list.push({
+        rank: last && last.count === entry.count ? last.rank : index + 1,
+        name: entry.name,
+        count: entry.count,
+      });
+      return list;
+    }, [] as { rank: number; name: UserName; count: number }[]);
 
 export const Ranking = (props: {
   title: string;
   ranking: { name: UserName; count: number }[];
   universalStateLoaded: boolean;
-}) => (
+}): JSX.Element => (
   <Row>
     <h2>{props.title}</h2>
     {props.universalStateLoaded ? (
       <></>
     ) : (
-      <Spinner style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }} />
+      <Spinner
+        style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }}
+      />
     )}
     <BootstrapTable
       height="auto"
@@ -60,9 +66,11 @@ export const Ranking = (props: {
             value: props.ranking.length,
           },
         ],
-        paginationPanel: (paginationPanelProps: ListPaginationPanelProps) => (
-          <ListPaginationPanel {...paginationPanelProps} />
-        ),
+        paginationPanel: function _paginationPanel(
+          paginationPanelProps: ListPaginationPanelProps
+        ) {
+          return <ListPaginationPanel {...paginationPanelProps} />;
+        },
       }}
     >
       <TableHeaderColumn dataField="rank">#</TableHeaderColumn>

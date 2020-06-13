@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getDifficultyLevelColor } from '../utils';
 import { ProblemLevel } from '../interfaces/Problem';
 
-export const DifficultyStarsFillDefs = () => (
+export const DifficultyStarsFillDefs = (): JSX.Element => (
   <svg style={{ height: 0 }}>
     <defs>
       <linearGradient id="ggold">
@@ -30,9 +30,9 @@ interface DifficultyStarsProps {
   showDifficultyLevel: boolean;
 }
 
-export const DifficultyStars = (props: DifficultyStarsProps) => {
+export const DifficultyStars = (props: DifficultyStarsProps): JSX.Element => {
   const { level, showDifficultyLevel } = props;
-  if (!showDifficultyLevel) return null;
+  if (!showDifficultyLevel) return <></>;
 
   const half = level % 1;
   const full = level - half;
@@ -47,28 +47,46 @@ export const DifficultyStars = (props: DifficultyStarsProps) => {
 
   const color = getDifficultyLevelColor(level);
   const style = { color };
-  const className = level <= 4.5
-    ? 'star-normal'
-    : level <= 5
+  const className =
+    level <= 4.5
+      ? 'star-normal'
+      : level <= 5
       ? 'star-bronze'
       : level <= 5.5
-        ? 'star-silver'
-        : 'star-gold';
+      ? 'star-silver'
+      : 'star-gold';
   return (
     <>
-      {stars.map((s) => (s[1] === 1 ? (
-        <FontAwesomeIcon icon="star" key={s[0]} style={style} className={className} />
-      ) : (
-        <FontAwesomeIcon icon="star-half" key={s[0]} style={style} className={className} />
-      )))}
+      {stars.map((s) =>
+        s[1] === 1 ? (
+          <FontAwesomeIcon
+            icon="star"
+            key={s[0]}
+            style={style}
+            className={className}
+          />
+        ) : (
+          <FontAwesomeIcon
+            icon="star-half"
+            key={s[0]}
+            style={style}
+            className={className}
+          />
+        )
+      )}
     </>
   );
 };
 
-export const DifficultyStarsAbsoluteSpan = (props: DifficultyStarsProps) => (
+export const DifficultyStarsAbsoluteSpan = (
+  props: DifficultyStarsProps
+): JSX.Element => (
   <span className="table-problem-stars">
     <DifficultyStars {...props} />
   </span>
 );
 
-export const NormalStarElement = (props: any) => <FontAwesomeIcon icon="star" {...props} />;
+export const NormalStarElement = (props: {
+  className?: string;
+  color?: string;
+}): JSX.Element => <FontAwesomeIcon icon="star" {...props} />;

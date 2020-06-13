@@ -12,7 +12,10 @@ import { TabbedDailyEffortBarChart } from './TabbedDailyEffortBarChart';
 import { TabbedClimbingLineChart } from './TabbedClimbingLineChart';
 import { TabbedHeatmap } from './TabbedHeatmap';
 import { SolvedProblemList } from './SolvedProblemList';
-import { DifficultyStarsFillDefs, NormalStarElement } from '../../components/DifficultyStars';
+import {
+  DifficultyStarsFillDefs,
+  NormalStarElement,
+} from '../../components/DifficultyStars';
 import {
   DateRangePicker,
   INITIAL_FROM_DATE,
@@ -44,8 +47,11 @@ const initialUserState = {
   maxDate: INITIAL_TO_DATE,
 };
 
-export const UserPage = () => {
-  const { param, user } = useParams() as { param: TypedCachedApiClient.UserParam; user: string };
+export const UserPage = (): JSX.Element => {
+  const { param, user } = useParams() as {
+    param: TypedCachedApiClient.UserParam;
+    user: string;
+  };
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
@@ -94,7 +100,10 @@ export const UserPage = () => {
         TypedCachedApiClient.cachedUserInfo(param, user),
         TypedCachedApiClient.cachedSolvedProblemArray(param, user),
       ]);
-      const solvedProblemsMap = await TypedCachedApiClient.cachedSolvedProblemMap(param, user);
+      const solvedProblemsMap = await TypedCachedApiClient.cachedSolvedProblemMap(
+        param,
+        user
+      );
 
       const dates = solvedProblems.map((problem) => Date.parse(problem.Date));
       const minDate = new Date(Math.min.apply(null, dates));
@@ -129,7 +138,11 @@ export const UserPage = () => {
     problemContestMap,
   } = universalState;
   const {
-    userInfo, solvedProblems, solvedProblemsMap, minDate, maxDate,
+    userInfo,
+    solvedProblems,
+    solvedProblemsMap,
+    minDate,
+    maxDate,
   } = userState;
 
   const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
@@ -139,8 +152,13 @@ export const UserPage = () => {
 
   // for user info section
   /** returns [shortestCount, shortestRank] */
-  const countRank = (shortestMap: Map<UserName, RankingProblem[]>): [number, number] => {
-    const shortestCount = name && shortestMap.has(name) ? (shortestMap.get(name) as RankingProblem[]).length : 0;
+  const countRank = (
+    shortestMap: Map<UserName, RankingProblem[]>
+  ): [number, number] => {
+    const shortestCount =
+      name && shortestMap.has(name)
+        ? (shortestMap.get(name) as RankingProblem[]).length
+        : 0;
     if (shortestMap.size === 0) return [shortestCount, 0];
     if (shortestCount === 0) return [shortestCount, 1 + shortestMap.size];
     let rank = 1;
@@ -160,7 +178,8 @@ export const UserPage = () => {
       return contest.ProblemIdList.reduce((map_, problemId, idx) => {
         const key = Math.min(idx, 5) as 0 | 1 | 2 | 3 | 4 | 5;
         if (!map_.has(key)) map_.set(key, { total: 0, solved: 0 });
-        if (solvedProblemsMap.has(problemId)) (map_.get(key) as { total: number; solved: number }).solved++;
+        if (solvedProblemsMap.has(problemId))
+          (map_.get(key) as { total: number; solved: number }).solved++;
         (map_.get(key) as { total: number; solved: number }).total++;
         return map_;
       }, map);
@@ -201,7 +220,8 @@ export const UserPage = () => {
     .reduce(
       (state, dateSecond) => {
         const nextDateSecond = state.prevDateSecond + MS_OF_DAY;
-        const currentStreak = dateSecond === nextDateSecond ? state.currentStreak + 1 : 1;
+        const currentStreak =
+          dateSecond === nextDateSecond ? state.currentStreak + 1 : 1;
         const longestStreak = Math.max(state.longestStreak, currentStreak);
         return { longestStreak, currentStreak, prevDateSecond: dateSecond };
       },
@@ -209,7 +229,7 @@ export const UserPage = () => {
         longestStreak: 0,
         currentStreak: 0,
         prevDateSecond: 0,
-      },
+      }
     );
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
@@ -226,7 +246,8 @@ export const UserPage = () => {
     .filter((problem) => problem.ProblemType === ProblemType.Normal)
     .map((problem) => problem.Level)
     .reduce((sum, cur) => sum + cur, 0 as number);
-  const origUserLevel = allProblemsStars > 0 ? (100.0 * userSolvedStars) / allProblemsStars : 0;
+  const origUserLevel =
+    allProblemsStars > 0 ? (100.0 * userSolvedStars) / allProblemsStars : 0;
   const userLevel = Math.round(origUserLevel * 100) / 100;
   const nextLevel = Math.min(100, Math.floor(userLevel) + 1.0);
   const starsToAdvance = (allProblemsStars * (nextLevel - userLevel)) / 100;
@@ -271,7 +292,9 @@ export const UserPage = () => {
         {universalStateLoaded ? (
           <></>
         ) : (
-          <Spinner style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }} />
+          <Spinner
+            style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }}
+          />
         )}
       </Row>
       {userStateLoaded ? (
@@ -295,49 +318,52 @@ export const UserPage = () => {
             <h6>{key}</h6>
             <h3>{value}</h3>
             {rank === undefined ? null : (
-              <h6 className="text-muted">{`${rank}${ordinalSuffixOf(rank)}`}</h6>
+              <h6 className="text-muted">{`${rank}${ordinalSuffixOf(
+                rank
+              )}`}</h6>
             )}
           </Col>
         ))}
         <Col key="Level" className="text-center" xs="6" md="3">
           <h6>Level</h6>
-          <h3 title={`${userLevel} (${origUserLevel})`}>{userLevel.toFixed(2)}</h3>
-          <h6 className="text-muted" title={`${starsToAdvance} stars to level ${nextLevel}`}>
-            <NormalStarElement />
-            {' '}
-            *
-            {Math.ceil(starsToAdvance * 2) / 2}
-            {' '}
-            to advance
+          <h3 title={`${userLevel} (${origUserLevel})`}>
+            {userLevel.toFixed(2)}
+          </h3>
+          <h6
+            className="text-muted"
+            title={`${starsToAdvance} stars to level ${nextLevel}`}
+          >
+            <NormalStarElement /> *{Math.ceil(starsToAdvance * 2) / 2} to
+            advance
           </h6>
         </Col>
         <Col key="Longest Streak" className="text-center" xs="6" md="3">
           <h6>Longest Streak</h6>
-          <h3>
-            {longestStreak}
-            {' '}
-            days
-          </h3>
+          <h3>{longestStreak} days</h3>
         </Col>
         <Col key="Current Streak" className="text-center" xs="6" md="3">
           <h6>Current Streak</h6>
-          <h3>
-            {isIncreasing ? currentStreak : 0}
-            {' '}
-            days
-          </h3>
+          <h3>{isIncreasing ? currentStreak : 0} days</h3>
           <h6 className="text-muted">
-            {`Last AC: ${prevDateSecond > 0 ? dataFormat(prevDateSecond, 'yyyy/mm/dd') : ''}`}
+            {`Last AC: ${
+              prevDateSecond > 0 ? dataFormat(prevDateSecond, 'yyyy/mm/dd') : ''
+            }`}
           </h6>
         </Col>
       </Row>
 
-      <PieCharts problems={regularContestProblemsCnt} title="yukicoder contest" />
+      <PieCharts
+        problems={regularContestProblemsCnt}
+        title="yukicoder contest"
+      />
 
       <Row className="my-2 border-bottom">
         <h1>Problem Level Pies</h1>
       </Row>
-      <ProblemLevelPieChart problems={problems} solvedProblems={solvedProblems} />
+      <ProblemLevelPieChart
+        problems={problems}
+        solvedProblems={solvedProblems}
+      />
 
       <Row className="my-2 border-bottom">
         <h1>Daily Effort</h1>

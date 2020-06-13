@@ -7,7 +7,10 @@ import { DailyEffortStackedBarChart } from './DailyEffortStackedBarChart';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { ProblemLevel } from '../../interfaces/Problem';
 
-const DailyEffortBarChartWrapper = (props: { display: boolean; children: React.ReactNode }) => (
+const DailyEffortBarChartWrapper = (props: {
+  display: boolean;
+  children: React.ReactNode;
+}): JSX.Element => (
   <div style={{ display: props.display ? '' : 'none' }}>{props.children}</div>
 );
 
@@ -15,10 +18,10 @@ export const TabbedDailyEffortBarChart = (props: {
   dailyData: { dateSecond: number; count: number }[];
   solvedProblems: SolvedProblem[];
   syncId: string;
-}) => {
+}): JSX.Element => {
   const [showMode, setShowMode] = useLocalStorage<'Simple' | 'Colored'>(
     'UserPage_TabbedDailyEffortBarChart_showMode',
-    'Simple',
+    'Simple'
   );
   const { dailyData, solvedProblems, syncId } = props;
 
@@ -32,12 +35,15 @@ export const TabbedDailyEffortBarChart = (props: {
         key,
         levelList.reduce(
           (map, currentLevel) => map.set(currentLevel, 0),
-          new Map<ProblemLevel, number>(),
-        ),
+          new Map<ProblemLevel, number>()
+        )
       );
     }
     const targetDate = map.get(key) as Map<ProblemLevel, number>;
-    targetDate.set(solvedProblem.Level, (targetDate.get(solvedProblem.Level) as number) + 1);
+    targetDate.set(
+      solvedProblem.Level,
+      (targetDate.get(solvedProblem.Level) as number) + 1
+    );
     return map;
   }, new Map<number, Map<ProblemLevel, number>>());
   let dailyLevelCount = [] as { dateSecond: number; [key: number]: number }[];
@@ -50,10 +56,16 @@ export const TabbedDailyEffortBarChart = (props: {
     <>
       <Row className="my-3">
         <ButtonGroup className="mr-3">
-          <Button onClick={() => setShowMode('Simple')} active={showMode === 'Simple'}>
+          <Button
+            onClick={() => setShowMode('Simple')}
+            active={showMode === 'Simple'}
+          >
             Simple
           </Button>
-          <Button onClick={() => setShowMode('Colored')} active={showMode === 'Colored'}>
+          <Button
+            onClick={() => setShowMode('Colored')}
+            active={showMode === 'Colored'}
+          >
             Colored
           </Button>
         </ButtonGroup>
@@ -62,7 +74,10 @@ export const TabbedDailyEffortBarChart = (props: {
         <DailyEffortBarChart dailyData={dailyData} syncId={syncId} />
       </DailyEffortBarChartWrapper>
       <DailyEffortBarChartWrapper display={showMode === 'Colored'}>
-        <DailyEffortStackedBarChart dailyData={dailyLevelCount} syncId={syncId} />
+        <DailyEffortStackedBarChart
+          dailyData={dailyLevelCount}
+          syncId={syncId}
+        />
       </DailyEffortBarChartWrapper>
     </>
   );
