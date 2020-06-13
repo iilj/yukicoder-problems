@@ -1,10 +1,13 @@
+/* ユーザーID */
+export type UserId = number;
+
 /** ユーザー名 */
 export type UserName = string;
 
 /** ユーザ */
 export interface User {
   /** ユーザーID */
-  readonly Id: number;
+  readonly Id: UserId;
   /** ユーザー名 */
   readonly Name: UserName;
   /** 解いている問題数 */
