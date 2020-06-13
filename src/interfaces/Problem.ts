@@ -1,3 +1,5 @@
+import { UserId } from './User';
+
 /** 問題No */
 export type ProblemNo = number;
 /** 問題Id */
@@ -38,9 +40,9 @@ export interface Problem {
   /** 問題名 */
   readonly Title: string;
   /** 作問者のユーザーId */
-  readonly AuthorId: number;
+  readonly AuthorId: UserId;
   /** テスターのユーザーId */
-  readonly TesterId: number;
+  readonly TesterId: UserId;
   /** 問題レベル小数あり */
   readonly Level: ProblemLevel;
   /** 問題タイプ */

@@ -1,5 +1,5 @@
 import { ProblemNo } from './Problem';
-import { UserName } from './User';
+import { UserId, UserName } from './User';
 import { LangId } from './Language';
 
 /** 問題 */
@@ -13,7 +13,7 @@ export interface RankingProblem {
   /** 問題名 */
   readonly Title: string;
   /** 提出者ID */
-  readonly SubmitterId: number;
+  readonly SubmitterId: UserId;
   /** 提出者名 */
   readonly UserName: UserName;
   /** ソースコード長 */
