@@ -96,7 +96,7 @@ export const ListPage = (): JSX.Element => {
         setUniversalStateLoaded(true);
       }
     };
-    getUniversalInfo();
+    void getUniversalInfo();
     const cleanup = () => {
       unmounted = true;
     };
@@ -124,7 +124,7 @@ export const ListPage = (): JSX.Element => {
         setUserStateLoaded(true);
       }
     };
-    getUserInfo();
+    void getUserInfo();
     const cleanup = () => {
       unmounted = true;
     };

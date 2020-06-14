@@ -24,7 +24,7 @@ export const SubmitTimespan = (props: {
 }): JSX.Element => {
   const { contest, solvedProblem, showContestResult } = props;
   if (!showContestResult) {
-    return null;
+    return <></>;
   }
 
   return (

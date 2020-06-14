@@ -296,7 +296,7 @@ export const ListTable = (props: {
             if (problem.Date === null) return false;
             const startDate = new Date(problem.Date);
             if (fromDate === undefined) return startDate <= (toDate as Date);
-            if (toDate === undefined) return (fromDate as Date) <= startDate;
+            if (toDate === undefined) return fromDate <= startDate;
             return fromDate <= startDate && startDate <= toDate;
           })
           .sort((a, b) => {
@@ -304,7 +304,7 @@ export const ListTable = (props: {
             if (b.Date === null) return -1;
             return a.Date < b.Date ? 1 : -1;
           })}
-        trClassName={(problem) => {
+        trClassName={(problem: MergedProblem) => {
           if (!problem.SolveDate) return 'table-problem';
           if (!problem.Contest) return 'table-problem table-problem-solved';
           const solveDate = Date.parse(problem.SolveDate);

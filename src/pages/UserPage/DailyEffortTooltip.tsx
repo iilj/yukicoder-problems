@@ -16,7 +16,7 @@ export const DailyEffortTooltip = (props: {
   reverseColorOrder?: boolean;
 }): JSX.Element => {
   const { active, payload, label, reverseColorOrder } = props;
-  if (!active || payload === undefined) return null;
+  if (!active || payload === undefined) return <></>;
   return (
     <div
       className="recharts-default-tooltip"

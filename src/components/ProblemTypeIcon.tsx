@@ -9,7 +9,7 @@ interface ProblemTypeIconProps {
 
 export const ProblemTypeIcon = (props: ProblemTypeIconProps): JSX.Element => {
   const { problemType } = props;
-  if (!problemType) return null;
+  if (!problemType) return <></>;
 
   switch (problemType) {
     case ProblemType.Educational:
@@ -34,7 +34,7 @@ export const ProblemTypeIcon = (props: ProblemTypeIconProps): JSX.Element => {
         />
       );
     default:
-      return null;
+      return <></>;
   }
 };
 

@@ -117,15 +117,17 @@ export const AllProblemsTable = (props: {
                               className =
                                 'table-problem table-problem-solved-before-contest';
                           }
-                          const elementId = `AllProblems_td_${problem.No}`;
+                          const elementId = `AllProblems_td_${
+                            problem.No as number
+                          }`;
                           return (
                             <td key={pid} className={className} id={elementId}>
                               <ProblemLink
                                 problemNo={problem.No as ProblemNo}
-                                problemTitle={`${problem.No}`}
+                                problemTitle={`${problem.No as number}`}
                                 level={problem.Level}
                                 showDifficultyLevel={showDifficultyLevel}
-                                id={`AllProblems_td_${problem.No}`}
+                                id={`AllProblems_td_${problem.No as number}`}
                               />
                               <UncontrolledTooltip
                                 target={elementId}
@@ -141,7 +143,9 @@ export const AllProblemsTable = (props: {
                                     problemTitle={`${problem.Title}`}
                                     level={problem.Level}
                                     showDifficultyLevel={showDifficultyLevel}
-                                    id={`AllProblems_td_${problem.No}`}
+                                    id={`AllProblems_td_${
+                                      problem.No as number
+                                    }`}
                                   />
                                 </div>
                                 <div>

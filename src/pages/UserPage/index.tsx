@@ -85,7 +85,7 @@ export const UserPage = (): JSX.Element => {
         setUniversalStateLoaded(true);
       }
     };
-    getUniversalInfo();
+    void getUniversalInfo();
     const cleanup = () => {
       unmounted = true;
     };
@@ -122,7 +122,7 @@ export const UserPage = (): JSX.Element => {
         setUserStateLoaded(true);
       }
     };
-    getUserInfo();
+    void getUserInfo();
     const cleanup = () => {
       unmounted = true;
     };
@@ -173,8 +173,9 @@ export const UserPage = (): JSX.Element => {
   const [pureShortestCount, pureShortestRank] = countRank(pureGolferMap);
 
   // for pichart
+  const regexpContest = /^yukicoder contest \d+/;
   const regularContestProblemsCntMap = contests.reduce((map, contest) => {
-    if (contest.Name.match(/^yukicoder contest \d+/)) {
+    if (regexpContest.exec(contest.Name)) {
       return contest.ProblemIdList.reduce((map_, problemId, idx) => {
         const key = Math.min(idx, 5) as 0 | 1 | 2 | 3 | 4 | 5;
         if (!map_.has(key)) map_.set(key, { total: 0, solved: 0 });
@@ -318,9 +319,9 @@ export const UserPage = (): JSX.Element => {
             <h6>{key}</h6>
             <h3>{value}</h3>
             {rank === undefined ? null : (
-              <h6 className="text-muted">{`${rank}${ordinalSuffixOf(
-                rank
-              )}`}</h6>
+              <h6 className="text-muted">
+                {`${rank}${ordinalSuffixOf(rank)}`}
+              </h6>
             )}
           </Col>
         ))}

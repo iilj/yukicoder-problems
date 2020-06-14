@@ -19,7 +19,7 @@ export const ClimbingAreaChart = (props: {
   reverseColorOrder: boolean;
   syncId: string;
 }): JSX.Element => {
-  if (props.climbingData.length === 0) return null;
+  if (props.climbingData.length === 0) return <></>;
 
   return (
     <Row className="my-3">

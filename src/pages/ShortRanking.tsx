@@ -25,7 +25,7 @@ export const ShortRanking = (): JSX.Element => {
         setUniversalStateLoaded(true);
       }
     };
-    getUniversalInfo();
+    void getUniversalInfo();
     const cleanup = () => {
       unmounted = true;
     };

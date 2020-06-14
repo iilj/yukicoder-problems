@@ -71,7 +71,7 @@ export const TablePage = (): JSX.Element => {
         setUniversalStateLoaded(true);
       }
     };
-    getUniversalInfo();
+    void getUniversalInfo();
     const cleanup = () => {
       unmounted = true;
     };
@@ -94,7 +94,7 @@ export const TablePage = (): JSX.Element => {
         setUserStateLoaded(true);
       }
     };
-    getUserInfo();
+    void getUserInfo();
     const cleanup = () => {
       unmounted = true;
     };
@@ -126,8 +126,9 @@ export const TablePage = (): JSX.Element => {
   const yukicoderRegularContests = [] as Contest[];
   const yukicoderLongContests = [] as Contest[];
   const otherContests = [] as Contest[];
+  const regexpContest = /^yukicoder contest \d+/;
   contests.forEach((contest) => {
-    if (contest.Name.match(/^yukicoder contest \d+/)) {
+    if (regexpContest.exec(contest.Name)) {
       if (contest.ProblemIdList.length <= 6)
         yukicoderRegularContests.push(contest);
       else yukicoderLongContests.push(contest);

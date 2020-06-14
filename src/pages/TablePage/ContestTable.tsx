@@ -88,10 +88,8 @@ export const ContestTable = (props: {
                         className = 'table-problem';
                       } else {
                         const solvedDate = Date.parse(solvedProblem.Date);
-                        const startDate = Date.parse((contest as Contest).Date);
-                        const endDate = Date.parse(
-                          (contest as Contest).EndDate
-                        );
+                        const startDate = Date.parse(contest.Date);
+                        const endDate = Date.parse(contest.EndDate);
                         if (!showContestResult || solvedDate > endDate)
                           className = 'table-problem table-problem-solved';
                         else if (solvedDate >= startDate)

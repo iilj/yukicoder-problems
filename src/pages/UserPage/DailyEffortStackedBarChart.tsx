@@ -18,7 +18,7 @@ export const DailyEffortStackedBarChart = (props: {
   dailyData: { dateSecond: number; [key: number]: number }[];
   syncId: string;
 }): JSX.Element => {
-  if (props.dailyData.length === 0) return null;
+  if (props.dailyData.length === 0) return <></>;
 
   return (
     <Row className="my-3">

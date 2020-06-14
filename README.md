@@ -28,9 +28,19 @@ yarn build
 yarn ghpages
 ```
 
-### Fix code format
+### Prettify codes
+```bash
+yarn prettier
+```
+
+### Check code format
 ```bash
 yarn lint
+```
+
+### Fix code format
+```bash
+yarn lint:fix
 ```
 
 ## Favicon

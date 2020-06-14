@@ -10,15 +10,14 @@ const STATIC_API_BASE_URL = `${BASE_URL}/api/v1`;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const assertResultIsValid = (obj: any): void => {
-  if ('Message' in obj) throw new Error(obj.Message);
+  if ('Message' in obj) throw new Error((obj as { Message: string }).Message);
 };
 const fetchJson = async <T>(url: string): Promise<T> => {
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(res.statusText);
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const obj: any = await res.json();
+  const obj = (await res.json()) as T | { Message: string };
   assertResultIsValid(obj);
   return obj as T;
 };

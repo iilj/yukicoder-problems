@@ -20,14 +20,18 @@ import {
   FormGroup,
 } from 'reactstrap';
 
+const regexpUser = /^\/user/;
+const regexpList = /^\/list/;
+const regexpTable = /^\/table/;
+
 const extractPageKind = (pathname: string) => {
-  if (pathname.match(/^\/user/)) {
+  if (regexpUser.exec(pathname)) {
     return 'user';
   }
-  if (pathname.match(/^\/list/)) {
+  if (regexpList.exec(pathname)) {
     return 'list';
   }
-  if (pathname.match(/^\/table/)) {
+  if (regexpTable.exec(pathname)) {
     return 'table';
   }
   return undefined;
