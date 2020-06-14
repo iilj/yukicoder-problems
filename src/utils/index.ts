@@ -32,7 +32,7 @@ export const getLevelList = (): ProblemLevel[] => {
  * @param {ProblemLevel} level 問題の難易度レベル
  * @returns color code string
  */
-export const getDifficultyLevelColor = (level: ProblemLevel) => {
+export const getDifficultyLevelColor = (level: ProblemLevel): string => {
   if (!level) {
     return '';
   }
@@ -72,13 +72,27 @@ export const getDifficultyLevelColor = (level: ProblemLevel) => {
   return '#ffd700'; // gold
 };
 
+type DifficultyLevelColorClassName =
+  | ''
+  | 'difficulty-black'
+  | 'difficulty-grey'
+  | 'difficulty-brown'
+  | 'difficulty-green'
+  | 'difficulty-cyan'
+  | 'difficulty-blue'
+  | 'difficulty-yellow'
+  | 'difficulty-orange'
+  | 'difficulty-red';
+
 /**
  * 問題の難易度レベル→色クラス，の変換
  *
  * @param {ProblemLevel} level 問題の難易度レベル
  * @returns 色クラス名
  */
-export const getDifficultyLevelColorClass = (level: ProblemLevel) => {
+export const getDifficultyLevelColorClass = (
+  level: ProblemLevel
+): DifficultyLevelColorClassName => {
   if (!level) {
     return '';
   }
@@ -115,7 +129,7 @@ export const getDifficultyLevelColorClass = (level: ProblemLevel) => {
  * @param {number} i number representing order
  * @returns suffix string of order
  */
-export const ordinalSuffixOf = (i: number) => {
+export const ordinalSuffixOf = (i: number): 'st' | 'nd' | 'rd' | 'th' => {
   const j = i % 10;
   const k = i % 100;
   if (j === 1 && k !== 11) {
@@ -136,7 +150,7 @@ export const ordinalSuffixOf = (i: number) => {
  * @param {ProblemType} problemType Problem Type number
  * @returns string representing the problem type
  */
-export const getProblemTypeName = (problemType: ProblemType) => {
+export const getProblemTypeName = (problemType: ProblemType): string => {
   switch (problemType) {
     case ProblemType.Normal:
       return 'Normal';
@@ -146,8 +160,6 @@ export const getProblemTypeName = (problemType: ProblemType) => {
       return 'Scoring';
     case ProblemType.Joke:
       return 'Joke';
-    default:
-      return `${problemType}`;
   }
 };
 
@@ -158,6 +170,13 @@ export const getProblemTypeName = (problemType: ProblemType) => {
  * @param {number} end end number
  * @returns {number[]} array
  */
-export const range = (start: number, end: number): number[] => Array.from({ length: end - start + 1 }, (v, k) => k + start);
+export const range = (start: number, end: number): number[] =>
+  Array.from({ length: end - start + 1 }, (v, k) => k + start);
 
-export const mapToObject = <T>(map: Map<string | number | symbol, T>): {} => Array.from(map.entries()).reduce((l, [k, v]) => Object.assign(l, { [k]: v }), {});
+export const mapToObject = <T>(
+  map: Map<string | number | symbol, T>
+): { [key: string]: T } | { [key: number]: T } =>
+  Array.from(map.entries()).reduce(
+    (l, [k, v]) => Object.assign(l, { [k]: v }),
+    {}
+  );

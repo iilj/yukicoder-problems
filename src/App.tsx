@@ -1,6 +1,9 @@
 import React from 'react';
 import {
-  HashRouter as Router, Route, Routes, Navigate,
+  HashRouter as Router,
+  Route,
+  Routes,
+  Navigate,
 } from 'react-router-dom';
 import { Container } from 'reactstrap';
 
@@ -23,14 +26,14 @@ import './App.css';
 
 library.add(faStar, faStarHalf, faSchool, faCalculator, faLaughBeam);
 
-function App() {
+function App(): JSX.Element {
   return (
     <Router>
       <NavigationBar />
       <Container style={{ width: '100%', maxWidth: '90%' }}>
         <Routes>
-          <Route exect path="/short" element={<ShortRanking />} />
-          <Route exect path="/pureshort" element={<PureShortRanking />} />
+          <Route path="/short" element={<ShortRanking />} />
+          <Route path="/pureshort" element={<PureShortRanking />} />
           <Route path="/table/:param/:user" element={<TablePage />} />
           <Route path="/table/" element={<TablePage />} />
           <Route path="/list/:param/:user" element={<ListPage />} />

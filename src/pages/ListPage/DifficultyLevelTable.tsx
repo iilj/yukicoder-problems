@@ -9,16 +9,27 @@ export const DifficultyLevelTable = (props: {
   problems: Problem[];
   solvedProblems: SolvedProblem[];
   user: string;
-}) => {
+}): JSX.Element => {
   const { problems, solvedProblems, user } = props;
 
   const difficultyLevelsSolvedCountMap = solvedProblems.reduce(
-    (map, solvedProblem) => map.set(solvedProblem.Level, (map.get(solvedProblem.Level) as ProblemLevel) + 1),
-    ProblemLevels.reduce((map, level) => map.set(level, 0), new Map<ProblemLevel, number>()),
+    (map, solvedProblem) =>
+      map.set(
+        solvedProblem.Level,
+        (map.get(solvedProblem.Level) as ProblemLevel) + 1
+      ),
+    ProblemLevels.reduce(
+      (map, level) => map.set(level, 0),
+      new Map<ProblemLevel, number>()
+    )
   );
   const difficultyLevelsTotalCountMap = problems.reduce(
-    (map, problem) => map.set(problem.Level, (map.get(problem.Level) as ProblemLevel) + 1),
-    ProblemLevels.reduce((map, level) => map.set(level, 0), new Map<ProblemLevel, number>()),
+    (map, problem) =>
+      map.set(problem.Level, (map.get(problem.Level) as ProblemLevel) + 1),
+    ProblemLevels.reduce(
+      (map, level) => map.set(level, 0),
+      new Map<ProblemLevel, number>()
+    )
   );
 
   return (
@@ -37,7 +48,10 @@ export const DifficultyLevelTable = (props: {
                 }}
                 className={getDifficultyLevelColorClass(level)}
               >
-                <DifficultyStarsAbsoluteSpan level={level} showDifficultyLevel />
+                <DifficultyStarsAbsoluteSpan
+                  level={level}
+                  showDifficultyLevel
+                />
                 {level}
               </th>
             ))}

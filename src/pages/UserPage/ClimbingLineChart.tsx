@@ -14,8 +14,8 @@ import dataFormat from 'dateformat';
 export const ClimbingLineChart = (props: {
   climbingData: { dateSecond: number; count: number }[];
   syncId: string;
-}) => {
-  if (props.climbingData.length === 0) return null;
+}): JSX.Element => {
+  if (props.climbingData.length === 0) return <></>;
 
   return (
     <Row className="my-3">
@@ -35,11 +35,15 @@ export const ClimbingLineChart = (props: {
             dataKey="dateSecond"
             type="number"
             domain={['dataMin', 'dataMax']}
-            tickFormatter={(dateSecond: number) => dataFormat(new Date(dateSecond), 'yyyy/mm/dd')}
+            tickFormatter={(dateSecond: number) =>
+              dataFormat(new Date(dateSecond), 'yyyy/mm/dd')
+            }
           />
           <YAxis />
           <Tooltip
-            labelFormatter={(dateSecond: number) => dataFormat(new Date(Number(dateSecond)), 'yyyy/mm/dd')}
+            labelFormatter={(dateSecond: number) =>
+              dataFormat(new Date(Number(dateSecond)), 'yyyy/mm/dd')
+            }
           />
           <Line dataKey="count" stroke="#8884d8" />
         </LineChart>

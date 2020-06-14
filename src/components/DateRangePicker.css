@@ -97,7 +97,8 @@ div.react-datepicker__today-button:hover {
   border-radius: 0 0.3rem 0.3rem 0;
 }
 /* 選択時の元の区間内 */
-.react-datepicker__month.react-datepicker__month--selecting-range .react-datepicker__day--in-range {
+.react-datepicker__month.react-datepicker__month--selecting-range
+  .react-datepicker__day--in-range {
   color: #007bff;
 }
 /* 選択時の元の区間の始点終点 */

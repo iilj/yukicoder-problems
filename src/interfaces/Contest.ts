@@ -5,7 +5,7 @@ export type ContestId = number;
 
 /** コンテスト */
 export interface Contest {
-  /** 一意な値　コンテストID */
+  /** 一意な値 コンテストID */
   readonly Id: ContestId;
   /** コンテスト名 */
   readonly Name: string;

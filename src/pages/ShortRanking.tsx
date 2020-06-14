@@ -8,7 +8,7 @@ const initialUniversalState = {
   golferMap: new Map<UserName, RankingProblem[]>(),
 };
 
-export const ShortRanking = () => {
+export const ShortRanking = (): JSX.Element => {
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [universalStateLoaded, setUniversalStateLoaded] = useState(false);
 
@@ -25,7 +25,7 @@ export const ShortRanking = () => {
         setUniversalStateLoaded(true);
       }
     };
-    getUniversalInfo();
+    void getUniversalInfo();
     const cleanup = () => {
       unmounted = true;
     };
@@ -40,6 +40,10 @@ export const ShortRanking = () => {
   });
 
   return (
-    <Ranking title="Top Golfers" ranking={ranking} universalStateLoaded={universalStateLoaded} />
+    <Ranking
+      title="Top Golfers"
+      ranking={ranking}
+      universalStateLoaded={universalStateLoaded}
+    />
   );
 };

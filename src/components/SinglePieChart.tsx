@@ -1,6 +1,11 @@
 import React from 'react';
 import {
-  PieChart, Pie, ResponsiveContainer, Cell, Tooltip, Legend,
+  PieChart,
+  Pie,
+  ResponsiveContainer,
+  Cell,
+  Tooltip,
+  Legend,
 } from 'recharts';
 
 export const SinglePieChart = ({
@@ -11,7 +16,7 @@ export const SinglePieChart = ({
     color: string;
     name: string;
   }[];
-}) => (
+}): JSX.Element => (
   <div>
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>

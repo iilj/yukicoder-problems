@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-  Row, FormGroup, Label, Input, Spinner,
-} from 'reactstrap';
+import { Row, FormGroup, Label, Input, Spinner } from 'reactstrap';
 
 import { YukicoderRegularTable } from './YukicoderRegularTable';
 import { ContestTable } from './ContestTable';
@@ -18,7 +16,10 @@ import { SolvedProblem } from '../../interfaces/SolvedProblem';
 /**
  * Wrap element to switch visibility.
  */
-const ContestWrapper = (props: { display: boolean; children: React.ReactNode }) => (
+const ContestWrapper = (props: {
+  display: boolean;
+  children: React.ReactNode;
+}): JSX.Element => (
   <div style={{ display: props.display ? '' : 'none' }}>{props.children}</div>
 );
 
@@ -34,8 +35,11 @@ const initialUserState = {
   solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
 };
 
-export const TablePage = () => {
-  const { param, user } = useParams() as { param: TypedCachedApiClient.UserParam; user: string };
+export const TablePage = (): JSX.Element => {
+  const { param, user } = useParams() as {
+    param: TypedCachedApiClient.UserParam;
+    user: string;
+  };
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
@@ -67,7 +71,7 @@ export const TablePage = () => {
         setUniversalStateLoaded(true);
       }
     };
-    getUniversalInfo();
+    void getUniversalInfo();
     const cleanup = () => {
       unmounted = true;
     };
@@ -78,9 +82,10 @@ export const TablePage = () => {
     let unmounted = false;
     const getUserInfo = async () => {
       setUserStateLoaded(false);
-      const solvedProblemsMap = param && user
-        ? await TypedCachedApiClient.cachedSolvedProblemMap(param, user)
-        : new Map<ProblemId, SolvedProblem>();
+      const solvedProblemsMap =
+        param && user
+          ? await TypedCachedApiClient.cachedSolvedProblemMap(param, user)
+          : new Map<ProblemId, SolvedProblem>();
 
       if (!unmounted) {
         setUserState({
@@ -89,7 +94,7 @@ export const TablePage = () => {
         setUserStateLoaded(true);
       }
     };
-    getUserInfo();
+    void getUserInfo();
     const cleanup = () => {
       unmounted = true;
     };
@@ -97,26 +102,35 @@ export const TablePage = () => {
   }, [param, user]);
 
   const {
-    problems, contests, contestMap, problemsMap, problemContestMap,
+    problems,
+    contests,
+    contestMap,
+    problemsMap,
+    problemContestMap,
   } = universalState;
   const { solvedProblemsMap } = userState;
 
   const [showDifficultyLevel, setShowDifficultyLevel] = useLocalStorage(
     'TablePage_showDifficultyLevel',
-    true,
+    true
   );
   const [showContestResult, setShowContestResult] = useLocalStorage(
     'TablePage_showContestResult',
-    true,
+    true
   );
-  const [activeTab, setActiveTab] = useLocalStorage('TablePage_activeTab', ContestTableTab.regular);
+  const [activeTab, setActiveTab] = useLocalStorage(
+    'TablePage_activeTab',
+    ContestTableTab.regular
+  );
 
   const yukicoderRegularContests = [] as Contest[];
   const yukicoderLongContests = [] as Contest[];
   const otherContests = [] as Contest[];
+  const regexpContest = /^yukicoder contest \d+/;
   contests.forEach((contest) => {
-    if (contest.Name.match(/^yukicoder contest \d+/)) {
-      if (contest.ProblemIdList.length <= 6) yukicoderRegularContests.push(contest);
+    if (regexpContest.exec(contest.Name)) {
+      if (contest.ProblemIdList.length <= 6)
+        yukicoderRegularContests.push(contest);
       else yukicoderLongContests.push(contest);
     } else otherContests.push(contest);
   });

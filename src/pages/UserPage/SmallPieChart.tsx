@@ -7,7 +7,11 @@ const COLORS = {
   Trying: '#58616a',
 };
 
-const SmallPieChart = (props: { title: string; trying: number; accepted: number }) => {
+const SmallPieChart = (props: {
+  title: string;
+  trying: number;
+  accepted: number;
+}): JSX.Element => {
   const { title, trying, accepted } = props;
 
   const data = [
@@ -26,7 +30,7 @@ const SmallPieChart = (props: { title: string; trying: number; accepted: number 
 export const PieCharts = (props: {
   problems: { total: number; solved: number }[];
   title: string;
-}) => {
+}): JSX.Element => {
   const { problems, title } = props;
   return (
     <div>
@@ -37,8 +41,17 @@ export const PieCharts = (props: {
         {problems.map(({ solved, total }, i) => {
           const key = 'ABCDEF'.charAt(i) + (i >= 5 ? '〜' : '');
           return (
-            <Col key={key} className="text-center" xs="6" md={12 / problems.length}>
-              <SmallPieChart accepted={solved} trying={total - solved} title={`Problem ${key}`} />
+            <Col
+              key={key}
+              className="text-center"
+              xs="6"
+              md={12 / problems.length}
+            >
+              <SmallPieChart
+                accepted={solved}
+                trying={total - solved}
+                title={`Problem ${key}`}
+              />
             </Col>
           );
         })}

@@ -1,5 +1,7 @@
 # yukicoder-problems
 
+[![Build Status](https://travis-ci.com/iilj/yukicoder-problems.svg?branch=master)](https://travis-ci.com/iilj/yukicoder-problems)
+
 ## Overview
 
 [yukicoder problems](https://iilj.github.io/yukicoder-problems/) is a web application, to manage competitive programming problems on [yukicoder](https://yukicoder.me/), written in TypeScript with React.
@@ -28,9 +30,19 @@ yarn build
 yarn ghpages
 ```
 
-### Fix code format
+### Prettify codes
+```bash
+yarn prettier
+```
+
+### Check code format
 ```bash
 yarn lint
+```
+
+### Fix code format
+```bash
+yarn lint:fix
 ```
 
 ## Favicon

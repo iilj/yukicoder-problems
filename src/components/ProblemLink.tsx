@@ -9,10 +9,8 @@ export const ProblemLink = (props: {
   level: ProblemLevel;
   showDifficultyLevel: boolean;
   id?: string;
-}) => {
-  const {
-    problemNo, problemTitle, level, showDifficultyLevel, id,
-  } = props;
+}): JSX.Element => {
+  const { problemNo, problemTitle, level, showDifficultyLevel, id } = props;
   return (
     <a
       href={formatProblemUrl(problemNo)}

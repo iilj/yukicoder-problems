@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { NavLink as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import {
+  NavLink as RouterLink,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import {
   Collapse,
   Navbar,
@@ -16,14 +20,18 @@ import {
   FormGroup,
 } from 'reactstrap';
 
+const regexpUser = /^\/user/;
+const regexpList = /^\/list/;
+const regexpTable = /^\/table/;
+
 const extractPageKind = (pathname: string) => {
-  if (pathname.match(/^\/user/)) {
+  if (regexpUser.exec(pathname)) {
     return 'user';
   }
-  if (pathname.match(/^\/list/)) {
+  if (regexpList.exec(pathname)) {
     return 'list';
   }
-  if (pathname.match(/^\/table/)) {
+  if (regexpTable.exec(pathname)) {
     return 'table';
   }
   return undefined;
@@ -36,9 +44,12 @@ const extractParams = (pathname: string) => {
   return { param, user };
 };
 
-const generatePath = (kind: string, param: string, user: string) => (user && user !== '' ? `/${kind}/${param}/${encodeURIComponent(user)}` : `/${kind}/`);
+const generatePath = (kind: string, param: string, user: string): string =>
+  user && user !== ''
+    ? `/${kind}/${param}/${encodeURIComponent(user)}`
+    : `/${kind}/`;
 
-export const NavigationBar = () => {
+export const NavigationBar = (): JSX.Element => {
   const location = useLocation();
   const { pathname } = location;
   const navigate = useNavigate();
@@ -152,10 +163,18 @@ export const NavigationBar = () => {
               Links
             </DropdownToggle>
             <DropdownMenu right>
-              <DropdownItem tag="a" href="https://yukicoder.me/" target="_blank">
+              <DropdownItem
+                tag="a"
+                href="https://yukicoder.me/"
+                target="_blank"
+              >
                 yukicoder
               </DropdownItem>
-              <DropdownItem tag="a" href="https://kenkoooo.com/atcoder/" target="_blank">
+              <DropdownItem
+                tag="a"
+                href="https://kenkoooo.com/atcoder/"
+                target="_blank"
+              >
                 AtCoder Problems
               </DropdownItem>
               <DropdownItem
@@ -165,7 +184,11 @@ export const NavigationBar = () => {
               >
                 GitHub
               </DropdownItem>
-              <DropdownItem tag="a" href="https://twitter.com/iiljj" target="_blank">
+              <DropdownItem
+                tag="a"
+                href="https://twitter.com/iiljj"
+                target="_blank"
+              >
                 @iiljj
               </DropdownItem>
             </DropdownMenu>

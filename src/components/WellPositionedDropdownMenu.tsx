@@ -1,7 +1,9 @@
 import React from 'react';
 import { DropdownMenu, DropdownMenuProps } from 'reactstrap';
 
-export const WellPositionedDropdownMenu = (props: DropdownMenuProps) => (
+export const WellPositionedDropdownMenu = (
+  props: DropdownMenuProps
+): JSX.Element => (
   <DropdownMenu
     style={{
       position: 'absolute',

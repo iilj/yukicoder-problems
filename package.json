@@ -40,7 +40,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "prettier-eslint --write $PWD/'src/**/*.{js,ts,jsx,tsx,vue,css}'",
+    "prettier": "prettier-eslint --write $PWD/'**/*.{js,jsx,ts,tsx,vue,css,html}'",
+    "lint": "eslint --ignore-path .gitignore \"**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "yarn run lint --fix",
     "preghpages": "yarn build",
     "ghpages": "gh-pages -d build"
   },
@@ -60,13 +62,17 @@
     ]
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.2.0",
+    "@typescript-eslint/parser": "^3.2.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-react": "^7.19.0",
+    "prettier": "^2.0.5",
     "prettier-eslint": "^9.0.1",
-    "prettier-eslint-cli": "^5.0.0",
-    "@typescript-eslint/eslint-plugin": "^3.1.0"
+    "prettier-eslint-cli": "^5.0.0"
   }
 }

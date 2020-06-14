@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Row, Col, Table, UncontrolledTooltip, Spinner,
-} from 'reactstrap';
+import { Row, Col, Table, UncontrolledTooltip, Spinner } from 'reactstrap';
 import { ProblemLink } from '../../components/ProblemLink';
 import { DifficultyStars } from '../../components/DifficultyStars';
 import { range } from '../../utils';
@@ -19,7 +17,7 @@ export const AllProblemsTable = (props: {
   showDifficultyLevel: boolean;
   showContestResult: boolean;
   universalStateLoaded: boolean;
-}) => {
+}): JSX.Element => {
   const {
     problems,
     contestMap,
@@ -34,7 +32,10 @@ export const AllProblemsTable = (props: {
     .filter((a) => a.No !== null)
     .sort((a, b) => (a.No as ProblemNo) - (b.No as ProblemNo))
     .reduce((prevMap, problem) => {
-      const key = Math.min(Math.floor(((problem.No as ProblemNo) - 1) / 100), 29);
+      const key = Math.min(
+        Math.floor(((problem.No as ProblemNo) - 1) / 100),
+        29
+      );
       if (!prevMap.has(key)) {
         prevMap.set(key, []);
       }
@@ -52,13 +53,23 @@ export const AllProblemsTable = (props: {
         {universalStateLoaded ? (
           <></>
         ) : (
-          <Spinner style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }} />
+          <Spinner
+            style={{ width: '2.5rem', height: '2.5rem', marginLeft: '0.8rem' }}
+          />
         )}
       </Row>
       <div className="my-inner-container">
         <Row className="my-4">
           {problemTableEntries.map(([key, curTableProblems]) => (
-            <Col key={key} className="text-center" xs="12" sm="12" md="6" lg="6" xl="4">
+            <Col
+              key={key}
+              className="text-center"
+              xs="12"
+              sm="12"
+              md="6"
+              lg="6"
+              xl="4"
+            >
               <Table striped bordered hover className="problemsTable">
                 <tbody>
                   {range(0, 9).map((rowidx: number) => {
@@ -73,13 +84,17 @@ export const AllProblemsTable = (props: {
                           if (idx >= curTableProblems.length) return null;
                           const problem = curTableProblems[idx];
                           const pid = problem.ProblemId;
-                          const solvedProblem = solvedProblemsMap && solvedProblemsMap.has(pid)
-                            ? solvedProblemsMap.get(pid)
+                          const solvedProblem =
+                            solvedProblemsMap && solvedProblemsMap.has(pid)
+                              ? solvedProblemsMap.get(pid)
+                              : undefined;
+                          const contestId =
+                            problemContestMap && problemContestMap.has(pid)
+                              ? problemContestMap.get(pid)
+                              : undefined;
+                          const contest = contestId
+                            ? contestMap.get(contestId)
                             : undefined;
-                          const contestId = problemContestMap && problemContestMap.has(pid)
-                            ? problemContestMap.get(pid)
-                            : undefined;
-                          const contest = contestId ? contestMap.get(contestId) : undefined;
                           let className: string;
                           if (!solvedProblem) {
                             className = 'table-problem';
@@ -87,21 +102,32 @@ export const AllProblemsTable = (props: {
                             className = 'table-problem table-problem-solved';
                           } else {
                             const solvedDate = Date.parse(solvedProblem.Date);
-                            const startDate = Date.parse((contest as Contest).Date);
-                            const endDate = Date.parse((contest as Contest).EndDate);
-                            if (!showContestResult || solvedDate > endDate) className = 'table-problem table-problem-solved';
-                            else if (solvedDate >= startDate) className = 'table-problem table-problem-solved-intime';
-                            else className = 'table-problem table-problem-solved-before-contest';
+                            const startDate = Date.parse(
+                              (contest as Contest).Date
+                            );
+                            const endDate = Date.parse(
+                              (contest as Contest).EndDate
+                            );
+                            if (!showContestResult || solvedDate > endDate)
+                              className = 'table-problem table-problem-solved';
+                            else if (solvedDate >= startDate)
+                              className =
+                                'table-problem table-problem-solved-intime';
+                            else
+                              className =
+                                'table-problem table-problem-solved-before-contest';
                           }
-                          const elementId = `AllProblems_td_${problem.No}`;
+                          const elementId = `AllProblems_td_${
+                            problem.No as number
+                          }`;
                           return (
                             <td key={pid} className={className} id={elementId}>
                               <ProblemLink
                                 problemNo={problem.No as ProblemNo}
-                                problemTitle={`${problem.No}`}
+                                problemTitle={`${problem.No as number}`}
                                 level={problem.Level}
                                 showDifficultyLevel={showDifficultyLevel}
-                                id={`AllProblems_td_${problem.No}`}
+                                id={`AllProblems_td_${problem.No as number}`}
                               />
                               <UncontrolledTooltip
                                 target={elementId}
@@ -117,7 +143,9 @@ export const AllProblemsTable = (props: {
                                     problemTitle={`${problem.Title}`}
                                     level={problem.Level}
                                     showDifficultyLevel={showDifficultyLevel}
-                                    id={`AllProblems_td_${problem.No}`}
+                                    id={`AllProblems_td_${
+                                      problem.No as number
+                                    }`}
                                   />
                                 </div>
                                 <div>

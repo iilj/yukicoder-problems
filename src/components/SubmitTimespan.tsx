@@ -10,29 +10,33 @@ const formatTimespan = (sec: number): string => {
     sign = '-';
     sec *= -1;
   }
-  if (sec < 3600) return `${sign}${Math.floor(sec / 60)}:${`0${sec % 60}`.slice(-2)}`;
-  return `${sign}${Math.floor(sec / 3600)}:${`0${Math.floor((sec % 3600) / 60)}`.slice(
-    -2,
-  )}:${`0${sec % 60}`.slice(-2)}`;
+  if (sec < 3600)
+    return `${sign}${Math.floor(sec / 60)}:${`0${sec % 60}`.slice(-2)}`;
+  return `${sign}${Math.floor(sec / 3600)}:${`0${Math.floor(
+    (sec % 3600) / 60
+  )}`.slice(-2)}:${`0${sec % 60}`.slice(-2)}`;
 };
 
 export const SubmitTimespan = (props: {
   contest: Contest;
   solvedProblem?: Problem;
   showContestResult: boolean;
-}) => {
+}): JSX.Element => {
   const { contest, solvedProblem, showContestResult } = props;
   if (!showContestResult) {
-    return null;
+    return <></>;
   }
 
   return (
     <div className="table-problem-timespan">
-      {!solvedProblem || Date.parse(solvedProblem.Date as string) > Date.parse(contest.EndDate)
+      {!solvedProblem ||
+      Date.parse(solvedProblem.Date as string) > Date.parse(contest.EndDate)
         ? ''
         : formatTimespan(
-          (Date.parse(solvedProblem.Date as string) - Date.parse(contest.Date)) / 1000,
-        )}
+            (Date.parse(solvedProblem.Date as string) -
+              Date.parse(contest.Date)) /
+              1000
+          )}
     </div>
   );
 };

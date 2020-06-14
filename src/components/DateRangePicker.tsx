@@ -28,7 +28,7 @@ const DatePickerCustomHeader = (params: {
   increaseMonth: () => void;
   prevMonthButtonDisabled: boolean;
   nextMonthButtonDisabled: boolean;
-}) => {
+}): JSX.Element => {
   const {
     minDate,
     maxDate,
@@ -51,8 +51,7 @@ const DatePickerCustomHeader = (params: {
         className="next-prev-month"
       >
         &lt;
-      </Button>
-      {' '}
+      </Button>{' '}
       <UncontrolledButtonDropdown>
         <DropdownToggle caret className="year-month-dropdown-toggle">
           {date.getFullYear()}
@@ -77,8 +76,7 @@ const DatePickerCustomHeader = (params: {
             </DropdownItem>
           ))}
         </DropdownMenu>
-      </UncontrolledButtonDropdown>
-      {' '}
+      </UncontrolledButtonDropdown>{' '}
       <Button
         outline
         onClick={increaseMonth}
@@ -98,9 +96,14 @@ export const DateRangePicker = (props: {
   onToDateChange: (date: Date) => void;
   minDate: Date;
   maxDate: Date;
-}) => {
+}): JSX.Element => {
   const {
-    fromDate, toDate, onFromDateChange, onToDateChange, minDate, maxDate,
+    fromDate,
+    toDate,
+    onFromDateChange,
+    onToDateChange,
+    minDate,
+    maxDate,
   } = props;
 
   const popperModifiers = {
@@ -118,13 +121,13 @@ export const DateRangePicker = (props: {
       <UncontrolledButtonDropdown>
         <DatePicker
           selected={fromDate}
-          customInput={(
+          customInput={
             <DropdownToggle caret>
               {fromDate.getTime() === minDate.getTime()
                 ? 'Date From'
                 : dataFormat(fromDate, 'yyyy/mm/dd -')}
             </DropdownToggle>
-          )}
+          }
           onChange={onFromDateChange}
           selectsStart
           minDate={minDate}
@@ -135,20 +138,24 @@ export const DateRangePicker = (props: {
           popperPlacement="bottom-end"
           popperModifiers={popperModifiers}
           renderCustomHeader={(params) => (
-            <DatePickerCustomHeader minDate={minDate} maxDate={INITIAL_TO_DATE} {...params} />
+            <DatePickerCustomHeader
+              minDate={minDate}
+              maxDate={INITIAL_TO_DATE}
+              {...params}
+            />
           )}
         />
       </UncontrolledButtonDropdown>
       <UncontrolledButtonDropdown>
         <DatePicker
           selected={toDate}
-          customInput={(
+          customInput={
             <DropdownToggle caret>
               {toDate.getTime() === maxDate.getTime()
                 ? 'Date To'
                 : dataFormat(toDate, '- yyyy/mm/dd')}
             </DropdownToggle>
-          )}
+          }
           onChange={onToDateChange}
           selectsEnd
           minDate={fromDate}
@@ -159,7 +166,11 @@ export const DateRangePicker = (props: {
           popperPlacement="bottom-end"
           popperModifiers={popperModifiers}
           renderCustomHeader={(params) => (
-            <DatePickerCustomHeader minDate={fromDate} maxDate={maxDate} {...params} />
+            <DatePickerCustomHeader
+              minDate={fromDate}
+              maxDate={maxDate}
+              {...params}
+            />
           )}
         />
       </UncontrolledButtonDropdown>

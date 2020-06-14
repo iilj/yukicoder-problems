@@ -25,9 +25,15 @@ export const CalendarHeatmap = (props: {
   columns: number;
   rows: number;
   today: Date;
-}) => {
+}): JSX.Element => {
   const {
-    tableData, formatTooltip, onRectClick, getColor, columns, rows, today,
+    tableData,
+    formatTooltip,
+    onRectClick,
+    getColor,
+    columns,
+    rows,
+    today,
   } = props;
 
   const blockWidth = 10;
@@ -50,7 +56,7 @@ export const CalendarHeatmap = (props: {
             {day_name}
           </text>
         ))}
-        {tableData.map(({ date, count }, i) => {
+        {tableData.map(({ date }, i) => {
           if (new Date(date) > today) return null;
           const week = Math.floor(i / rows);
           const day = i % rows;
@@ -90,16 +96,18 @@ export const CalendarHeatmap = (props: {
         })}
       </svg>
 
-      {tableData.map(({ date, count }) => (new Date(date) > today ? null : (
-        <UncontrolledTooltip
-          delay={{ show: 0, hide: 0 }}
-          key={date}
-          placement="right"
-          target={`rect-${date}`}
-        >
-          {formatTooltip(date, count)}
-        </UncontrolledTooltip>
-      )))}
+      {tableData.map(({ date, count }) =>
+        new Date(date) > today ? null : (
+          <UncontrolledTooltip
+            delay={{ show: 0, hide: 0 }}
+            key={date}
+            placement="right"
+            target={`rect-${date}`}
+          >
+            {formatTooltip(date, count)}
+          </UncontrolledTooltip>
+        )
+      )}
     </div>
   );
 };

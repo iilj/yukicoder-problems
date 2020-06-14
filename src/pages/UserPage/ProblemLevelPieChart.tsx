@@ -9,18 +9,29 @@ import { SolvedProblem } from '../../interfaces/SolvedProblem';
 export const ProblemLevelPieChart = (props: {
   problems: Problem[];
   solvedProblems: SolvedProblem[];
-}) => {
+}): JSX.Element => {
   const { problems, solvedProblems } = props;
   const levelList = getLevelList();
 
   const colorCount = problems.reduce(
-    (map, problem) => map.set(problem.Level, (map.get(problem.Level) as number) + 1),
-    levelList.reduce((map, level) => map.set(level, 0), new Map<ProblemLevel, number>()),
+    (map, problem) =>
+      map.set(problem.Level, (map.get(problem.Level) as number) + 1),
+    levelList.reduce(
+      (map, level) => map.set(level, 0),
+      new Map<ProblemLevel, number>()
+    )
   );
 
   const solvedCount = solvedProblems.reduce(
-    (map, solvedProblem) => map.set(solvedProblem.Level, (map.get(solvedProblem.Level) as number) + 1),
-    levelList.reduce((map, level) => map.set(level, 0), new Map<ProblemLevel, number>()),
+    (map, solvedProblem) =>
+      map.set(
+        solvedProblem.Level,
+        (map.get(solvedProblem.Level) as number) + 1
+      ),
+    levelList.reduce(
+      (map, level) => map.set(level, 0),
+      new Map<ProblemLevel, number>()
+    )
   );
 
   const data = levelList.map((level) => {

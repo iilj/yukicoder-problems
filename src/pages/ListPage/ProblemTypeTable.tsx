@@ -7,16 +7,30 @@ export const ProblemTypeTable = (props: {
   problems: Problem[];
   solvedProblems: Problem[];
   user: string;
-}) => {
+}): JSX.Element => {
   const { problems, solvedProblems, user } = props;
 
   const problemTypesTotalCountMap = problems.reduce(
-    (map, problem) => map.set(problem.ProblemType, (map.get(problem.ProblemType) as ProblemType) + 1),
-    ProblemTypes.reduce((map, type) => map.set(type, 0), new Map<ProblemType, number>()),
+    (map, problem) =>
+      map.set(
+        problem.ProblemType,
+        (map.get(problem.ProblemType) as ProblemType) + 1
+      ),
+    ProblemTypes.reduce(
+      (map, type) => map.set(type, 0),
+      new Map<ProblemType, number>()
+    )
   );
   const problemTypesSolvedCountMap = solvedProblems.reduce(
-    (map, solvedProblem) => map.set(solvedProblem.ProblemType, (map.get(solvedProblem.ProblemType) as ProblemType) + 1),
-    ProblemTypes.reduce((map, type) => map.set(type, 0), new Map<ProblemType, number>()),
+    (map, solvedProblem) =>
+      map.set(
+        solvedProblem.ProblemType,
+        (map.get(solvedProblem.ProblemType) as ProblemType) + 1
+      ),
+    ProblemTypes.reduce(
+      (map, type) => map.set(type, 0),
+      new Map<ProblemType, number>()
+    )
   );
 
   return (

@@ -6,7 +6,7 @@ export const ContestLink = (props: {
   contestId: ContestId;
   contestName: string;
   rawContestName?: string;
-}) => {
+}): JSX.Element => {
   const { contestId, contestName, rawContestName } = props;
   return (
     <a
