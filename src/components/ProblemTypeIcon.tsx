@@ -33,6 +33,13 @@ export const ProblemTypeIcon = (props: ProblemTypeIconProps): JSX.Element => {
           icon="laugh-beam"
         />
       );
+    case ProblemType.Unproved:
+      return (
+        <FontAwesomeIcon
+          title={getProblemTypeName(problemType)}
+          icon="exclamation-triangle"
+        />
+      );
     default:
       return <></>;
   }

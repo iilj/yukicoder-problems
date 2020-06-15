@@ -14,6 +14,7 @@ import {
   faSchool,
   faCalculator,
   faLaughBeam,
+  faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 import { NavigationBar } from './components/NavigationBar';
 import { ShortRanking } from './pages/ShortRanking';
@@ -24,7 +25,14 @@ import { UserPage } from './pages/UserPage';
 // import logo from './logo.svg';
 import './App.css';
 
-library.add(faStar, faStarHalf, faSchool, faCalculator, faLaughBeam);
+library.add(
+  faStar,
+  faStarHalf,
+  faSchool,
+  faCalculator,
+  faLaughBeam,
+  faExclamationTriangle
+);
 
 function App(): JSX.Element {
   return (

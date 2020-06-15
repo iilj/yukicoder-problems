@@ -45,7 +45,7 @@ export const ProblemTypeTable = (props: {
                 style={{
                   whiteSpace: 'nowrap',
                   position: 'relative',
-                  minWidth: '70px',
+                  minWidth: '150px',
                 }}
               >
                 <ProblemTypeIconSpanWithName problemType={type} />

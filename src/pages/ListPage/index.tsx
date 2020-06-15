@@ -18,6 +18,7 @@ import { useParams } from 'react-router-dom';
 import { DifficultyLevelTable } from './DifficultyLevelTable';
 import { ProblemTypeTable } from './ProblemTypeTable';
 import { ListTable, FilterState } from './ListTable';
+import { getProblemTypeName } from '../../utils';
 import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
 import { WellPositionedDropdownMenu } from '../../components/WellPositionedDropdownMenu';
 import {
@@ -273,7 +274,11 @@ export const ListPage = (): JSX.Element => {
 
         <ButtonGroup className="mr-4">
           <UncontrolledDropdown>
-            <DropdownToggle caret>{problemTypeFilterState}</DropdownToggle>
+            <DropdownToggle caret>
+              {problemTypeFilterState === 'All'
+                ? 'All'
+                : getProblemTypeName(problemTypeFilterState)}
+            </DropdownToggle>
             <DropdownMenu>
               <DropdownItem onClick={() => setProblemTypeFilterState('All')}>
                 All
@@ -303,6 +308,13 @@ export const ListPage = (): JSX.Element => {
                 onClick={() => setProblemTypeFilterState(ProblemType.Joke)}
               >
                 <ProblemTypeIconSpanWithName problemType={ProblemType.Joke} />
+              </DropdownItem>
+              <DropdownItem
+                onClick={() => setProblemTypeFilterState(ProblemType.Unproved)}
+              >
+                <ProblemTypeIconSpanWithName
+                  problemType={ProblemType.Unproved}
+                />
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
