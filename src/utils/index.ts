@@ -160,6 +160,8 @@ export const getProblemTypeName = (problemType: ProblemType): string => {
       return 'Scoring';
     case ProblemType.Joke:
       return 'Joke';
+    case ProblemType.Unproved:
+      return 'Unproved';
   }
 };
 

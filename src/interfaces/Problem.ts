@@ -15,6 +15,8 @@ export enum ProblemType {
   Scoring = 2,
   /** ネタ問題 */
   Joke = 3,
+  /** 未証明問題 */
+  Unproved = 4,
 }
 
 /** 問題タイプのリスト */
@@ -23,6 +25,7 @@ export const ProblemTypes = [
   ProblemType.Educational,
   ProblemType.Scoring,
   ProblemType.Joke,
+  ProblemType.Unproved,
 ];
 
 /** 問題レベルのリスト */

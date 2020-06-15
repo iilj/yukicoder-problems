@@ -304,6 +304,13 @@ export const ListPage = (): JSX.Element => {
               >
                 <ProblemTypeIconSpanWithName problemType={ProblemType.Joke} />
               </DropdownItem>
+              <DropdownItem
+                onClick={() => setProblemTypeFilterState(ProblemType.Unproved)}
+              >
+                <ProblemTypeIconSpanWithName
+                  problemType={ProblemType.Unproved}
+                />
+              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </ButtonGroup>
