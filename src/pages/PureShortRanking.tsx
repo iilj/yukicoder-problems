@@ -22,7 +22,7 @@ const initialUserState = {
   golferPureMap: new Map<UserName, RankingProblem[]>(),
 };
 
-export const PureShortRanking = (): JSX.Element => {
+export const PureShortRanking: React.FC = () => {
   const emptyLangId = '';
   const [langId, setLangId] = useState<LangId>(emptyLangId);
 

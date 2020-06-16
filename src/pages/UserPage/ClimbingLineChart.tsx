@@ -11,10 +11,12 @@ import {
 } from 'recharts';
 import dataFormat from 'dateformat';
 
-export const ClimbingLineChart = (props: {
+interface Props {
   climbingData: { dateSecond: number; count: number }[];
   syncId: string;
-}): JSX.Element => {
+}
+
+export const ClimbingLineChart: React.FC<Props> = (props) => {
   if (props.climbingData.length === 0) return <></>;
 
   return (

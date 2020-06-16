@@ -8,15 +8,15 @@ import {
   Legend,
 } from 'recharts';
 
-export const SinglePieChart = ({
-  data,
-}: {
+interface Props {
   data: {
     value: number;
     color: string;
     name: string;
   }[];
-}): JSX.Element => (
+}
+
+export const SinglePieChart: React.FC<Props> = ({ data }) => (
   <div>
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>

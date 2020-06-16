@@ -47,7 +47,7 @@ const initialUserState = {
   maxDate: INITIAL_TO_DATE,
 };
 
-export const UserPage = (): JSX.Element => {
+export const UserPage: React.FC = () => {
   const { param, user } = useParams() as {
     param: TypedCachedApiClient.UserParam;
     user: string;

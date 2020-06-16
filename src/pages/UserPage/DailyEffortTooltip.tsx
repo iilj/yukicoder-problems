@@ -9,12 +9,14 @@ interface DailyEffortTooltipPayload {
   stroke: string;
 }
 
-export const DailyEffortTooltip = (props: {
+interface Props {
   active?: boolean;
   payload?: DailyEffortTooltipPayload[];
   label?: number;
   reverseColorOrder?: boolean;
-}): JSX.Element => {
+}
+
+export const DailyEffortTooltip: React.FC<Props> = (props) => {
   const { active, payload, label, reverseColorOrder } = props;
   if (!active || payload === undefined) return <></>;
   return (

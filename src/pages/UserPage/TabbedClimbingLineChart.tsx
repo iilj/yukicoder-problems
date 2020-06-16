@@ -7,18 +7,17 @@ import { ClimbingAreaChart } from './ClimbingAreaChart';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { ProblemLevel } from '../../interfaces/Problem';
 
-const ClimbingChartWrapper = (props: {
+const ClimbingChartWrapper: React.FC<{
   display: boolean;
-  children: React.ReactNode;
-}) => (
-  <div style={{ display: props.display ? '' : 'none' }}>{props.children}</div>
-);
+}> = (props) => <>{props.display ? props.children : <></>}</>;
 
-export const TabbedClimbingLineChart = (props: {
+interface Props {
   climbingData: { dateSecond: number; count: number }[];
   solvedProblems: SolvedProblem[];
   syncId: string;
-}): JSX.Element => {
+}
+
+export const TabbedClimbingLineChart: React.FC<Props> = (props) => {
   const [showMode, setShowMode] = useLocalStorage<'Simple' | 'Colored'>(
     'UserPage_TabbedClimbingLineChart_showMode',
     'Simple'

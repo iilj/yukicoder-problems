@@ -34,7 +34,7 @@ library.add(
   faExclamationTriangle
 );
 
-function App(): JSX.Element {
+const App: React.FC = () => {
   return (
     <Router>
       <NavigationBar />
@@ -52,6 +52,6 @@ function App(): JSX.Element {
       </Container>
     </Router>
   );
-}
+};
 
 export default App;

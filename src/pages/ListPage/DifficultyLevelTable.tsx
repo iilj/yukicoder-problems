@@ -5,11 +5,13 @@ import { getDifficultyLevelColorClass } from '../../utils';
 import { Problem, ProblemLevels, ProblemLevel } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 
-export const DifficultyLevelTable = (props: {
+interface Props {
   problems: Problem[];
   solvedProblems: SolvedProblem[];
   user: string;
-}): JSX.Element => {
+}
+
+export const DifficultyLevelTable: React.FC<Props> = (props) => {
   const { problems, solvedProblems, user } = props;
 
   const difficultyLevelsSolvedCountMap = solvedProblems.reduce(

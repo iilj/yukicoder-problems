@@ -8,10 +8,12 @@ export enum ContestTableTab {
   'all' = 3,
 }
 
-export const TableTabButtons = (props: {
+interface Props {
   active: ContestTableTab;
   setActive: (next: ContestTableTab) => void;
-}): JSX.Element => {
+}
+
+export const TableTabButtons: React.FC<Props> = (props) => {
   const { active, setActive } = props;
   return (
     <Row>

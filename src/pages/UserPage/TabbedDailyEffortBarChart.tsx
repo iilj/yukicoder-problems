@@ -7,18 +7,17 @@ import { DailyEffortStackedBarChart } from './DailyEffortStackedBarChart';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { ProblemLevel } from '../../interfaces/Problem';
 
-const DailyEffortBarChartWrapper = (props: {
+const DailyEffortBarChartWrapper: React.FC<{
   display: boolean;
-  children: React.ReactNode;
-}): JSX.Element => (
-  <div style={{ display: props.display ? '' : 'none' }}>{props.children}</div>
-);
+}> = (props) => <>{props.display ? props.children : <></>}</>;
 
-export const TabbedDailyEffortBarChart = (props: {
+interface Props {
   dailyData: { dateSecond: number; count: number }[];
   solvedProblems: SolvedProblem[];
   syncId: string;
-}): JSX.Element => {
+}
+
+export const TabbedDailyEffortBarChart: React.FC<Props> = (props) => {
   const [showMode, setShowMode] = useLocalStorage<'Simple' | 'Colored'>(
     'UserPage_TabbedDailyEffortBarChart_showMode',
     'Simple'

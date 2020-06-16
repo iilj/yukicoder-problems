@@ -7,11 +7,13 @@ const COLORS = {
   Trying: '#58616a',
 };
 
-const SmallPieChart = (props: {
+interface SmallPieChartProps {
   title: string;
   trying: number;
   accepted: number;
-}): JSX.Element => {
+}
+
+const SmallPieChart: React.FC<SmallPieChartProps> = (props) => {
   const { title, trying, accepted } = props;
 
   const data = [
@@ -27,10 +29,12 @@ const SmallPieChart = (props: {
   );
 };
 
-export const PieCharts = (props: {
+interface Props {
   problems: { total: number; solved: number }[];
   title: string;
-}): JSX.Element => {
+}
+
+export const PieCharts: React.FC<Props> = (props) => {
   const { problems, title } = props;
   return (
     <div>

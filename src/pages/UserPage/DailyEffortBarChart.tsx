@@ -11,10 +11,12 @@ import {
 } from 'recharts';
 import dataFormat from 'dateformat';
 
-export const DailyEffortBarChart = (props: {
+interface Props {
   dailyData: { dateSecond: number; count: number }[];
   syncId: string;
-}): JSX.Element => {
+}
+
+export const DailyEffortBarChart: React.FC<Props> = (props) => {
   if (props.dailyData.length === 0) return <></>;
 
   return (

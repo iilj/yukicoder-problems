@@ -3,11 +3,13 @@ import Table from 'reactstrap/lib/Table';
 import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
 import { Problem, ProblemType, ProblemTypes } from '../../interfaces/Problem';
 
-export const ProblemTypeTable = (props: {
+interface Props {
   problems: Problem[];
   solvedProblems: Problem[];
   user: string;
-}): JSX.Element => {
+}
+
+export const ProblemTypeTable: React.FC<Props> = (props) => {
   const { problems, solvedProblems, user } = props;
 
   const problemTypesTotalCountMap = problems.reduce(

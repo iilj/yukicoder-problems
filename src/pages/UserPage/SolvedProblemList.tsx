@@ -17,13 +17,15 @@ interface Entry extends SolvedProblem {
   Contest: Contest | undefined;
 }
 
-export const SolvedProblemList = (props: {
+interface Props {
   solvedProblems: SolvedProblem[];
   problemContestMap: Map<ProblemId, ContestId>;
   contestMap: Map<ContestId, Contest>;
   fromDate: Date;
   toDate: Date;
-}): JSX.Element => {
+}
+
+export const SolvedProblemList: React.FC<Props> = (props) => {
   const {
     solvedProblems,
     problemContestMap,

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getDifficultyLevelColor } from '../utils';
 import { ProblemLevel } from '../interfaces/Problem';
 
-export const DifficultyStarsFillDefs = (): JSX.Element => (
+export const DifficultyStarsFillDefs: React.FC = () => (
   <svg style={{ height: 0 }}>
     <defs>
       <linearGradient id="ggold">
@@ -30,7 +30,7 @@ interface DifficultyStarsProps {
   showDifficultyLevel: boolean;
 }
 
-export const DifficultyStars = (props: DifficultyStarsProps): JSX.Element => {
+export const DifficultyStars: React.FC<DifficultyStarsProps> = (props) => {
   const { level, showDifficultyLevel } = props;
   if (!showDifficultyLevel) return <></>;
 
@@ -78,15 +78,19 @@ export const DifficultyStars = (props: DifficultyStarsProps): JSX.Element => {
   );
 };
 
-export const DifficultyStarsAbsoluteSpan = (
-  props: DifficultyStarsProps
-): JSX.Element => (
+export const DifficultyStarsAbsoluteSpan: React.FC<DifficultyStarsProps> = (
+  props
+) => (
   <span className="table-problem-stars">
     <DifficultyStars {...props} />
   </span>
 );
 
-export const NormalStarElement = (props: {
+interface NormalStarElementProps {
   className?: string;
   color?: string;
-}): JSX.Element => <FontAwesomeIcon icon="star" {...props} />;
+}
+
+export const NormalStarElement: React.FC<NormalStarElementProps> = (props) => (
+  <FontAwesomeIcon icon="star" {...props} />
+);
