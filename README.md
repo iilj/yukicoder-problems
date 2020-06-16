@@ -25,11 +25,6 @@ yarn start
 yarn build
 ```
 
-### Build optimized files and update gh-pages branch
-```bash
-yarn ghpages
-```
-
 ### Prettify codes
 ```bash
 yarn prettier
