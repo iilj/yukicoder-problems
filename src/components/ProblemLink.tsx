@@ -3,13 +3,15 @@ import { formatProblemUrl } from '../utils/Url';
 import { getDifficultyLevelColorClass } from '../utils';
 import { ProblemNo, ProblemLevel } from '../interfaces/Problem';
 
-export const ProblemLink = (props: {
+interface Props {
   problemNo: ProblemNo;
   problemTitle: string;
   level: ProblemLevel;
   showDifficultyLevel: boolean;
   id?: string;
-}): JSX.Element => {
+}
+
+export const ProblemLink: React.FC<Props> = (props) => {
   const { problemNo, problemTitle, level, showDifficultyLevel, id } = props;
   return (
     <a

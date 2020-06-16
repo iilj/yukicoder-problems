@@ -49,7 +49,7 @@ const generatePath = (kind: string, param: string, user: string): string =>
     ? `/${kind}/${param}/${encodeURIComponent(user)}`
     : `/${kind}/`;
 
-export const NavigationBar = (): JSX.Element => {
+export const NavigationBar: React.FC = () => {
   const location = useLocation();
   const { pathname } = location;
   const navigate = useNavigate();

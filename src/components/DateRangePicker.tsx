@@ -18,7 +18,7 @@ import { range } from '../utils';
 export const INITIAL_FROM_DATE = new Date('2014/07/20');
 export const INITIAL_TO_DATE = new Date(new Date().setHours(23, 59, 59, 999));
 
-const DatePickerCustomHeader = (params: {
+interface DatePickerCustomHeaderProps {
   minDate: Date;
   maxDate: Date;
   date: Date;
@@ -28,7 +28,11 @@ const DatePickerCustomHeader = (params: {
   increaseMonth: () => void;
   prevMonthButtonDisabled: boolean;
   nextMonthButtonDisabled: boolean;
-}): JSX.Element => {
+}
+
+const DatePickerCustomHeader: React.FC<DatePickerCustomHeaderProps> = (
+  params
+) => {
   const {
     minDate,
     maxDate,
@@ -89,14 +93,16 @@ const DatePickerCustomHeader = (params: {
   );
 };
 
-export const DateRangePicker = (props: {
+interface Props {
   fromDate: Date;
   toDate: Date;
   onFromDateChange: (date: Date) => void;
   onToDateChange: (date: Date) => void;
   minDate: Date;
   maxDate: Date;
-}): JSX.Element => {
+}
+
+export const DateRangePicker: React.FC<Props> = (props) => {
   const {
     fromDate,
     toDate,

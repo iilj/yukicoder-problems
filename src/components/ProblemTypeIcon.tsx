@@ -7,7 +7,7 @@ interface ProblemTypeIconProps {
   problemType: ProblemType;
 }
 
-export const ProblemTypeIcon = (props: ProblemTypeIconProps): JSX.Element => {
+export const ProblemTypeIcon: React.FC<ProblemTypeIconProps> = (props) => {
   const { problemType } = props;
   if (!problemType) return <></>;
 
@@ -45,17 +45,17 @@ export const ProblemTypeIcon = (props: ProblemTypeIconProps): JSX.Element => {
   }
 };
 
-export const ProblemTypeIconAbsoluteSpan = (
-  props: ProblemTypeIconProps
-): JSX.Element => (
+export const ProblemTypeIconAbsoluteSpan: React.FC<ProblemTypeIconProps> = (
+  props
+) => (
   <span className="table-problem-type-icon">
     <ProblemTypeIcon {...props} />
   </span>
 );
 
-export const ProblemTypeIconSpanWithName = (
-  props: ProblemTypeIconProps
-): JSX.Element => (
+export const ProblemTypeIconSpanWithName: React.FC<ProblemTypeIconProps> = (
+  props
+) => (
   <span>
     <ProblemTypeIcon {...props} /> {getProblemTypeName(props.problemType)}
   </span>

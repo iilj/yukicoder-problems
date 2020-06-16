@@ -2,11 +2,13 @@ import React from 'react';
 import { formatContestUrl } from '../utils/Url';
 import { ContestId } from '../interfaces/Contest';
 
-export const ContestLink = (props: {
+interface Props {
   contestId: ContestId;
   contestName: string;
   rawContestName?: string;
-}): JSX.Element => {
+}
+
+export const ContestLink: React.FC<Props> = (props) => {
   const { contestId, contestName, rawContestName } = props;
   return (
     <a

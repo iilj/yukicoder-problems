@@ -33,7 +33,7 @@ interface MergedProblem extends Problem {
   PureShortestRankingUserName?: string;
 }
 
-export const ListTable = (props: {
+interface Props {
   problems: Problem[];
   contestMap: Map<ContestId, Contest>;
   problemContestMap: Map<ProblemId, ContestId>;
@@ -47,7 +47,9 @@ export const ListTable = (props: {
   toDate?: Date;
   problemTypeFilterState: ProblemType | 'All';
   showTagsOfTryingProblems: boolean;
-}): JSX.Element => {
+}
+
+export const ListTable: React.FC<Props> = (props) => {
   const {
     problems,
     contestMap,

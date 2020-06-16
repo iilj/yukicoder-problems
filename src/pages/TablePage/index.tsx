@@ -16,12 +16,9 @@ import { SolvedProblem } from '../../interfaces/SolvedProblem';
 /**
  * Wrap element to switch visibility.
  */
-const ContestWrapper = (props: {
+const ContestWrapper: React.FC<{
   display: boolean;
-  children: React.ReactNode;
-}): JSX.Element => (
-  <div style={{ display: props.display ? '' : 'none' }}>{props.children}</div>
-);
+}> = (props) => <>{props.display ? props.children : <></>}</>;
 
 const initialUniversalState = {
   problems: [] as Problem[],
@@ -35,7 +32,7 @@ const initialUserState = {
   solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
 };
 
-export const TablePage = (): JSX.Element => {
+export const TablePage: React.FC = () => {
   const { param, user } = useParams() as {
     param: TypedCachedApiClient.UserParam;
     user: string;
@@ -174,7 +171,7 @@ export const TablePage = (): JSX.Element => {
       </Row>
       <TableTabButtons active={activeTab} setActive={setActiveTab} />
       <DifficultyStarsFillDefs />
-      <ContestWrapper display={activeTab === 0}>
+      <ContestWrapper display={activeTab === ContestTableTab.regular}>
         <YukicoderRegularTable
           contests={yukicoderRegularContests}
           title="yukicoder contest (regular)"
@@ -185,7 +182,7 @@ export const TablePage = (): JSX.Element => {
           universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
-      <ContestWrapper display={activeTab === 1}>
+      <ContestWrapper display={activeTab === ContestTableTab.long}>
         <ContestTable
           contests={yukicoderLongContests}
           title="yukicoder contest (long)"
@@ -196,7 +193,7 @@ export const TablePage = (): JSX.Element => {
           universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
-      <ContestWrapper display={activeTab === 2}>
+      <ContestWrapper display={activeTab === ContestTableTab.other}>
         <ContestTable
           contests={otherContests}
           title="Other contests"
@@ -207,7 +204,7 @@ export const TablePage = (): JSX.Element => {
           universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
-      <ContestWrapper display={activeTab === 3}>
+      <ContestWrapper display={activeTab === ContestTableTab.all}>
         <AllProblemsTable
           problems={problems}
           contestMap={contestMap}

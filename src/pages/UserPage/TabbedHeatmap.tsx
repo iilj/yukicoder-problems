@@ -26,11 +26,13 @@ export const getToday = (): Date => {
   return cur;
 };
 
-export const TabbedHeatmap = (props: {
+interface Props {
   dailyCountMap: Map<number, number>;
   solvedProblems: SolvedProblem[];
   onRectClick: (date: number) => void;
-}): JSX.Element => {
+}
+
+export const TabbedHeatmap: React.FC<Props> = (props) => {
   const [showMode, setShowMode] = useLocalStorage<'Unique AC' | 'Max Level'>(
     'UserPage_TabbedHeatmap_showMode',
     'Unique AC'

@@ -16,7 +16,7 @@ enum ProblemSolveStatus {
   BeforeContest = 3,
 }
 
-export const YukicoderRegularTable = (props: {
+interface Props {
   title: string;
   contests: Contest[];
   problemsMap: Map<ProblemId, Problem>;
@@ -24,7 +24,9 @@ export const YukicoderRegularTable = (props: {
   showDifficultyLevel: boolean;
   showContestResult: boolean;
   universalStateLoaded: boolean;
-}): JSX.Element => {
+}
+
+export const YukicoderRegularTable: React.FC<Props> = (props) => {
   const {
     contests,
     problemsMap,

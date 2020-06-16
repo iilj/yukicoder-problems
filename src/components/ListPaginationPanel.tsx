@@ -57,9 +57,9 @@ const pageList = (
   return pageNumbers;
 };
 
-export const ListPaginationPanel = (
-  props: ListPaginationPanelProps
-): JSX.Element => {
+export const ListPaginationPanel: React.FC<ListPaginationPanelProps> = (
+  props
+) => {
   const pageNumbers = pageList(
     props.currPage,
     props.pageStartIndex,

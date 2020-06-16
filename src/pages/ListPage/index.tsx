@@ -58,7 +58,7 @@ const initialUserState = {
   solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
 };
 
-export const ListPage = (): JSX.Element => {
+export const ListPage: React.FC = () => {
   const { param, user } = useParams() as {
     param: TypedCachedApiClient.UserParam;
     user: string;

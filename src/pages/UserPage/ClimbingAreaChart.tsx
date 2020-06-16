@@ -14,11 +14,13 @@ import { DailyEffortTooltip } from './DailyEffortTooltip';
 import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
 import { getLevelList, getDifficultyLevelColor } from '../../utils';
 
-export const ClimbingAreaChart = (props: {
+interface Props {
   climbingData: { dateSecond: number; [key: number]: number }[];
   reverseColorOrder: boolean;
   syncId: string;
-}): JSX.Element => {
+}
+
+export const ClimbingAreaChart: React.FC<Props> = (props) => {
   if (props.climbingData.length === 0) return <></>;
 
   return (

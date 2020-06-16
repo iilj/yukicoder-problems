@@ -17,7 +17,7 @@ const month_names_short = [
 ];
 const day_names_short = ['Mon', 'Wed', 'Fri'];
 
-export const CalendarHeatmap = (props: {
+interface Props {
   tableData: { date: number; count: number }[];
   formatTooltip: (date: number, count: number) => React.ReactNode;
   onRectClick: (date: number) => void;
@@ -25,7 +25,9 @@ export const CalendarHeatmap = (props: {
   columns: number;
   rows: number;
   today: Date;
-}): JSX.Element => {
+}
+
+export const CalendarHeatmap: React.FC<Props> = (props) => {
   const {
     tableData,
     formatTooltip,

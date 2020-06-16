@@ -20,11 +20,13 @@ const refineRanking = (ranking: { name: UserName; count: number }[]) =>
       return list;
     }, [] as { rank: number; name: UserName; count: number }[]);
 
-export const Ranking = (props: {
+interface Props {
   title: string;
   ranking: { name: UserName; count: number }[];
   universalStateLoaded: boolean;
-}): JSX.Element => (
+}
+
+export const Ranking: React.FC<Props> = (props) => (
   <Row>
     <h2>{props.title}</h2>
     {props.universalStateLoaded ? (

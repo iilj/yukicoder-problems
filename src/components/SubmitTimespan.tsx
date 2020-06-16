@@ -17,11 +17,13 @@ const formatTimespan = (sec: number): string => {
   )}`.slice(-2)}:${`0${sec % 60}`.slice(-2)}`;
 };
 
-export const SubmitTimespan = (props: {
+interface Props {
   contest: Contest;
   solvedProblem?: Problem;
   showContestResult: boolean;
-}): JSX.Element => {
+}
+
+export const SubmitTimespan: React.FC<Props> = (props) => {
   const { contest, solvedProblem, showContestResult } = props;
   if (!showContestResult) {
     return <></>;

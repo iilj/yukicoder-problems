@@ -6,10 +6,12 @@ import { DifficultyStars } from '../../components/DifficultyStars';
 import { Problem, ProblemLevel } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 
-export const ProblemLevelPieChart = (props: {
+interface Props {
   problems: Problem[];
   solvedProblems: SolvedProblem[];
-}): JSX.Element => {
+}
+
+export const ProblemLevelPieChart: React.FC<Props> = (props) => {
   const { problems, solvedProblems } = props;
   const levelList = getLevelList();
 

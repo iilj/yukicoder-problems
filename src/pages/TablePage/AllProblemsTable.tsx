@@ -8,7 +8,7 @@ import { Contest, ContestId } from '../../interfaces/Contest';
 import { Problem, ProblemId, ProblemNo } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 
-export const AllProblemsTable = (props: {
+interface Props {
   title: string;
   problems: Problem[];
   contestMap: Map<ContestId, Contest>;
@@ -17,7 +17,9 @@ export const AllProblemsTable = (props: {
   showDifficultyLevel: boolean;
   showContestResult: boolean;
   universalStateLoaded: boolean;
-}): JSX.Element => {
+}
+
+export const AllProblemsTable: React.FC<Props> = (props) => {
   const {
     problems,
     contestMap,

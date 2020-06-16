@@ -14,10 +14,12 @@ import { DailyEffortTooltip } from './DailyEffortTooltip';
 import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
 import { getLevelList, getDifficultyLevelColor } from '../../utils';
 
-export const DailyEffortStackedBarChart = (props: {
+interface Props {
   dailyData: { dateSecond: number; [key: number]: number }[];
   syncId: string;
-}): JSX.Element => {
+}
+
+export const DailyEffortStackedBarChart: React.FC<Props> = (props) => {
   if (props.dailyData.length === 0) return <></>;
 
   return (

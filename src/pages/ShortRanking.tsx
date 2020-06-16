@@ -8,7 +8,7 @@ const initialUniversalState = {
   golferMap: new Map<UserName, RankingProblem[]>(),
 };
 
-export const ShortRanking = (): JSX.Element => {
+export const ShortRanking: React.FC = () => {
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [universalStateLoaded, setUniversalStateLoaded] = useState(false);
 
