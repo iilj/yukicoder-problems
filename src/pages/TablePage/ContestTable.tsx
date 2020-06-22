@@ -6,14 +6,16 @@ import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { SubmitTimespan } from '../../components/SubmitTimespan';
 import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
 import { Contest } from '../../interfaces/Contest';
-import { Problem, ProblemId, ProblemNo } from '../../interfaces/Problem';
-import { SolvedProblem } from '../../interfaces/SolvedProblem';
+import { ProblemId, ProblemNo } from '../../interfaces/Problem';
+import {
+  MergedProblem,
+  ProblemSolveStatus,
+} from '../../interfaces/MergedProblem';
 
 interface Props {
   title: string;
   contests: Contest[];
-  problemsMap: Map<ProblemId, Problem>;
-  solvedProblemsMap: Map<ProblemId, SolvedProblem>;
+  mergedProblemsMap: Map<ProblemId, MergedProblem>;
   showDifficultyLevel: boolean;
   showContestResult: boolean;
   universalStateLoaded: boolean;
@@ -22,8 +24,7 @@ interface Props {
 export const ContestTable: React.FC<Props> = (props) => {
   const {
     contests,
-    problemsMap,
-    solvedProblemsMap,
+    mergedProblemsMap,
     showDifficultyLevel,
     showContestResult,
     universalStateLoaded,
@@ -79,58 +80,48 @@ export const ContestTable: React.FC<Props> = (props) => {
               <tbody>
                 <tr>
                   {contest.ProblemIdList.map((pid: ProblemId, i) => {
-                    if (problemsMap !== undefined && problemsMap.has(pid)) {
-                      const problem = problemsMap.get(pid) as Problem;
-                      const solvedProblem =
-                        solvedProblemsMap && solvedProblemsMap.has(pid)
-                          ? solvedProblemsMap.get(pid)
-                          : undefined;
-                      let className: string;
-                      if (!solvedProblem) {
-                        className = 'table-problem';
-                      } else {
-                        const solvedDate = Date.parse(solvedProblem.Date);
-                        const startDate = Date.parse(contest.Date);
-                        const endDate = Date.parse(contest.EndDate);
-                        if (!showContestResult || solvedDate > endDate)
-                          className = 'table-problem table-problem-solved';
-                        else if (solvedDate >= startDate)
-                          className =
-                            'table-problem table-problem-solved-intime';
-                        else
-                          className =
-                            'table-problem table-problem-solved-before-contest';
-                      }
-
-                      const problemTitle = `${header[i]}. ${problem.Title}`;
-
+                    const mergedProblem = mergedProblemsMap.get(pid);
+                    if (!mergedProblem) {
                       return (
-                        <td key={pid} className={className}>
-                          <DifficultyStarsAbsoluteSpan
-                            level={problem.Level}
-                            showDifficultyLevel={showDifficultyLevel}
-                          />
-                          <ProblemTypeIconAbsoluteSpan
-                            problemType={problem.ProblemType}
-                          />
-                          <ProblemLink
-                            problemNo={problem.No as ProblemNo}
-                            problemTitle={problemTitle}
-                            level={problem.Level}
-                            showDifficultyLevel={showDifficultyLevel}
-                          />
-                          <SubmitTimespan
-                            contest={contest}
-                            solvedProblem={solvedProblem}
-                            showContestResult={showContestResult}
-                          />
+                        <td key={pid}>
+                          (Id=
+                          {pid})
                         </td>
                       );
                     }
+                    const className =
+                      mergedProblem.SolveStatus === ProblemSolveStatus.Trying
+                        ? 'table-problem'
+                        : !showContestResult ||
+                          mergedProblem.SolveStatus ===
+                            ProblemSolveStatus.Solved
+                        ? 'table-problem table-problem-solved'
+                        : mergedProblem.SolveStatus ===
+                          ProblemSolveStatus.Intime
+                        ? 'table-problem table-problem-solved-intime'
+                        : 'table-problem table-problem-solved-before-contest';
+
+                    const problemTitle = `${header[i]}. ${mergedProblem.Title}`;
+
                     return (
-                      <td key={pid}>
-                        (Id=
-                        {pid})
+                      <td key={pid} className={className}>
+                        <DifficultyStarsAbsoluteSpan
+                          level={mergedProblem.Level}
+                          showDifficultyLevel={showDifficultyLevel}
+                        />
+                        <ProblemTypeIconAbsoluteSpan
+                          problemType={mergedProblem.ProblemType}
+                        />
+                        <ProblemLink
+                          problemNo={mergedProblem.No as ProblemNo}
+                          problemTitle={problemTitle}
+                          level={mergedProblem.Level}
+                          showDifficultyLevel={showDifficultyLevel}
+                        />
+                        <SubmitTimespan
+                          mergedProblem={mergedProblem}
+                          showContestResult={showContestResult}
+                        />
                       </td>
                     );
                   })}

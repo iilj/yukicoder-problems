@@ -8,10 +8,12 @@ import { AllProblemsTable } from './AllProblemsTable';
 import { TableTabButtons, ContestTableTab } from './TableTab';
 import { useLocalStorage } from '../../utils/LocalStorage';
 import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
+import { mergeSolveStatus, mergedProblemsToMap } from '../../utils/MergeProcs';
 import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { Problem, ProblemId } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
+import { MergedProblem } from '../../interfaces/MergedProblem';
 
 /**
  * Wrap element to switch visibility.
@@ -24,12 +26,15 @@ const initialUniversalState = {
   problems: [] as Problem[],
   contests: [] as Contest[],
   contestMap: new Map<ContestId, Contest>(),
-  problemsMap: new Map<ProblemId, Problem>(),
   problemContestMap: new Map<ProblemId, ContestId>(),
 };
 
 const initialUserState = {
   solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
+};
+
+const initialMergedState = {
+  mergedProblemsMap: new Map<ProblemId, MergedProblem>(),
 };
 
 export const TablePage: React.FC = () => {
@@ -40,8 +45,10 @@ export const TablePage: React.FC = () => {
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
+  const [mergedState, setMergedState] = useState(initialMergedState);
   const [universalStateLoaded, setUniversalStateLoaded] = useState(false);
   const [userStateLoaded, setUserStateLoaded] = useState(false);
+  const [mergedStateLoaded, setMergedStateLoaded] = useState(false);
 
   useEffect(() => {
     let unmounted = false;
@@ -51,8 +58,7 @@ export const TablePage: React.FC = () => {
         TypedCachedApiClient.cachedProblemArray(),
         TypedCachedApiClient.cachedContestArray(),
       ]);
-      const [problemsMap, contestMap, problemContestMap] = await Promise.all([
-        TypedCachedApiClient.cachedProblemMap(),
+      const [contestMap, problemContestMap] = await Promise.all([
         TypedCachedApiClient.cachedContestMap(),
         TypedCachedApiClient.cachedProblemContestMap(),
       ]);
@@ -62,7 +68,6 @@ export const TablePage: React.FC = () => {
           problems,
           contests,
           contestMap,
-          problemsMap,
           problemContestMap,
         });
         setUniversalStateLoaded(true);
@@ -98,14 +103,35 @@ export const TablePage: React.FC = () => {
     return cleanup;
   }, [param, user]);
 
-  const {
-    problems,
-    contests,
-    contestMap,
-    problemsMap,
-    problemContestMap,
-  } = universalState;
+  useEffect(() => {
+    let unmounted = false;
+    const getMergedInfo = () => {
+      setMergedStateLoaded(false);
+      const mergedProblems = mergeSolveStatus(
+        universalState.problems,
+        universalState.contests,
+        universalState.problemContestMap,
+        userState.solvedProblemsMap
+      );
+      const mergedProblemsMap = mergedProblemsToMap(mergedProblems);
+
+      if (!unmounted) {
+        setMergedState({
+          mergedProblemsMap,
+        });
+        setMergedStateLoaded(true);
+      }
+    };
+    void getMergedInfo();
+    const cleanup = () => {
+      unmounted = true;
+    };
+    return cleanup;
+  }, [universalState, userState]);
+
+  const { problems, contests, contestMap, problemContestMap } = universalState;
   const { solvedProblemsMap } = userState;
+  const { mergedProblemsMap } = mergedState;
 
   const [showDifficultyLevel, setShowDifficultyLevel] = useLocalStorage(
     'TablePage_showDifficultyLevel',
@@ -134,7 +160,7 @@ export const TablePage: React.FC = () => {
 
   return (
     <>
-      {userStateLoaded ? (
+      {userStateLoaded && mergedStateLoaded ? (
         <></>
       ) : (
         <Spinner
@@ -175,8 +201,7 @@ export const TablePage: React.FC = () => {
         <YukicoderRegularTable
           contests={yukicoderRegularContests}
           title="yukicoder contest (regular)"
-          problemsMap={problemsMap}
-          solvedProblemsMap={solvedProblemsMap}
+          mergedProblemsMap={mergedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}
           universalStateLoaded={universalStateLoaded}
@@ -186,8 +211,7 @@ export const TablePage: React.FC = () => {
         <ContestTable
           contests={yukicoderLongContests}
           title="yukicoder contest (long)"
-          problemsMap={problemsMap}
-          solvedProblemsMap={solvedProblemsMap}
+          mergedProblemsMap={mergedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}
           universalStateLoaded={universalStateLoaded}
@@ -197,8 +221,7 @@ export const TablePage: React.FC = () => {
         <ContestTable
           contests={otherContests}
           title="Other contests"
-          problemsMap={problemsMap}
-          solvedProblemsMap={solvedProblemsMap}
+          mergedProblemsMap={mergedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}
           universalStateLoaded={universalStateLoaded}
