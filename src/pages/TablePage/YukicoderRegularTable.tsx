@@ -7,20 +7,16 @@ import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { SubmitTimespan } from '../../components/SubmitTimespan';
 import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
 import { Contest } from '../../interfaces/Contest';
-import { Problem, ProblemId, ProblemNo } from '../../interfaces/Problem';
-
-enum ProblemSolveStatus {
-  Trying = 0,
-  Solved = 1,
-  Intime = 2,
-  BeforeContest = 3,
-}
+import { ProblemId, ProblemNo } from '../../interfaces/Problem';
+import {
+  MergedProblem,
+  ProblemSolveStatus,
+} from '../../interfaces/MergedProblem';
 
 interface Props {
   title: string;
   contests: Contest[];
-  problemsMap: Map<ProblemId, Problem>;
-  solvedProblemsMap: Map<ProblemId, Problem>;
+  mergedProblemsMap: Map<ProblemId, MergedProblem>;
   showDifficultyLevel: boolean;
   showContestResult: boolean;
   universalStateLoaded: boolean;
@@ -29,8 +25,7 @@ interface Props {
 export const YukicoderRegularTable: React.FC<Props> = (props) => {
   const {
     contests,
-    problemsMap,
-    solvedProblemsMap,
+    mergedProblemsMap,
     showDifficultyLevel,
     showContestResult,
     universalStateLoaded,
@@ -64,35 +59,28 @@ export const YukicoderRegularTable: React.FC<Props> = (props) => {
           isKey
           dataField="Name"
           columnClassName={(_, contest: Contest) => {
-            const startDate = Date.parse(contest.Date);
-            const endDate = Date.parse(contest.EndDate);
-            const ls = contest.ProblemIdList.map((pid: ProblemId) => {
-              const problem =
-                problemsMap && problemsMap.has(pid)
-                  ? problemsMap.get(pid)
-                  : undefined;
-              if (!problem) return ProblemSolveStatus.Trying;
-              const solvedProblem =
-                solvedProblemsMap && solvedProblemsMap.has(pid)
-                  ? solvedProblemsMap.get(pid)
-                  : undefined;
-              if (!solvedProblem) return ProblemSolveStatus.Trying;
-              const solvedDate = Date.parse(solvedProblem.Date as string);
-              if (solvedDate > endDate) return ProblemSolveStatus.Solved;
-              if (solvedDate >= startDate) return ProblemSolveStatus.Intime;
-              return ProblemSolveStatus.BeforeContest;
-            });
+            const solveStatusList = contest.ProblemIdList.map(
+              (pid: ProblemId): ProblemSolveStatus => {
+                const mergedProblem = mergedProblemsMap.get(pid);
+                if (!mergedProblem) return ProblemSolveStatus.Trying;
+                return mergedProblem.SolveStatus;
+              }
+            );
             if (
               showContestResult &&
-              ls.every((stat) => stat === ProblemSolveStatus.BeforeContest)
+              solveStatusList.every(
+                (stat) => stat === ProblemSolveStatus.BeforeContest
+              )
             )
               return 'table-problem table-problem-solved-before-contest';
             if (
               showContestResult &&
-              ls.every((stat) => stat >= ProblemSolveStatus.Intime)
+              solveStatusList.every((stat) => stat >= ProblemSolveStatus.Intime)
             )
               return 'table-problem table-problem-solved-intime';
-            if (ls.every((stat) => stat >= ProblemSolveStatus.Solved))
+            if (
+              solveStatusList.every((stat) => stat >= ProblemSolveStatus.Solved)
+            )
               return 'table-problem table-problem-solved';
             return 'table-problem';
           }}
@@ -115,28 +103,22 @@ export const YukicoderRegularTable: React.FC<Props> = (props) => {
                 i in contest.ProblemIdList
                   ? contest.ProblemIdList[i]
                   : undefined;
-              const problem =
-                pid !== undefined && problemsMap && problemsMap.has(pid)
-                  ? problemsMap.get(pid)
-                  : undefined;
-              const solvedProblem =
-                pid !== undefined &&
-                solvedProblemsMap &&
-                solvedProblemsMap.has(pid)
-                  ? solvedProblemsMap.get(pid)
-                  : undefined;
               if (!pid) {
                 return 'table-problem-empty';
               }
-              if (!problem || !solvedProblem) {
+              const MergedProblem = mergedProblemsMap.get(pid);
+              if (
+                !MergedProblem ||
+                MergedProblem.SolveStatus === ProblemSolveStatus.Trying
+              ) {
                 return 'table-problem';
               }
-              const solvedDate = Date.parse(solvedProblem.Date as string);
-              const startDate = Date.parse(contest.Date);
-              const endDate = Date.parse(contest.EndDate);
-              if (!showContestResult || solvedDate > endDate)
+              if (
+                !showContestResult ||
+                MergedProblem.SolveStatus === ProblemSolveStatus.Solved
+              )
                 return 'table-problem table-problem-solved';
-              if (solvedDate >= startDate)
+              if (MergedProblem.SolveStatus === ProblemSolveStatus.Intime)
                 return 'table-problem table-problem-solved-intime';
               return 'table-problem table-problem-solved-before-contest';
             }}
@@ -145,20 +127,11 @@ export const YukicoderRegularTable: React.FC<Props> = (props) => {
                 i in contest.ProblemIdList
                   ? contest.ProblemIdList[i]
                   : undefined;
-              const problem =
-                pid !== undefined && problemsMap && problemsMap.has(pid)
-                  ? problemsMap.get(pid)
-                  : undefined;
-              const solvedProblem =
-                pid !== undefined &&
-                solvedProblemsMap &&
-                solvedProblemsMap.has(pid)
-                  ? solvedProblemsMap.get(pid)
-                  : undefined;
               if (!pid) {
                 return '';
               }
-              if (!problem) {
+              const mergedProblem = mergedProblemsMap.get(pid);
+              if (!mergedProblem) {
                 return (
                   <span>
                     (Id=
@@ -167,26 +140,25 @@ export const YukicoderRegularTable: React.FC<Props> = (props) => {
                 );
               }
 
-              const problemTitle = `${header[i]}. ${problem.Title}`;
+              const problemTitle = `${header[i]}. ${mergedProblem.Title}`;
 
               return (
                 <>
                   <DifficultyStarsAbsoluteSpan
-                    level={problem.Level}
+                    level={mergedProblem.Level}
                     showDifficultyLevel={showDifficultyLevel}
                   />
                   <ProblemTypeIconAbsoluteSpan
-                    problemType={problem.ProblemType}
+                    problemType={mergedProblem.ProblemType}
                   />
                   <ProblemLink
-                    problemNo={problem.No as ProblemNo}
+                    problemNo={mergedProblem.No as ProblemNo}
                     problemTitle={problemTitle}
-                    level={problem.Level}
+                    level={mergedProblem.Level}
                     showDifficultyLevel={showDifficultyLevel}
                   />
                   <SubmitTimespan
-                    contest={contest}
-                    solvedProblem={solvedProblem}
+                    mergedProblem={mergedProblem}
                     showContestResult={showContestResult}
                   />
                 </>

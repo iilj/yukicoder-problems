@@ -1,6 +1,9 @@
 import React from 'react';
-import { Contest } from '../interfaces/Contest';
-import { Problem } from '../interfaces/Problem';
+import {
+  MergedProblem,
+  ProblemSolveStatus,
+  ExtendedContest,
+} from '../interfaces/MergedProblem';
 
 const formatTimespan = (sec: number): string => {
   let sign: string;
@@ -18,25 +21,24 @@ const formatTimespan = (sec: number): string => {
 };
 
 interface Props {
-  contest: Contest;
-  solvedProblem?: Problem;
+  mergedProblem: MergedProblem;
   showContestResult: boolean;
 }
 
 export const SubmitTimespan: React.FC<Props> = (props) => {
-  const { contest, solvedProblem, showContestResult } = props;
+  const { mergedProblem, showContestResult } = props;
   if (!showContestResult) {
     return <></>;
   }
 
   return (
     <div className="table-problem-timespan">
-      {!solvedProblem ||
-      Date.parse(solvedProblem.Date as string) > Date.parse(contest.EndDate)
+      {mergedProblem.SolveStatus === ProblemSolveStatus.Trying ||
+      mergedProblem.SolveStatus === ProblemSolveStatus.Solved
         ? ''
         : formatTimespan(
-            (Date.parse(solvedProblem.Date as string) -
-              Date.parse(contest.Date)) /
+            ((mergedProblem.SolveDateNum as number) -
+              (mergedProblem.Contest as ExtendedContest).DateNum) /
               1000
           )}
     </div>

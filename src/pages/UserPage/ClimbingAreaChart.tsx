@@ -56,13 +56,13 @@ export const ClimbingAreaChart: React.FC<Props> = (props) => {
           {(props.reverseColorOrder
             ? getLevelList().reverse()
             : getLevelList()
-          ).map((level) => {
+          ).map((level, idx) => {
             const color = getDifficultyLevelColor(level);
             return (
               <Area
                 type="monotone"
                 dataKey={level}
-                key={level}
+                key={idx}
                 stackId="1"
                 stroke={color}
                 fill={color}

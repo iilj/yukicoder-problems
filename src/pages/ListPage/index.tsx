@@ -20,6 +20,7 @@ import { ProblemTypeTable } from './ProblemTypeTable';
 import { ListTable, FilterState } from './ListTable';
 import { getProblemTypeName } from '../../utils';
 import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
+import { mergeSolveStatus, mergeShortest } from '../../utils/MergeProcs';
 import { WellPositionedDropdownMenu } from '../../components/WellPositionedDropdownMenu';
 import {
   DifficultyStarsFillDefs,
@@ -42,12 +43,13 @@ import {
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { RankingProblem } from '../../interfaces/RankingProblem';
+import { RankingMergedProblem } from '../../interfaces/MergedProblem';
 
 const INF_LEVEL = 100;
 
 const initialUniversalState = {
   problems: [] as Problem[],
-  contestMap: new Map<ContestId, Contest>(),
+  contests: [] as Contest[],
   problemContestMap: new Map<ProblemId, ContestId>(),
   golferProblemMap: new Map<ProblemNo, RankingProblem>(),
   golferPureProblemMap: new Map<ProblemNo, RankingProblem>(),
@@ -58,6 +60,10 @@ const initialUserState = {
   solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
 };
 
+const initialMergedState = {
+  rankingMergedProblems: [] as RankingMergedProblem[],
+};
+
 export const ListPage: React.FC = () => {
   const { param, user } = useParams() as {
     param: TypedCachedApiClient.UserParam;
@@ -66,8 +72,10 @@ export const ListPage: React.FC = () => {
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [userState, setUserState] = useState(initialUserState);
+  const [mergedState, setMergedState] = useState(initialMergedState);
   const [universalStateLoaded, setUniversalStateLoaded] = useState(false);
   const [userStateLoaded, setUserStateLoaded] = useState(false);
+  const [mergedStateLoaded, setMergedStateLoaded] = useState(false);
 
   useEffect(() => {
     let unmounted = false;
@@ -75,12 +83,12 @@ export const ListPage: React.FC = () => {
       setUniversalStateLoaded(false);
       const [
         problems,
-        contestMap,
+        contests,
         golferProblemMap,
         golferPureProblemMap,
       ] = await Promise.all([
         TypedCachedApiClient.cachedProblemArray(),
-        TypedCachedApiClient.cachedContestMap(),
+        TypedCachedApiClient.cachedContestArray(),
         TypedCachedApiClient.cachedGolferRankingProblemMap(),
         TypedCachedApiClient.cachedGolferRankingPureProblemMap(),
       ]);
@@ -89,7 +97,7 @@ export const ListPage: React.FC = () => {
       if (!unmounted) {
         setUniversalState({
           problems,
-          contestMap,
+          contests,
           problemContestMap,
           golferProblemMap,
           golferPureProblemMap,
@@ -132,14 +140,39 @@ export const ListPage: React.FC = () => {
     return cleanup;
   }, [param, user]);
 
-  const {
-    problems,
-    contestMap,
-    problemContestMap,
-    golferProblemMap,
-    golferPureProblemMap,
-  } = universalState;
-  const { solvedProblems, solvedProblemsMap } = userState;
+  useEffect(() => {
+    let unmounted = false;
+    const getMergedInfo = () => {
+      setMergedStateLoaded(false);
+      const mergedProblems = mergeSolveStatus(
+        universalState.problems,
+        universalState.contests,
+        universalState.problemContestMap,
+        userState.solvedProblemsMap
+      );
+      const rankingMergedProblems = mergeShortest(
+        mergedProblems,
+        universalState.golferProblemMap,
+        universalState.golferPureProblemMap
+      );
+
+      if (!unmounted) {
+        setMergedState({
+          rankingMergedProblems,
+        });
+        setMergedStateLoaded(true);
+      }
+    };
+    void getMergedInfo();
+    const cleanup = () => {
+      unmounted = true;
+    };
+    return cleanup;
+  }, [universalState, userState]);
+
+  const { problems } = universalState;
+  const { solvedProblems } = userState;
+  const { rankingMergedProblems } = mergedState;
 
   const [statusFilterState, setStatusFilterState] = useState<FilterState>(
     'All'
@@ -163,7 +196,7 @@ export const ListPage: React.FC = () => {
     <>
       <DifficultyStarsFillDefs />
 
-      {universalStateLoaded && userStateLoaded ? (
+      {universalStateLoaded && userStateLoaded && mergedStateLoaded ? (
         <></>
       ) : (
         <Spinner
@@ -348,12 +381,7 @@ export const ListPage: React.FC = () => {
       </Row>
       <Row>
         <ListTable
-          problems={problems}
-          contestMap={contestMap}
-          problemContestMap={problemContestMap}
-          solvedProblemsMap={solvedProblemsMap}
-          golferProblemMap={golferProblemMap}
-          golferPureProblemMap={golferPureProblemMap}
+          rankingMergedProblems={rankingMergedProblems}
           statusFilterState={statusFilterState}
           fromDifficultyLevel={fromDifficultyLevel}
           toDifficultyLevel={toDifficultyLevel}
