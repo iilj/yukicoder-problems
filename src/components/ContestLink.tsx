@@ -10,7 +10,7 @@ interface Props {
 
 export const ContestLink: React.FC<Props> = (props) => {
   const { contestId, contestName, rawContestName } = props;
-  return (
+  return contestId >= 0 ? (
     <a
       href={formatContestUrl(contestId)}
       target="_blank" // eslint-disable-line react/jsx-no-target-blank
@@ -19,5 +19,7 @@ export const ContestLink: React.FC<Props> = (props) => {
     >
       {contestName}
     </a>
+  ) : (
+    <span>{contestName}</span>
   );
 };

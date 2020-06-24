@@ -148,13 +148,17 @@ export const TablePage: React.FC = () => {
 
   const yukicoderRegularContests = [] as Contest[];
   const yukicoderLongContests = [] as Contest[];
+  const openContests = [] as Contest[];
   const otherContests = [] as Contest[];
-  const regexpContest = /^yukicoder contest \d+/;
+  const regexpYukicoderContest = /^yukicoder contest \d+/;
+  const regexpOpenContest = /\(Open\)$/;
   contests.forEach((contest) => {
-    if (regexpContest.exec(contest.Name)) {
+    if (regexpYukicoderContest.exec(contest.Name)) {
       if (contest.ProblemIdList.length <= 6)
         yukicoderRegularContests.push(contest);
       else yukicoderLongContests.push(contest);
+    } else if (regexpOpenContest.exec(contest.Name)) {
+      openContests.push(contest);
     } else otherContests.push(contest);
   });
 
@@ -211,6 +215,16 @@ export const TablePage: React.FC = () => {
         <ContestTable
           contests={yukicoderLongContests}
           title="yukicoder contest (long)"
+          mergedProblemsMap={mergedProblemsMap}
+          showDifficultyLevel={showDifficultyLevel}
+          showContestResult={showContestResult}
+          universalStateLoaded={universalStateLoaded}
+        />
+      </ContestWrapper>
+      <ContestWrapper display={activeTab === ContestTableTab.open}>
+        <ContestTable
+          contests={openContests}
+          title="Open contests"
           mergedProblemsMap={mergedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}

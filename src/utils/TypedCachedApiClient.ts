@@ -4,6 +4,7 @@ import { Contest, ContestId } from '../interfaces/Contest';
 import { Language, LangId } from '../interfaces/Language';
 import { RankingProblem } from '../interfaces/RankingProblem';
 import { User, UserName } from '../interfaces/User';
+import { OpenContests } from './OpenContest';
 
 const BASE_URL = 'https://yukicoder.me';
 const STATIC_API_BASE_URL = `${BASE_URL}/api/v1`;
@@ -56,7 +57,7 @@ let CACHED_CONTESTS: Contest[];
 export const cachedContestArray = async (): Promise<Contest[]> => {
   if (CACHED_CONTESTS === undefined) {
     try {
-      CACHED_CONTESTS = await fetchContests();
+      CACHED_CONTESTS = (await fetchContests()).concat(OpenContests);
     } catch (e) {
       console.log(e);
       CACHED_CONTESTS = [];
