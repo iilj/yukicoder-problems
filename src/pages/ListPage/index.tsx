@@ -211,7 +211,7 @@ export const ListPage: React.FC = () => {
       )}
 
       <Row className="my-2 border-bottom">
-        <h1>Level Status</h1>
+        <h2>Level Status</h2>
       </Row>
       <Row>
         <DifficultyLevelTable
@@ -222,7 +222,7 @@ export const ListPage: React.FC = () => {
       </Row>
 
       <Row className="my-2 border-bottom">
-        <h1>Type Status</h1>
+        <h2>Type Status</h2>
       </Row>
       <Row>
         <ProblemTypeTable
@@ -233,7 +233,7 @@ export const ListPage: React.FC = () => {
       </Row>
 
       <Row className="my-2 border-bottom">
-        <h1>Problem List</h1>
+        <h2>Problem List</h2>
       </Row>
       <Row>
         <ButtonGroup className="mr-4">

@@ -39,7 +39,7 @@ export const PieCharts: React.FC<Props> = (props) => {
   return (
     <div>
       <Row className="my-2 border-bottom">
-        <h1>{title}</h1>
+        <h2>{title}</h2>
       </Row>
       <Row className="my-3">
         {problems.map(({ solved, total }, i) => {
