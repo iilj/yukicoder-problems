@@ -293,24 +293,24 @@ export const UserPage: React.FC = () => {
         {universalStateLoaded ? (
           <></>
         ) : (
-          <Spinner
-            style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }}
-          />
-        )}
+            <Spinner
+              style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }}
+            />
+          )}
       </Row>
       {userStateLoaded ? (
         <></>
       ) : (
-        <Spinner
-          style={{
-            width: '3rem',
-            height: '3rem',
-            position: 'fixed',
-            right: '10px',
-            bottom: '10px',
-          }}
-        />
-      )}
+          <Spinner
+            style={{
+              width: '3rem',
+              height: '3rem',
+              position: 'fixed',
+              right: '10px',
+              bottom: '10px',
+            }}
+          />
+        )}
       <DifficultyStarsFillDefs />
 
       <Row className="my-3">
@@ -348,8 +348,12 @@ export const UserPage: React.FC = () => {
           <h6 className="text-muted">
             {`Last AC: ${
               prevDateSecond > 0 ? dataFormat(prevDateSecond, 'yyyy/mm/dd') : ''
-            }`}
+              }`}
           </h6>
+        </Col>
+        <Col key="Streak Sum" className="text-center" xs="6" md="3">
+          <h6>Streak Sum</h6>
+          <h3>{dailyCount.length} days</h3>
         </Col>
       </Row>
 
