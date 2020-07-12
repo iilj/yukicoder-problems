@@ -41,9 +41,23 @@ export const YukicoderRegularTable: React.FC<Props> = (props) => {
     0,
     maxProblemCount
   );
+  const solvedFlags = contests.reduce(
+    (flags: ProblemSolveStatus[], curContest: Contest) => {
+      curContest.ProblemIdList.forEach((pid: ProblemId, idx: number) => {
+        const mergedProblem = mergedProblemsMap.get(pid);
+        if (!mergedProblem) return;
+        flags[idx] = Math.min(flags[idx], mergedProblem.SolveStatus);
+      });
+      return flags;
+    },
+    new Array(maxProblemCount).fill(
+      ProblemSolveStatus.BeforeContest
+    ) as ProblemSolveStatus[]
+  );
+
   return (
     <Row className="my-4">
-      <h2>{props.title}</h2>
+      <h3>{props.title}</h3>
       {universalStateLoaded ? (
         <></>
       ) : (
@@ -98,6 +112,15 @@ export const YukicoderRegularTable: React.FC<Props> = (props) => {
           <TableHeaderColumn
             dataField={c}
             key={c}
+            className={
+              solvedFlags[i] === ProblemSolveStatus.BeforeContest
+                ? 'table-problem table-problem-solved-before-contest'
+                : solvedFlags[i] === ProblemSolveStatus.Intime
+                ? 'table-problem table-problem-solved-intime'
+                : solvedFlags[i] === ProblemSolveStatus.Solved
+                ? 'table-problem table-problem-solved'
+                : 'table-problem'
+            }
             columnClassName={(_, contest: Contest) => {
               const pid =
                 i in contest.ProblemIdList
@@ -106,19 +129,19 @@ export const YukicoderRegularTable: React.FC<Props> = (props) => {
               if (!pid) {
                 return 'table-problem-empty';
               }
-              const MergedProblem = mergedProblemsMap.get(pid);
+              const mergedProblem = mergedProblemsMap.get(pid);
               if (
-                !MergedProblem ||
-                MergedProblem.SolveStatus === ProblemSolveStatus.Trying
+                !mergedProblem ||
+                mergedProblem.SolveStatus === ProblemSolveStatus.Trying
               ) {
                 return 'table-problem';
               }
               if (
                 !showContestResult ||
-                MergedProblem.SolveStatus === ProblemSolveStatus.Solved
+                mergedProblem.SolveStatus === ProblemSolveStatus.Solved
               )
                 return 'table-problem table-problem-solved';
-              if (MergedProblem.SolveStatus === ProblemSolveStatus.Intime)
+              if (mergedProblem.SolveStatus === ProblemSolveStatus.Intime)
                 return 'table-problem table-problem-solved-intime';
               return 'table-problem table-problem-solved-before-contest';
             }}

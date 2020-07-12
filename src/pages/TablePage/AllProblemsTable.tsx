@@ -51,7 +51,7 @@ export const AllProblemsTable: React.FC<Props> = (props) => {
   return (
     <>
       <Row className="my-4">
-        <h2>{props.title}</h2>
+        <h3>{props.title}</h3>
         {universalStateLoaded ? (
           <></>
         ) : (
