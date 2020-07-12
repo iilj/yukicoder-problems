@@ -255,9 +255,14 @@ export const UserPage: React.FC = () => {
 
   const achievements = [
     {
-      key: 'Solved',
+      key: 'Solved (Normal)',
       value: userInfo.Solved ?? 0,
       rank: userInfo.Rank ?? 0,
+    },
+    {
+      key: 'Solved (All)',
+      value: solvedProblems.length,
+      rank: undefined,
     },
     {
       key: 'Shortest Code',
@@ -289,7 +294,7 @@ export const UserPage: React.FC = () => {
   return (
     <div>
       <Row className="my-2 border-bottom">
-        <h1>{name}</h1>
+        <h2>{name}</h2>
         {universalStateLoaded ? (
           <></>
         ) : (
@@ -313,11 +318,14 @@ export const UserPage: React.FC = () => {
       )}
       <DifficultyStarsFillDefs />
 
+      <Row className="my-2 border-bottom">
+        <h3>Scores</h3>
+      </Row>
       <Row className="my-3">
         {achievements.map(({ key, value, rank }) => (
           <Col key={key} className="text-center col-achivement" xs="6" md="3">
             <h6>{key}</h6>
-            <h3>{value}</h3>
+            <h4>{value}</h4>
             {rank === undefined ? null : (
               <h6 className="text-muted">
                 {`${rank}${ordinalSuffixOf(rank)}`}
@@ -327,9 +335,9 @@ export const UserPage: React.FC = () => {
         ))}
         <Col key="Level" className="text-center" xs="6" md="3">
           <h6>Level</h6>
-          <h3 title={`${userLevel} (${origUserLevel})`}>
+          <h4 title={`${userLevel} (${origUserLevel})`}>
             {userLevel.toFixed(2)}
-          </h3>
+          </h4>
           <h6
             className="text-muted"
             title={`${starsToAdvance} stars to level ${nextLevel}`}
@@ -338,18 +346,28 @@ export const UserPage: React.FC = () => {
             advance
           </h6>
         </Col>
+      </Row>
+
+      <Row className="my-2 border-bottom">
+        <h3>Streaks</h3>
+      </Row>
+      <Row className="my-3">
         <Col key="Longest Streak" className="text-center" xs="6" md="3">
           <h6>Longest Streak</h6>
-          <h3>{longestStreak} days</h3>
+          <h4>{longestStreak} days</h4>
         </Col>
         <Col key="Current Streak" className="text-center" xs="6" md="3">
           <h6>Current Streak</h6>
-          <h3>{isIncreasing ? currentStreak : 0} days</h3>
+          <h4>{isIncreasing ? currentStreak : 0} days</h4>
           <h6 className="text-muted">
             {`Last AC: ${
               prevDateSecond > 0 ? dataFormat(prevDateSecond, 'yyyy/mm/dd') : ''
             }`}
           </h6>
+        </Col>
+        <Col key="Streak Sum" className="text-center" xs="6" md="3">
+          <h6>Streak Sum</h6>
+          <h4>{dailyCount.length} days</h4>
         </Col>
       </Row>
 
@@ -359,7 +377,7 @@ export const UserPage: React.FC = () => {
       />
 
       <Row className="my-2 border-bottom">
-        <h1>Problem Level Pies</h1>
+        <h2>Problem Level Pies</h2>
       </Row>
       <ProblemLevelPieChart
         problems={problems}
@@ -367,7 +385,7 @@ export const UserPage: React.FC = () => {
       />
 
       <Row className="my-2 border-bottom">
-        <h1>Daily Effort</h1>
+        <h2>Daily Effort</h2>
       </Row>
       <TabbedDailyEffortBarChart
         dailyData={dailyCount}
@@ -376,7 +394,7 @@ export const UserPage: React.FC = () => {
       />
 
       <Row className="my-2 border-bottom">
-        <h1>Climbing</h1>
+        <h2>Climbing</h2>
       </Row>
       <TabbedClimbingLineChart
         climbingData={climbing}
@@ -385,7 +403,7 @@ export const UserPage: React.FC = () => {
       />
 
       <Row className="my-2 border-bottom">
-        <h1>Heatmap</h1>
+        <h2>Heatmap</h2>
       </Row>
       <TabbedHeatmap
         dailyCountMap={dailyCountMap}
@@ -397,7 +415,7 @@ export const UserPage: React.FC = () => {
       />
 
       <Row className="my-2 border-bottom">
-        <h1>Solved Problems</h1>
+        <h2>Solved Problems</h2>
       </Row>
       <Row>
         <DateRangePicker
