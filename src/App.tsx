@@ -15,6 +15,7 @@ import {
   faCalculator,
   faLaughBeam,
   faExclamationTriangle,
+  faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import { NavigationBar } from './components/NavigationBar';
 import { ShortRanking } from './pages/ShortRanking';
@@ -31,7 +32,8 @@ library.add(
   faSchool,
   faCalculator,
   faLaughBeam,
-  faExclamationTriangle
+  faExclamationTriangle,
+  faCheck
 );
 
 const App: React.FC = () => {
