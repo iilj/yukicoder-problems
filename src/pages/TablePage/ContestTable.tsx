@@ -5,6 +5,7 @@ import { ContestLink } from '../../components/ContestLink';
 import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { SubmitTimespan } from '../../components/SubmitTimespan';
 import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
+import { SolvedCheckIcon } from '../../components/SolvedCheckIcon';
 import { Contest } from '../../interfaces/Contest';
 import { ProblemId, ProblemNo } from '../../interfaces/Problem';
 import {
@@ -74,6 +75,17 @@ export const ContestTable: React.FC<Props> = (props) => {
         {contests.map((contest) => (
           <div key={contest.Id} className="contest-table">
             <strong>
+              {contest.ProblemIdList.map((pid: ProblemId) =>
+                mergedProblemsMap.get(pid)
+              ).every(
+                (mergedProblem) =>
+                  mergedProblem &&
+                  mergedProblem.SolveStatus >= ProblemSolveStatus.Solved
+              ) ? (
+                <SolvedCheckIcon />
+              ) : (
+                <></>
+              )}
               <ContestLink contestId={contest.Id} contestName={contest.Name} />
             </strong>
             <Table striped bordered hover className="contest-other-table">
