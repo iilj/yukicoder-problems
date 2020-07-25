@@ -47,6 +47,8 @@ const fetchSolvedProblems = (param: UserParam, user: UserName) =>
   fetchJson<SolvedProblem[]>(
     `${STATIC_API_BASE_URL}/solved/${param}/${encodeURIComponent(user)}`
   );
+const fetchSingleProblem = (problemId: ProblemId) =>
+  fetchJson<Problem>(`${STATIC_API_BASE_URL}/problems/${problemId}`);
 
 // //////////////////
 // Raw Data
@@ -103,6 +105,24 @@ export const cachedSolvedProblemArray = async (
     CACHED_SOLVED_PROBLEMS_USER = user;
   }
   return CACHED_SOLVED_PROBLEMS;
+};
+
+const CACHED_SINGLE_PROBLEM_MAP = new Map<ProblemId, Problem>();
+export const cachedSingleProblem = async (
+  problemId: ProblemId
+): Promise<Problem> => {
+  if (!CACHED_SINGLE_PROBLEM_MAP.has(problemId)) {
+    try {
+      CACHED_SINGLE_PROBLEM_MAP.set(
+        problemId,
+        await fetchSingleProblem(problemId)
+      );
+    } catch (e) {
+      console.log(e);
+      CACHED_SINGLE_PROBLEM_MAP.set(problemId, {} as Problem);
+    }
+  }
+  return CACHED_SINGLE_PROBLEM_MAP.get(problemId) as Problem;
 };
 
 // user data object

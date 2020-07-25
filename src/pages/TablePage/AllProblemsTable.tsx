@@ -4,16 +4,16 @@ import { ProblemLink } from '../../components/ProblemLink';
 import { DifficultyStars } from '../../components/DifficultyStars';
 import { range } from '../../utils';
 import './AllProblemsTable.css';
-import { Contest, ContestId } from '../../interfaces/Contest';
-import { Problem, ProblemId, ProblemNo } from '../../interfaces/Problem';
-import { SolvedProblem } from '../../interfaces/SolvedProblem';
+import { ProblemNo } from '../../interfaces/Problem';
+import { ProblemLinkWithContextMenu } from '../../components/ProblemLinkWithContextMenu';
+import {
+  MergedProblem,
+  ProblemSolveStatus,
+} from '../../interfaces/MergedProblem';
 
 interface Props {
   title: string;
-  problems: Problem[];
-  contestMap: Map<ContestId, Contest>;
-  problemContestMap: Map<ProblemId, ContestId>;
-  solvedProblemsMap: Map<ProblemId, SolvedProblem>;
+  mergedProblems: MergedProblem[];
   showDifficultyLevel: boolean;
   showContestResult: boolean;
   universalStateLoaded: boolean;
@@ -21,16 +21,13 @@ interface Props {
 
 export const AllProblemsTable: React.FC<Props> = (props) => {
   const {
-    problems,
-    contestMap,
-    problemContestMap,
-    solvedProblemsMap,
+    mergedProblems,
     showDifficultyLevel,
     showContestResult,
     universalStateLoaded,
   } = props;
 
-  const problemTables = problems
+  const problemTables = mergedProblems
     .filter((a) => a.No !== null)
     .sort((a, b) => (a.No as ProblemNo) - (b.No as ProblemNo))
     .reduce((prevMap, problem) => {
@@ -41,10 +38,10 @@ export const AllProblemsTable: React.FC<Props> = (props) => {
       if (!prevMap.has(key)) {
         prevMap.set(key, []);
       }
-      (prevMap.get(key) as Problem[]).push(problem);
+      (prevMap.get(key) as MergedProblem[]).push(problem);
       return prevMap;
-    }, new Map<number, Problem[]>());
-  const problemTableEntries = [] as [number, Problem[]][];
+    }, new Map<number, MergedProblem[]>());
+  const problemTableEntries = [] as [number, MergedProblem[]][];
   problemTables.forEach((problems, key) => {
     problemTableEntries.push([key, problems]);
   });
@@ -84,52 +81,49 @@ export const AllProblemsTable: React.FC<Props> = (props) => {
                         {range(0, 9).map((colidx) => {
                           const idx = offset + colidx;
                           if (idx >= curTableProblems.length) return null;
-                          const problem = curTableProblems[idx];
-                          const pid = problem.ProblemId;
-                          const solvedProblem =
-                            solvedProblemsMap && solvedProblemsMap.has(pid)
-                              ? solvedProblemsMap.get(pid)
-                              : undefined;
-                          const contestId =
-                            problemContestMap && problemContestMap.has(pid)
-                              ? problemContestMap.get(pid)
-                              : undefined;
-                          const contest = contestId
-                            ? contestMap.get(contestId)
-                            : undefined;
+                          const mergedProblem = curTableProblems[idx];
                           let className: string;
-                          if (!solvedProblem) {
+                          if (
+                            mergedProblem.SolveStatus ===
+                            ProblemSolveStatus.Trying
+                          ) {
                             className = 'table-problem';
-                          } else if (!contestId) {
+                          } else if (!mergedProblem.Contest) {
                             className = 'table-problem table-problem-solved';
                           } else {
-                            const solvedDate = Date.parse(solvedProblem.Date);
-                            const startDate = Date.parse(
-                              (contest as Contest).Date
-                            );
-                            const endDate = Date.parse(
-                              (contest as Contest).EndDate
-                            );
-                            if (!showContestResult || solvedDate > endDate)
+                            if (
+                              !showContestResult ||
+                              mergedProblem.SolveStatus ===
+                                ProblemSolveStatus.Solved
+                            )
                               className = 'table-problem table-problem-solved';
-                            else if (solvedDate >= startDate)
+                            else if (
+                              mergedProblem.SolveStatus ===
+                              ProblemSolveStatus.Intime
+                            )
                               className =
                                 'table-problem table-problem-solved-intime';
                             else
                               className =
                                 'table-problem table-problem-solved-before-contest';
                           }
+
                           const elementId = `AllProblems_td_${
-                            problem.No as number
+                            mergedProblem.No as number
                           }`;
                           return (
-                            <td key={pid} className={className} id={elementId}>
-                              <ProblemLink
-                                problemNo={problem.No as ProblemNo}
-                                problemTitle={`${problem.No as number}`}
-                                level={problem.Level}
+                            <td
+                              key={mergedProblem.ProblemId}
+                              className={className}
+                              id={elementId}
+                            >
+                              <ProblemLinkWithContextMenu
+                                mergedProblem={mergedProblem}
+                                problemTitle={`${mergedProblem.No as number}`}
                                 showDifficultyLevel={showDifficultyLevel}
-                                id={`AllProblems_td_${problem.No as number}`}
+                                id={`AllProblems_td_${
+                                  mergedProblem.No as number
+                                }`}
                               />
                               <UncontrolledTooltip
                                 target={elementId}
@@ -141,18 +135,18 @@ export const AllProblemsTable: React.FC<Props> = (props) => {
                               >
                                 <div>
                                   <ProblemLink
-                                    problemNo={problem.No as ProblemNo}
-                                    problemTitle={`${problem.Title}`}
-                                    level={problem.Level}
+                                    problemNo={mergedProblem.No as ProblemNo}
+                                    problemTitle={`${mergedProblem.Title}`}
+                                    level={mergedProblem.Level}
                                     showDifficultyLevel={showDifficultyLevel}
                                     id={`AllProblems_td_${
-                                      problem.No as number
+                                      mergedProblem.No as number
                                     }`}
                                   />
                                 </div>
                                 <div>
                                   <DifficultyStars
-                                    level={problem.Level}
+                                    level={mergedProblem.Level}
                                     showDifficultyLevel={showDifficultyLevel}
                                   />
                                 </div>

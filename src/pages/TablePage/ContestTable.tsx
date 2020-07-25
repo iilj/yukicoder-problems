@@ -1,13 +1,13 @@
 import { Table, Row, Spinner } from 'reactstrap';
 import React from 'react';
-import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
 import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { SubmitTimespan } from '../../components/SubmitTimespan';
 import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
 import { SolvedCheckIcon } from '../../components/SolvedCheckIcon';
+import { ProblemLinkWithContextMenu } from '../../components/ProblemLinkWithContextMenu';
 import { Contest } from '../../interfaces/Contest';
-import { ProblemId, ProblemNo } from '../../interfaces/Problem';
+import { ProblemId } from '../../interfaces/Problem';
 import {
   MergedProblem,
   ProblemSolveStatus,
@@ -124,10 +124,9 @@ export const ContestTable: React.FC<Props> = (props) => {
                         <ProblemTypeIconAbsoluteSpan
                           problemType={mergedProblem.ProblemType}
                         />
-                        <ProblemLink
-                          problemNo={mergedProblem.No as ProblemNo}
+                        <ProblemLinkWithContextMenu
+                          mergedProblem={mergedProblem}
                           problemTitle={problemTitle}
-                          level={mergedProblem.Level}
                           showDifficultyLevel={showDifficultyLevel}
                         />
                         <SubmitTimespan
