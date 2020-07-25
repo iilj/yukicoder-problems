@@ -4,12 +4,12 @@ import dataFormat from 'dateformat';
 import { DifficultyStars } from '../../components/DifficultyStars';
 import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
+import { SubmissionLink } from '../../components/SubmissionLink';
 import {
   ListPaginationPanel,
   ListPaginationPanelProps,
 } from '../../components/ListPaginationPanel';
 import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
-import { formatSubmissionUrl } from '../../utils/Url';
 import { ProblemLevel, ProblemNo, ProblemType } from '../../interfaces/Problem';
 import { Contest } from '../../interfaces/Contest';
 import { RankingProblem } from '../../interfaces/RankingProblem';
@@ -126,14 +126,10 @@ export const ListTable: React.FC<Props> = (props) => {
         shortestRankingProblem: RankingProblem
       ): React.ReactElement {
         return shortestRankingProblem ? (
-          <a
-            href={formatSubmissionUrl(shortestRankingProblem.SubmissionId)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {shortestRankingProblem.UserName} ({shortestRankingProblem.Length}{' '}
-            Bytes)
-          </a>
+          <SubmissionLink
+            submissionId={shortestRankingProblem.SubmissionId}
+            submissionTitle={`${shortestRankingProblem.UserName} (${shortestRankingProblem.Length} Bytes)`}
+          />
         ) : (
           <></>
         );
@@ -147,14 +143,10 @@ export const ListTable: React.FC<Props> = (props) => {
         pureShortestRankingProblem: RankingProblem
       ): React.ReactElement {
         return pureShortestRankingProblem ? (
-          <a
-            href={formatSubmissionUrl(pureShortestRankingProblem.SubmissionId)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {pureShortestRankingProblem.UserName} (
-            {pureShortestRankingProblem.Length} Bytes)
-          </a>
+          <SubmissionLink
+            submissionId={pureShortestRankingProblem.SubmissionId}
+            submissionTitle={`${pureShortestRankingProblem.UserName} (${pureShortestRankingProblem.Length} Bytes)`}
+          />
         ) : (
           <></>
         );

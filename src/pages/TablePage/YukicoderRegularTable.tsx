@@ -1,17 +1,17 @@
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import React from 'react';
 import { Row, Spinner } from 'reactstrap';
-import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
 import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { SubmitTimespan } from '../../components/SubmitTimespan';
 import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
 import { Contest } from '../../interfaces/Contest';
-import { ProblemId, ProblemNo } from '../../interfaces/Problem';
+import { ProblemId } from '../../interfaces/Problem';
 import {
   MergedProblem,
   ProblemSolveStatus,
 } from '../../interfaces/MergedProblem';
+import { ProblemLinkWithContextMenu } from '../../components/ProblemLinkWithContextMenu';
 
 interface Props {
   title: string;
@@ -174,10 +174,9 @@ export const YukicoderRegularTable: React.FC<Props> = (props) => {
                   <ProblemTypeIconAbsoluteSpan
                     problemType={mergedProblem.ProblemType}
                   />
-                  <ProblemLink
-                    problemNo={mergedProblem.No as ProblemNo}
+                  <ProblemLinkWithContextMenu
+                    mergedProblem={mergedProblem}
                     problemTitle={problemTitle}
-                    level={mergedProblem.Level}
                     showDifficultyLevel={showDifficultyLevel}
                   />
                   <SubmitTimespan

@@ -1,11 +1,11 @@
-import { ProblemNo } from './Problem';
+import { ProblemNo, SubmissionId } from './Problem';
 import { UserId, UserName } from './User';
 import { LangId } from './Language';
 
 /** 問題 */
 export interface RankingProblem {
   /** 提出ID */
-  readonly SubmissionId: number;
+  readonly SubmissionId: SubmissionId;
   /** 提出時間（RFC 3339） */
   readonly TimeStamp: string;
   /** 問題No */

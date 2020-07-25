@@ -34,6 +34,7 @@ const initialUserState = {
 };
 
 const initialMergedState = {
+  mergedProblems: [] as MergedProblem[],
   mergedProblemsMap: new Map<ProblemId, MergedProblem>(),
 };
 
@@ -117,6 +118,7 @@ export const TablePage: React.FC = () => {
 
       if (!unmounted) {
         setMergedState({
+          mergedProblems,
           mergedProblemsMap,
         });
         setMergedStateLoaded(true);
@@ -129,9 +131,8 @@ export const TablePage: React.FC = () => {
     return cleanup;
   }, [universalState, userState]);
 
-  const { problems, contests, contestMap, problemContestMap } = universalState;
-  const { solvedProblemsMap } = userState;
-  const { mergedProblemsMap } = mergedState;
+  const { contests } = universalState;
+  const { mergedProblems, mergedProblemsMap } = mergedState;
 
   const [showDifficultyLevel, setShowDifficultyLevel] = useLocalStorage(
     'TablePage_showDifficultyLevel',
@@ -243,11 +244,8 @@ export const TablePage: React.FC = () => {
       </ContestWrapper>
       <ContestWrapper display={activeTab === ContestTableTab.all}>
         <AllProblemsTable
-          problems={problems}
-          contestMap={contestMap}
-          problemContestMap={problemContestMap}
+          mergedProblems={mergedProblems}
           title="All Problems"
-          solvedProblemsMap={solvedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}
           universalStateLoaded={universalStateLoaded}
