@@ -3,10 +3,9 @@ import { Table, Spinner } from 'reactstrap';
 import { Modal, Button } from 'react-bootstrap';
 import dataFormat from 'dateformat';
 import * as TypedCachedApiClient from '../utils/TypedCachedApiClient';
-import { MergedProblem } from '../interfaces/MergedProblem';
+import { RankingMergedProblem } from '../interfaces/MergedProblem';
 import { Problem, ProblemNo } from '../interfaces/Problem';
 import { ContestId } from '../interfaces/Contest';
-import { RankingProblem } from '../interfaces/RankingProblem';
 import { DifficultyStars } from './DifficultyStars';
 import { ProblemLink } from './ProblemLink';
 import { ContestLink } from './ContestLink';
@@ -17,18 +16,21 @@ import { ProblemTypeIconSpanWithName } from './ProblemTypeIcon';
 interface Props {
   show: boolean;
   handleClose: () => void;
-  mergedProblem: MergedProblem;
+  rankingMergedProblem: RankingMergedProblem;
   showDifficultyLevel: boolean;
 }
 
 const initialUniversalState = {
   problem: {} as Problem,
-  golferProblemMap: new Map<ProblemNo, RankingProblem>(),
-  golferPureProblemMap: new Map<ProblemNo, RankingProblem>(),
 };
 
 export const ProblemDetailModal: React.FC<Props> = (props) => {
-  const { show, handleClose, mergedProblem, showDifficultyLevel } = props;
+  const {
+    show,
+    handleClose,
+    rankingMergedProblem,
+    showDifficultyLevel,
+  } = props;
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [universalStateLoaded, setUniversalStateLoaded] = useState(false);
@@ -37,48 +39,36 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
     let unmounted = false;
     const getUniversalInfo = async () => {
       setUniversalStateLoaded(false);
-      const [
-        problem,
-        golferProblemMap,
-        golferPureProblemMap,
-      ] = await Promise.all([
-        TypedCachedApiClient.cachedSingleProblem(mergedProblem.ProblemId),
-        TypedCachedApiClient.cachedGolferRankingProblemMap(),
-        TypedCachedApiClient.cachedGolferRankingPureProblemMap(),
-      ]);
+      const problem = await TypedCachedApiClient.cachedSingleProblem(
+        rankingMergedProblem.ProblemId
+      );
 
       if (!unmounted) {
         setUniversalState({
           problem,
-          golferProblemMap,
-          golferPureProblemMap,
         });
         setUniversalStateLoaded(true);
       }
     };
     if (show) {
-      console.log(mergedProblem.ProblemId, show);
       void getUniversalInfo();
     }
     const cleanup = () => {
       unmounted = true;
     };
     return cleanup;
-  }, [show, mergedProblem.ProblemId]);
+  }, [show, rankingMergedProblem.ProblemId]);
 
-  const { problem, golferProblemMap, golferPureProblemMap } = universalState;
+  const { problem } = universalState;
 
-  const shortestRankingProblem = golferProblemMap.get(
-    mergedProblem.No as ProblemNo
-  );
-  const pureShortestRankingProblem = golferPureProblemMap.get(
-    mergedProblem.No as ProblemNo
-  );
+  const shortestRankingProblem = rankingMergedProblem.ShortestRankingProblem;
+  const pureShortestRankingProblem =
+    rankingMergedProblem.PureShortestRankingProblem;
 
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>{mergedProblem.Title}</Modal.Title>
+        <Modal.Title>{rankingMergedProblem.Title}</Modal.Title>
         {universalStateLoaded ? (
           <></>
         ) : (
@@ -100,9 +90,9 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
               <th>Title</th>
               <td>
                 <ProblemLink
-                  problemTitle={mergedProblem.Title}
-                  problemNo={mergedProblem.No as ProblemNo}
-                  level={mergedProblem.Level}
+                  problemTitle={rankingMergedProblem.Title}
+                  problemNo={rankingMergedProblem.No as ProblemNo}
+                  level={rankingMergedProblem.Level}
                   showDifficultyLevel
                 />
               </td>
@@ -111,7 +101,7 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
               <th>Date</th>
               <td>
                 {dataFormat(
-                  new Date(mergedProblem.Date as string),
+                  new Date(rankingMergedProblem.Date as string),
                   'yyyy/mm/dd HH:MM'
                 )}
               </td>
@@ -120,7 +110,7 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
               <th>Level</th>
               <td>
                 <DifficultyStars
-                  level={mergedProblem.Level}
+                  level={rankingMergedProblem.Level}
                   showDifficultyLevel={showDifficultyLevel}
                 />
               </td>
@@ -129,19 +119,19 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
               <th>Contest</th>
               <td>
                 <ContestLink
-                  contestId={mergedProblem.Contest?.Id as ContestId}
-                  contestName={mergedProblem.Contest?.Name as string}
+                  contestId={rankingMergedProblem.Contest?.Id as ContestId}
+                  contestName={rankingMergedProblem.Contest?.Name as string}
                 />
               </td>
             </tr>
             <tr key="problem-solve-date">
               <th>Solve Date</th>
               <td>
-                {mergedProblem.SolveDate ? (
+                {rankingMergedProblem.SolveDate ? (
                   <>
                     <SolvedCheckIcon />
                     {dataFormat(
-                      new Date(mergedProblem.SolveDate),
+                      new Date(rankingMergedProblem.SolveDate),
                       'yyyy/mm/dd HH:MM'
                     )}
                   </>
@@ -152,7 +142,7 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
             </tr>
             <tr key="problem-tegs">
               <th>Tags</th>
-              <td>{mergedProblem.Tags}</td>
+              <td>{rankingMergedProblem.Tags}</td>
             </tr>
             <tr key="problem-solved-users">
               <th>Solved Users</th>
@@ -222,7 +212,7 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
               <th>Problem Type</th>
               <td>
                 <ProblemTypeIconSpanWithName
-                  problemType={mergedProblem.ProblemType}
+                  problemType={rankingMergedProblem.ProblemType}
                 />
               </td>
             </tr>

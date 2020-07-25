@@ -5,13 +5,13 @@ import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { SubmitTimespan } from '../../components/SubmitTimespan';
 import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
 import { SolvedCheckIcon } from '../../components/SolvedCheckIcon';
-import { ProblemLinkWithContextMenu } from '../../components/ProblemLinkWithContextMenu';
 import { Contest } from '../../interfaces/Contest';
-import { ProblemId } from '../../interfaces/Problem';
+import { ProblemId, ProblemNo } from '../../interfaces/Problem';
 import {
   MergedProblem,
   ProblemSolveStatus,
 } from '../../interfaces/MergedProblem';
+import { ProblemLink } from '../../components/ProblemLink';
 
 interface Props {
   title: string;
@@ -124,9 +124,10 @@ export const ContestTable: React.FC<Props> = (props) => {
                         <ProblemTypeIconAbsoluteSpan
                           problemType={mergedProblem.ProblemType}
                         />
-                        <ProblemLinkWithContextMenu
-                          mergedProblem={mergedProblem}
+                        <ProblemLink
+                          problemNo={mergedProblem.No as ProblemNo}
                           problemTitle={problemTitle}
+                          level={mergedProblem.Level}
                           showDifficultyLevel={showDifficultyLevel}
                         />
                         <SubmitTimespan

@@ -1,5 +1,6 @@
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import React from 'react';
+import React, { useState } from 'react';
+import { Button } from 'reactstrap';
 import dataFormat from 'dateformat';
 import { DifficultyStars } from '../../components/DifficultyStars';
 import { ProblemLink } from '../../components/ProblemLink';
@@ -17,6 +18,7 @@ import {
   RankingMergedProblem,
   ProblemSolveStatus,
 } from '../../interfaces/MergedProblem';
+import { ProblemDetailModal } from '../../components/ProblemDetailModal';
 
 export type FilterState = 'All' | 'Only Trying' | 'Only AC';
 
@@ -42,6 +44,14 @@ export const ListTable: React.FC<Props> = (props) => {
     problemTypeFilterState,
     showTagsOfTryingProblems,
   } = props;
+  const [showDetailsModalStatus, setShowDetailsModalStatus] = useState<{
+    enabled: boolean;
+    rankingMergedProblem?: RankingMergedProblem;
+  }>({
+    enabled: false,
+    rankingMergedProblem: undefined,
+  });
+
   const columns = [
     {
       header: 'Date',
@@ -171,6 +181,30 @@ export const ListTable: React.FC<Props> = (props) => {
       dataSort: true,
     },
     {
+      header: 'Detail',
+      dataField: 'No',
+      dataFormat: function _dataFormat(
+        problemNo: ProblemNo,
+        row: RankingMergedProblem
+      ) {
+        return (
+          <Button
+            color="secondary"
+            size="sm"
+            onClick={() =>
+              setShowDetailsModalStatus({
+                enabled: true,
+                rankingMergedProblem: row,
+              })
+            }
+          >
+            Detail
+          </Button>
+        );
+      },
+      dataSort: true,
+    },
+    {
       header: 'Contest name for Search',
       dataField: 'ContestName',
       hidden: true,
@@ -287,6 +321,23 @@ export const ListTable: React.FC<Props> = (props) => {
           </TableHeaderColumn>
         ))}
       </BootstrapTable>
+
+      {showDetailsModalStatus.enabled &&
+      showDetailsModalStatus.rankingMergedProblem ? (
+        <ProblemDetailModal
+          show={showDetailsModalStatus.enabled}
+          handleClose={() =>
+            setShowDetailsModalStatus({
+              enabled: false,
+              rankingMergedProblem: undefined,
+            })
+          }
+          rankingMergedProblem={showDetailsModalStatus.rankingMergedProblem}
+          showDifficultyLevel={true}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };
