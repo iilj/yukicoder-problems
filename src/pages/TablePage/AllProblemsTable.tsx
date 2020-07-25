@@ -5,7 +5,6 @@ import { DifficultyStars } from '../../components/DifficultyStars';
 import { range } from '../../utils';
 import './AllProblemsTable.css';
 import { ProblemNo } from '../../interfaces/Problem';
-import { ProblemLinkWithContextMenu } from '../../components/ProblemLinkWithContextMenu';
 import {
   MergedProblem,
   ProblemSolveStatus,
@@ -117,9 +116,10 @@ export const AllProblemsTable: React.FC<Props> = (props) => {
                               className={className}
                               id={elementId}
                             >
-                              <ProblemLinkWithContextMenu
-                                mergedProblem={mergedProblem}
+                              <ProblemLink
+                                problemNo={mergedProblem.No as ProblemNo}
                                 problemTitle={`${mergedProblem.No as number}`}
+                                level={mergedProblem.Level}
                                 showDifficultyLevel={showDifficultyLevel}
                                 id={`AllProblems_td_${
                                   mergedProblem.No as number
