@@ -163,7 +163,7 @@ export const ListTable: React.FC<Props> = (props) => {
       },
     },
     {
-      header: 'ProblemType',
+      header: 'Type',
       dataField: 'ProblemType',
       dataFormat: function _dataFormat(problemType: ProblemType) {
         return <ProblemTypeIconSpanWithName problemType={problemType} />;
@@ -334,6 +334,7 @@ export const ListTable: React.FC<Props> = (props) => {
           }
           rankingMergedProblem={showDetailsModalStatus.rankingMergedProblem}
           showDifficultyLevel={true}
+          showTagsOfTryingProblems={showTagsOfTryingProblems}
         />
       ) : (
         <></>
