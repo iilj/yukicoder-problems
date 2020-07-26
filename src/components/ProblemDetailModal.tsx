@@ -3,7 +3,10 @@ import { Table, Spinner } from 'reactstrap';
 import { Modal, Button } from 'react-bootstrap';
 import dataFormat from 'dateformat';
 import * as TypedCachedApiClient from '../utils/TypedCachedApiClient';
-import { RankingMergedProblem } from '../interfaces/MergedProblem';
+import {
+  RankingMergedProblem,
+  ProblemSolveStatus,
+} from '../interfaces/MergedProblem';
 import { Problem, ProblemNo } from '../interfaces/Problem';
 import { ContestId } from '../interfaces/Contest';
 import { DifficultyStars } from './DifficultyStars';
@@ -18,6 +21,7 @@ interface Props {
   handleClose: () => void;
   rankingMergedProblem: RankingMergedProblem;
   showDifficultyLevel: boolean;
+  showTagsOfTryingProblems: boolean;
 }
 
 const initialUniversalState = {
@@ -30,6 +34,7 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
     handleClose,
     rankingMergedProblem,
     showDifficultyLevel,
+    showTagsOfTryingProblems,
   } = props;
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
@@ -100,10 +105,12 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
             <tr key="problem-date">
               <th>Date</th>
               <td>
-                {dataFormat(
-                  new Date(rankingMergedProblem.Date as string),
-                  'yyyy/mm/dd HH:MM'
-                )}
+                {rankingMergedProblem.Date
+                  ? dataFormat(
+                      new Date(rankingMergedProblem.Date),
+                      'yyyy/mm/dd HH:MM'
+                    )
+                  : '-'}
               </td>
             </tr>
             <tr key="problem-level">
@@ -142,7 +149,12 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
             </tr>
             <tr key="problem-tegs">
               <th>Tags</th>
-              <td>{rankingMergedProblem.Tags}</td>
+              <td>
+                {showTagsOfTryingProblems ||
+                rankingMergedProblem.SolveStatus !== ProblemSolveStatus.Trying
+                  ? rankingMergedProblem.Tags
+                  : ''}
+              </td>
             </tr>
             <tr key="problem-solved-users">
               <th>Solved Users</th>
@@ -164,6 +176,12 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
                     submissionId={shortestRankingProblem.SubmissionId}
                     submissionTitle={`#${shortestRankingProblem.SubmissionId} (${shortestRankingProblem.UserName}, ${shortestRankingProblem.Length} Bytes)`}
                   />
+                ) : problem.Statistics &&
+                  problem.Statistics.ShortCodeSubmissionId > 0 ? (
+                  <SubmissionLink
+                    submissionId={problem.Statistics.ShortCodeSubmissionId}
+                    submissionTitle={`#${problem.Statistics.ShortCodeSubmissionId}`}
+                  />
                 ) : (
                   <></>
                 )}
@@ -177,6 +195,12 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
                     submissionId={pureShortestRankingProblem.SubmissionId}
                     submissionTitle={`#${pureShortestRankingProblem.SubmissionId} (${pureShortestRankingProblem.UserName}, ${pureShortestRankingProblem.Length} Bytes)`}
                   />
+                ) : problem.Statistics &&
+                  problem.Statistics.PureShortCodeSubmissionId > 0 ? (
+                  <SubmissionLink
+                    submissionId={problem.Statistics.PureShortCodeSubmissionId}
+                    submissionTitle={`#${problem.Statistics.PureShortCodeSubmissionId}`}
+                  />
                 ) : (
                   <></>
                 )}
@@ -185,7 +209,8 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
             <tr key="problem-first-accepted">
               <th>First Accepted</th>
               <td>
-                {problem.Statistics ? (
+                {problem.Statistics &&
+                problem.Statistics.FirstACSubmissionId > 0 ? (
                   <SubmissionLink
                     submissionId={problem.Statistics.FirstACSubmissionId}
                     submissionTitle={`#${problem.Statistics.FirstACSubmissionId} (${problem.Statistics.FirstAcceptedTimeSecond} seconds)`}
@@ -198,7 +223,8 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
             <tr key="problem-fastest">
               <th>Fastest</th>
               <td>
-                {problem.Statistics ? (
+                {problem.Statistics &&
+                problem.Statistics.FastSubmissionId > 0 ? (
                   <SubmissionLink
                     submissionId={problem.Statistics.FastSubmissionId}
                     submissionTitle={`#${problem.Statistics.FastSubmissionId}`}
