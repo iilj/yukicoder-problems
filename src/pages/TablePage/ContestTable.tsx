@@ -1,17 +1,18 @@
 import { Table, Row, Spinner } from 'reactstrap';
 import React from 'react';
+import { ProblemLink } from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
-import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
 import { SubmitTimespan } from '../../components/SubmitTimespan';
-import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
 import { SolvedCheckIcon } from '../../components/SolvedCheckIcon';
+import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
+import { ProblemTypeIconAbsoluteSpan } from '../../components/ProblemTypeIcon';
+import { getHeader } from '../../utils';
 import { Contest } from '../../interfaces/Contest';
 import { ProblemId, ProblemNo } from '../../interfaces/Problem';
 import {
   MergedProblem,
   ProblemSolveStatus,
 } from '../../interfaces/MergedProblem';
-import { ProblemLink } from '../../components/ProblemLink';
 
 interface Props {
   title: string;
@@ -31,34 +32,6 @@ export const ContestTable: React.FC<Props> = (props) => {
     universalStateLoaded,
   } = props;
 
-  const header = [
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J',
-    'K',
-    'L',
-    'M',
-    'N',
-    'O',
-    'P',
-    'Q',
-    'R',
-    'S',
-    'T',
-    'U',
-    'V',
-    'W',
-    'X',
-    'Y',
-    'Z',
-  ];
   return (
     <>
       <Row className="my-4">
@@ -113,7 +86,9 @@ export const ContestTable: React.FC<Props> = (props) => {
                         ? 'table-problem table-problem-solved-intime'
                         : 'table-problem table-problem-solved-before-contest';
 
-                    const problemTitle = `${header[i]}. ${mergedProblem.Title}`;
+                    const problemTitle = `${getHeader(i)}. ${
+                      mergedProblem.Title
+                    }`;
 
                     return (
                       <td key={pid} className={className}>

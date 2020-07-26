@@ -4,8 +4,8 @@ import { Row, ButtonGroup, Button } from 'reactstrap';
 export enum ContestTableTab {
   'regular' = 0,
   'long' = 1,
-  'open' = 2,
-  'other' = 3,
+  'other' = 2,
+  'other_problems' = 3,
   'all' = 4,
 }
 
@@ -40,20 +40,20 @@ export const TableTabButtons: React.FC<Props> = (props) => {
         <Button
           color="secondary"
           onClick={() => {
-            setActive(ContestTableTab.open);
-          }}
-          active={active === ContestTableTab.open}
-        >
-          Open contests
-        </Button>
-        <Button
-          color="secondary"
-          onClick={() => {
             setActive(ContestTableTab.other);
           }}
           active={active === ContestTableTab.other}
         >
-          Other contests
+          Other Contests
+        </Button>
+        <Button
+          color="secondary"
+          onClick={() => {
+            setActive(ContestTableTab.other_problems);
+          }}
+          active={active === ContestTableTab.other_problems}
+        >
+          Other Problems
         </Button>
         <Button
           color="secondary"

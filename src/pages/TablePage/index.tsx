@@ -149,8 +149,8 @@ export const TablePage: React.FC = () => {
 
   const yukicoderRegularContests = [] as Contest[];
   const yukicoderLongContests = [] as Contest[];
-  const openContests = [] as Contest[];
   const otherContests = [] as Contest[];
+  const otherProblems = [] as Contest[];
   const regexpYukicoderContest = /^yukicoder contest \d+/;
   const regexpOpenContest = /\(Open\)$/;
   contests.forEach((contest) => {
@@ -159,9 +159,21 @@ export const TablePage: React.FC = () => {
         yukicoderRegularContests.push(contest);
       else yukicoderLongContests.push(contest);
     } else if (regexpOpenContest.exec(contest.Name)) {
-      openContests.push(contest);
+      otherProblems.push(contest);
     } else otherContests.push(contest);
   });
+
+  // filter sigle problems
+  otherProblems.push({
+    Id: -1,
+    Name: 'Others',
+    Date: '',
+    EndDate: '',
+    ProblemIdList: mergedProblems.reduce((ar, mergedProblem) => {
+      if (!mergedProblem.Contest) ar.push(mergedProblem.ProblemId);
+      return ar;
+    }, [] as ProblemId[]),
+  } as Contest);
 
   return (
     <>
@@ -222,20 +234,20 @@ export const TablePage: React.FC = () => {
           universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
-      <ContestWrapper display={activeTab === ContestTableTab.open}>
+      <ContestWrapper display={activeTab === ContestTableTab.other}>
         <ContestTable
-          contests={openContests}
-          title="Open contests"
+          contests={otherContests}
+          title="Other Contests"
           mergedProblemsMap={mergedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}
           universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
-      <ContestWrapper display={activeTab === ContestTableTab.other}>
+      <ContestWrapper display={activeTab === ContestTableTab.other_problems}>
         <ContestTable
-          contests={otherContests}
-          title="Other contests"
+          contests={otherProblems}
+          title="Other Problems"
           mergedProblemsMap={mergedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}
