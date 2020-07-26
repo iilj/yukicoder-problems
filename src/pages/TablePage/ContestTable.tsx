@@ -65,6 +65,7 @@ export const ContestTable: React.FC<Props> = (props) => {
               <tbody>
                 <tr>
                   {contest.ProblemIdList.map((pid: ProblemId, i) => {
+                    if (pid < 0) return null;
                     const mergedProblem = mergedProblemsMap.get(pid);
                     if (!mergedProblem) {
                       return (
