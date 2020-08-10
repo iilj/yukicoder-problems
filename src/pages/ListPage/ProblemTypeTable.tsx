@@ -66,7 +66,17 @@ export const ProblemTypeTable: React.FC<Props> = (props) => {
             <tr key={user}>
               <td>{user}</td>
               {ProblemTypes.map((type) => (
-                <td key={type}>{problemTypesSolvedCountMap.get(type)}</td>
+                <td
+                  key={type}
+                  className={
+                    problemTypesTotalCountMap.get(type) ===
+                    problemTypesSolvedCountMap.get(type)
+                      ? 'table-problem table-problem-solved'
+                      : 'table-problem'
+                  }
+                >
+                  {problemTypesSolvedCountMap.get(type)}
+                </td>
               ))}
             </tr>
           )}
