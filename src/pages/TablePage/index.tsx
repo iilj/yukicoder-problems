@@ -216,20 +216,20 @@ export const TablePage: React.FC = () => {
           <Label check>
             <Input
               type="checkbox"
-              checked={showDifficultyLevel}
-              onChange={(e) => setShowDifficultyLevel(e.target.checked)}
+              checked={showContestResult}
+              onChange={(e) => setShowContestResult(e.target.checked)}
             />
-            Show Difficulty Level
+            Show Contest Result
           </Label>
         </FormGroup>
         <FormGroup check inline>
           <Label check>
             <Input
               type="checkbox"
-              checked={showContestResult}
-              onChange={(e) => setShowContestResult(e.target.checked)}
+              checked={showDifficultyLevel}
+              onChange={(e) => setShowDifficultyLevel(e.target.checked)}
             />
-            Show Contest Result
+            Show Level Stars
           </Label>
         </FormGroup>
         <UncontrolledDropdown>
