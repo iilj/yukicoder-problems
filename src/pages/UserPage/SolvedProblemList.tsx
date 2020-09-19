@@ -124,6 +124,7 @@ export const SolvedProblemList: React.FC<Props> = (props) => {
             level={row.Level}
             problemLinkColorMode={problemLinkColorMode}
             difficulty={row.Difficulty}
+            id={`SolvedProblemList-ProblemLink-${row.ProblemId}`}
           />
         )}
       >

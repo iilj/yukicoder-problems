@@ -87,6 +87,7 @@ export const ListTable: React.FC<Props> = (props) => {
             level={row.Level}
             problemLinkColorMode={problemLinkColorMode}
             difficulty={row.Difficulty}
+            id={`ListTable-ProblemLink-${row.ProblemId}`}
           />
         );
       },
