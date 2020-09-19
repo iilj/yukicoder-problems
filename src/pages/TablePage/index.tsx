@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Row, FormGroup, Label, Input, Spinner } from 'reactstrap';
+import {
+  Row,
+  FormGroup,
+  Label,
+  Input,
+  Spinner,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from 'reactstrap';
 
 import { YukicoderRegularTable } from './YukicoderRegularTable';
 import { ContestTable } from './ContestTable';
@@ -8,12 +18,14 @@ import { AllProblemsTable } from './AllProblemsTable';
 import { TableTabButtons, ContestTableTab } from './TableTab';
 import { useLocalStorage } from '../../utils/LocalStorage';
 import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
+import * as DifficultyDataClient from '../../utils/DifficultyDataClient';
 import { mergeSolveStatus, mergedProblemsToMap } from '../../utils/MergeProcs';
 import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { Problem, ProblemId } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
-import { MergedProblem } from '../../interfaces/MergedProblem';
+import { MergedProblem, Difficulties } from '../../interfaces/MergedProblem';
+import { ProblemLinkColorMode } from '../../components/ProblemLink';
 
 /**
  * Wrap element to switch visibility.
@@ -27,6 +39,7 @@ const initialUniversalState = {
   contests: [] as Contest[],
   contestMap: new Map<ContestId, Contest>(),
   problemContestMap: new Map<ProblemId, ContestId>(),
+  difficulties: {} as Difficulties,
 };
 
 const initialUserState = {
@@ -55,9 +68,10 @@ export const TablePage: React.FC = () => {
     let unmounted = false;
     const getUniversalInfo = async () => {
       setUniversalStateLoaded(false);
-      const [problems, contests] = await Promise.all([
+      const [problems, contests, difficulties] = await Promise.all([
         TypedCachedApiClient.cachedProblemArray(),
         TypedCachedApiClient.cachedContestArray(),
+        DifficultyDataClient.cachedContestArray(),
       ]);
       const [contestMap, problemContestMap] = await Promise.all([
         TypedCachedApiClient.cachedContestMap(),
@@ -70,6 +84,7 @@ export const TablePage: React.FC = () => {
           contests,
           contestMap,
           problemContestMap,
+          difficulties,
         });
         setUniversalStateLoaded(true);
       }
@@ -112,7 +127,8 @@ export const TablePage: React.FC = () => {
         universalState.problems,
         universalState.contests,
         universalState.problemContestMap,
-        userState.solvedProblemsMap
+        userState.solvedProblemsMap,
+        universalState.difficulties
       );
       const mergedProblemsMap = mergedProblemsToMap(mergedProblems);
 
@@ -134,6 +150,10 @@ export const TablePage: React.FC = () => {
   const { contests } = universalState;
   const { mergedProblems, mergedProblemsMap } = mergedState;
 
+  const [colorMode, setColorMode] = useLocalStorage<ProblemLinkColorMode>(
+    'TablePage_colorMode',
+    'Level'
+  );
   const [showDifficultyLevel, setShowDifficultyLevel] = useLocalStorage(
     'TablePage_showDifficultyLevel',
     true
@@ -175,6 +195,7 @@ export const TablePage: React.FC = () => {
     }, [] as ProblemId[]),
   } as Contest);
 
+  console.log(mergedProblems);
   return (
     <>
       {userStateLoaded && mergedStateLoaded ? (
@@ -195,22 +216,45 @@ export const TablePage: React.FC = () => {
           <Label check>
             <Input
               type="checkbox"
-              checked={showDifficultyLevel}
-              onChange={(e) => setShowDifficultyLevel(e.target.checked)}
-            />
-            Show Difficulty Level
-          </Label>
-        </FormGroup>
-        <FormGroup check inline>
-          <Label check>
-            <Input
-              type="checkbox"
               checked={showContestResult}
               onChange={(e) => setShowContestResult(e.target.checked)}
             />
             Show Contest Result
           </Label>
         </FormGroup>
+        <FormGroup check inline>
+          <Label check>
+            <Input
+              type="checkbox"
+              checked={showDifficultyLevel}
+              onChange={(e) => setShowDifficultyLevel(e.target.checked)}
+            />
+            Show Level Stars
+          </Label>
+        </FormGroup>
+        <UncontrolledDropdown>
+          <DropdownToggle caret>
+            {
+              {
+                None: 'Color By',
+                Level: 'Level',
+                Difficulty: 'Difficulty (experimental)',
+              }[colorMode]
+            }
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem header>Color By</DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('None')}>
+              None
+            </DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('Level')}>
+              Level
+            </DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('Difficulty')}>
+              Difficulty (experimental)
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
       </Row>
       <TableTabButtons active={activeTab} setActive={setActiveTab} />
       <DifficultyStarsFillDefs />
@@ -220,6 +264,7 @@ export const TablePage: React.FC = () => {
           title="yukicoder contest (regular)"
           mergedProblemsMap={mergedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
+          problemLinkColorMode={colorMode}
           showContestResult={showContestResult}
           universalStateLoaded={universalStateLoaded}
         />
@@ -230,6 +275,7 @@ export const TablePage: React.FC = () => {
           title="yukicoder contest (long)"
           mergedProblemsMap={mergedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
+          problemLinkColorMode={colorMode}
           showContestResult={showContestResult}
           universalStateLoaded={universalStateLoaded}
         />
@@ -240,6 +286,7 @@ export const TablePage: React.FC = () => {
           title="Other Contests"
           mergedProblemsMap={mergedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
+          problemLinkColorMode={colorMode}
           showContestResult={showContestResult}
           universalStateLoaded={universalStateLoaded}
         />
@@ -250,6 +297,7 @@ export const TablePage: React.FC = () => {
           title="Other Problems"
           mergedProblemsMap={mergedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
+          problemLinkColorMode={colorMode}
           showContestResult={showContestResult}
           universalStateLoaded={universalStateLoaded}
         />
@@ -258,6 +306,7 @@ export const TablePage: React.FC = () => {
         <AllProblemsTable
           mergedProblems={mergedProblems}
           title="All Problems"
+          problemLinkColorMode={colorMode}
           showDifficultyLevel={showDifficultyLevel}
           showContestResult={showContestResult}
           universalStateLoaded={universalStateLoaded}

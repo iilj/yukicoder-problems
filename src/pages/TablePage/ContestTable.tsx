@@ -1,6 +1,9 @@
 import { Table, Row, Spinner } from 'reactstrap';
 import React from 'react';
-import { ProblemLink } from '../../components/ProblemLink';
+import {
+  ProblemLink,
+  ProblemLinkColorMode,
+} from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
 import { SubmitTimespan } from '../../components/SubmitTimespan';
 import { SolvedCheckIcon } from '../../components/SolvedCheckIcon';
@@ -18,6 +21,7 @@ interface Props {
   title: string;
   contests: Contest[];
   mergedProblemsMap: Map<ProblemId, MergedProblem>;
+  problemLinkColorMode: ProblemLinkColorMode;
   showDifficultyLevel: boolean;
   showContestResult: boolean;
   universalStateLoaded: boolean;
@@ -27,6 +31,7 @@ export const ContestTable: React.FC<Props> = (props) => {
   const {
     contests,
     mergedProblemsMap,
+    problemLinkColorMode,
     showDifficultyLevel,
     showContestResult,
     universalStateLoaded,
@@ -96,6 +101,7 @@ export const ContestTable: React.FC<Props> = (props) => {
                         <DifficultyStarsAbsoluteSpan
                           level={mergedProblem.Level}
                           showDifficultyLevel={showDifficultyLevel}
+                          color={problemLinkColorMode === 'Level'}
                         />
                         <ProblemTypeIconAbsoluteSpan
                           problemType={mergedProblem.ProblemType}
@@ -104,7 +110,9 @@ export const ContestTable: React.FC<Props> = (props) => {
                           problemNo={mergedProblem.No as ProblemNo}
                           problemTitle={problemTitle}
                           level={mergedProblem.Level}
-                          showDifficultyLevel={showDifficultyLevel}
+                          problemLinkColorMode={problemLinkColorMode}
+                          id={`lnk-contest-table-${mergedProblem.ProblemId}`}
+                          difficulty={mergedProblem.Difficulty}
                         />
                         <SubmitTimespan
                           mergedProblem={mergedProblem}

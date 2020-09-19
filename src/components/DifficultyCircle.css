@@ -1,0 +1,14 @@
+.difficulty-unavailable-circle.badge {
+  margin-right: 5px;
+  font-size: 5px;
+}
+
+span.difficulty-circle {
+  display: inline-block;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 1px;
+  margin-right: 5px;
+  height: 12px;
+  width: 12px;
+}

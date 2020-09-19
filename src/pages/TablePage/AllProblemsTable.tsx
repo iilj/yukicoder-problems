@@ -1,6 +1,9 @@
 import React from 'react';
 import { Row, Col, Table, UncontrolledTooltip, Spinner } from 'reactstrap';
-import { ProblemLink } from '../../components/ProblemLink';
+import {
+  ProblemLink,
+  ProblemLinkColorMode,
+} from '../../components/ProblemLink';
 import { DifficultyStars } from '../../components/DifficultyStars';
 import { range } from '../../utils';
 import './AllProblemsTable.css';
@@ -13,6 +16,7 @@ import {
 interface Props {
   title: string;
   mergedProblems: MergedProblem[];
+  problemLinkColorMode: ProblemLinkColorMode;
   showDifficultyLevel: boolean;
   showContestResult: boolean;
   universalStateLoaded: boolean;
@@ -21,6 +25,7 @@ interface Props {
 export const AllProblemsTable: React.FC<Props> = (props) => {
   const {
     mergedProblems,
+    problemLinkColorMode,
     showDifficultyLevel,
     showContestResult,
     universalStateLoaded,
@@ -120,10 +125,12 @@ export const AllProblemsTable: React.FC<Props> = (props) => {
                                 problemNo={mergedProblem.No as ProblemNo}
                                 problemTitle={`${mergedProblem.No as number}`}
                                 level={mergedProblem.Level}
-                                showDifficultyLevel={showDifficultyLevel}
+                                problemLinkColorMode={problemLinkColorMode}
                                 id={`AllProblems_td_${
                                   mergedProblem.No as number
                                 }`}
+                                difficulty={mergedProblem.Difficulty}
+                                showDifficultyCircle={false}
                               />
                               <UncontrolledTooltip
                                 target={elementId}
@@ -138,16 +145,18 @@ export const AllProblemsTable: React.FC<Props> = (props) => {
                                     problemNo={mergedProblem.No as ProblemNo}
                                     problemTitle={`${mergedProblem.Title}`}
                                     level={mergedProblem.Level}
-                                    showDifficultyLevel={showDifficultyLevel}
+                                    problemLinkColorMode={problemLinkColorMode}
                                     id={`AllProblems_td_${
                                       mergedProblem.No as number
                                     }`}
+                                    difficulty={mergedProblem.Difficulty}
                                   />
                                 </div>
                                 <div>
                                   <DifficultyStars
                                     level={mergedProblem.Level}
                                     showDifficultyLevel={showDifficultyLevel}
+                                    color={problemLinkColorMode === 'Level'}
                                   />
                                 </div>
                               </UncontrolledTooltip>

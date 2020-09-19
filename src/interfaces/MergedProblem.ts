@@ -2,6 +2,10 @@ import { Contest } from './Contest';
 import { Problem } from './Problem';
 import { RankingProblem } from './RankingProblem';
 
+/** difficulty */
+export type Difficulty = number;
+export type Difficulties = { [key: number]: Difficulty };
+
 /** 問題の提出状況 */
 export enum ProblemSolveStatus {
   /** 未 AC */
@@ -34,6 +38,8 @@ export interface MergedProblem extends Problem {
   readonly SolveDateNum?: number;
   /** 問題の提出状況 */
   readonly SolveStatus: ProblemSolveStatus;
+  /** difficulty */
+  readonly Difficulty?: Difficulty;
 }
 
 /** コンテスト情報，解答状況，およびショートコード情報をマージした問題 */

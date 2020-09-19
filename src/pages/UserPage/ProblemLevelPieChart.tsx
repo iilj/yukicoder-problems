@@ -68,7 +68,11 @@ export const ProblemLevelPieChart: React.FC<Props> = (props) => {
               <h5 style={{ color: e.color, fontSize: 'small' }}>
                 {'Level '}
                 {e.level.toFixed(1)}
-                <DifficultyStars level={e.level} showDifficultyLevel />
+                <DifficultyStars
+                  level={e.level}
+                  showDifficultyLevel={true}
+                  color={true}
+                />
               </h5>
               <h5 className="text-muted">{`${e.solved} / ${e.totalCount}`}</h5>
             </Col>
