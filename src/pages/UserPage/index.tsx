@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Col, Row, Spinner } from 'reactstrap';
+import {
+  Col,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Row,
+  Spinner,
+  UncontrolledDropdown,
+} from 'reactstrap';
 import dataFormat from 'dateformat';
 
 import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
+import * as DifficultyDataClient from '../../utils/DifficultyDataClient';
 import { ordinalSuffixOf } from '../../utils';
 
 import { PieCharts } from './SmallPieChart';
@@ -26,6 +35,9 @@ import { Problem, ProblemId, ProblemType } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { User, UserName } from '../../interfaces/User';
 import { RankingProblem } from '../../interfaces/RankingProblem';
+import { ProblemLinkColorMode } from '../../components/ProblemLink';
+import { useLocalStorage } from '../../utils/LocalStorage';
+import { Difficulties } from '../../interfaces/MergedProblem';
 
 const MS_OF_HOUR = 1000 * 60 * 60;
 const MS_OF_DAY = MS_OF_HOUR * 24;
@@ -37,6 +49,7 @@ const initialUniversalState = {
   contestMap: new Map<ContestId, Contest>(),
   problems: [] as Problem[],
   problemContestMap: new Map<ProblemId, ContestId>(),
+  difficulties: {} as Difficulties,
 };
 
 const initialUserState = {
@@ -62,11 +75,18 @@ export const UserPage: React.FC = () => {
     let unmounted = false;
     const getUniversalInfo = async () => {
       setUniversalStateLoaded(false);
-      const [golferMap, pureGolferMap, problems, contests] = await Promise.all([
+      const [
+        golferMap,
+        pureGolferMap,
+        problems,
+        contests,
+        difficulties,
+      ] = await Promise.all([
         TypedCachedApiClient.cachedGolferMap(),
         TypedCachedApiClient.cachedGolferPureMap(),
         TypedCachedApiClient.cachedProblemArray(),
         TypedCachedApiClient.cachedContestArray(),
+        DifficultyDataClient.cachedContestArray(),
       ]);
       const [contestMap, problemContestMap] = await Promise.all([
         TypedCachedApiClient.cachedContestMap(),
@@ -81,6 +101,7 @@ export const UserPage: React.FC = () => {
           contestMap,
           problems,
           problemContestMap,
+          difficulties,
         });
         setUniversalStateLoaded(true);
       }
@@ -136,6 +157,7 @@ export const UserPage: React.FC = () => {
     contestMap,
     problems,
     problemContestMap,
+    difficulties,
   } = universalState;
   const {
     userInfo,
@@ -147,6 +169,11 @@ export const UserPage: React.FC = () => {
 
   const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
+
+  const [colorMode, setColorMode] = useLocalStorage<ProblemLinkColorMode>(
+    'TablePage_colorMode',
+    'Level'
+  );
 
   const name = userInfo ? userInfo.Name : undefined;
 
@@ -430,13 +457,39 @@ export const UserPage: React.FC = () => {
             setToDate(date);
           }}
         />
+
+        <UncontrolledDropdown>
+          <DropdownToggle caret>
+            {
+              {
+                None: 'Color By',
+                Level: 'Level',
+                Difficulty: 'Difficulty (experimental)',
+              }[colorMode]
+            }
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem header>Color By</DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('None')}>
+              None
+            </DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('Level')}>
+              Level
+            </DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('Difficulty')}>
+              Difficulty (experimental)
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
       </Row>
       <SolvedProblemList
         solvedProblems={solvedProblems}
         problemContestMap={problemContestMap}
         contestMap={contestMap}
+        difficulties={difficulties}
         fromDate={fromDate}
         toDate={toDate}
+        problemLinkColorMode={colorMode}
       />
     </div>
   );

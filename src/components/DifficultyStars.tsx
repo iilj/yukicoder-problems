@@ -28,6 +28,7 @@ export const DifficultyStarsFillDefs: React.FC = () => (
 interface DifficultyStarsProps {
   level: ProblemLevel;
   showDifficultyLevel: boolean;
+  color: boolean;
 }
 
 export const DifficultyStars: React.FC<DifficultyStarsProps> = (props) => {
@@ -45,10 +46,10 @@ export const DifficultyStars: React.FC<DifficultyStarsProps> = (props) => {
     stars.push([full, half]);
   }
 
-  const color = getDifficultyLevelColor(level);
+  const color = props.color ? getDifficultyLevelColor(level) : '#808080';
   const style = { color };
   const className =
-    level <= 4.5
+    !props.color || level <= 4.5
       ? 'star-normal'
       : level <= 5
       ? 'star-bronze'

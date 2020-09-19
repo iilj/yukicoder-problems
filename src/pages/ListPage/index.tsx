@@ -20,6 +20,7 @@ import { ProblemTypeTable } from './ProblemTypeTable';
 import { ListTable, FilterState } from './ListTable';
 import { getProblemTypeName } from '../../utils';
 import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
+import * as DifficultyDataClient from '../../utils/DifficultyDataClient';
 import { mergeSolveStatus, mergeShortest } from '../../utils/MergeProcs';
 import { WellPositionedDropdownMenu } from '../../components/WellPositionedDropdownMenu';
 import {
@@ -43,7 +44,12 @@ import {
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { RankingProblem } from '../../interfaces/RankingProblem';
-import { RankingMergedProblem } from '../../interfaces/MergedProblem';
+import {
+  RankingMergedProblem,
+  Difficulties,
+} from '../../interfaces/MergedProblem';
+import { ProblemLinkColorMode } from '../../components/ProblemLink';
+import { useLocalStorage } from '../../utils/LocalStorage';
 
 const INF_LEVEL = 100;
 
@@ -53,6 +59,7 @@ const initialUniversalState = {
   problemContestMap: new Map<ProblemId, ContestId>(),
   golferProblemMap: new Map<ProblemNo, RankingProblem>(),
   golferPureProblemMap: new Map<ProblemNo, RankingProblem>(),
+  difficulties: {} as Difficulties,
 };
 
 const initialUserState = {
@@ -86,11 +93,13 @@ export const ListPage: React.FC = () => {
         contests,
         golferProblemMap,
         golferPureProblemMap,
+        difficulties,
       ] = await Promise.all([
         TypedCachedApiClient.cachedProblemArray(),
         TypedCachedApiClient.cachedContestArray(),
         TypedCachedApiClient.cachedGolferRankingProblemMap(),
         TypedCachedApiClient.cachedGolferRankingPureProblemMap(),
+        DifficultyDataClient.cachedContestArray(),
       ]);
       const problemContestMap = await TypedCachedApiClient.cachedProblemContestMap();
 
@@ -101,6 +110,7 @@ export const ListPage: React.FC = () => {
           problemContestMap,
           golferProblemMap,
           golferPureProblemMap,
+          difficulties,
         });
         setUniversalStateLoaded(true);
       }
@@ -148,7 +158,8 @@ export const ListPage: React.FC = () => {
         universalState.problems,
         universalState.contests,
         universalState.problemContestMap,
-        userState.solvedProblemsMap
+        userState.solvedProblemsMap,
+        universalState.difficulties
       );
       const rankingMergedProblems = mergeShortest(
         mergedProblems,
@@ -173,6 +184,11 @@ export const ListPage: React.FC = () => {
   const { problems } = universalState;
   const { solvedProblems } = userState;
   const { rankingMergedProblems } = mergedState;
+
+  const [colorMode, setColorMode] = useLocalStorage<ProblemLinkColorMode>(
+    'TablePage_colorMode',
+    'Level'
+  );
 
   const [statusFilterState, setStatusFilterState] = useState<FilterState>(
     'All'
@@ -218,6 +234,7 @@ export const ListPage: React.FC = () => {
           problems={problems}
           solvedProblems={solvedProblems}
           user={user}
+          problemLinkColorMode={colorMode}
         />
       </Row>
 
@@ -234,6 +251,31 @@ export const ListPage: React.FC = () => {
 
       <Row className="my-2 border-bottom">
         <h2>Problem List</h2>
+      </Row>
+      <Row>
+        <UncontrolledDropdown>
+          <DropdownToggle caret>
+            {
+              {
+                None: 'Color By',
+                Level: 'Level',
+                Difficulty: 'Difficulty (experimental)',
+              }[colorMode]
+            }
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem header>Color By</DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('None')}>
+              None
+            </DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('Level')}>
+              Level
+            </DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('Difficulty')}>
+              Difficulty (experimental)
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
       </Row>
       <Row>
         <ButtonGroup className="mr-4">
@@ -266,7 +308,11 @@ export const ListPage: React.FC = () => {
                   key={level}
                   onClick={() => setFromDifficultyLevel(level)}
                 >
-                  <DifficultyStars level={level} showDifficultyLevel />
+                  <DifficultyStars
+                    level={level}
+                    showDifficultyLevel={true}
+                    color={colorMode === 'Level'}
+                  />
                   {level.toFixed(1)} -
                 </DropdownItem>
               ))}
@@ -284,8 +330,12 @@ export const ListPage: React.FC = () => {
                   key={level}
                   onClick={() => setToDifficultyLevel(level)}
                 >
-                  <DifficultyStars level={level} showDifficultyLevel />-
-                  {level.toFixed(1)}
+                  <DifficultyStars
+                    level={level}
+                    showDifficultyLevel={true}
+                    color={colorMode === 'Level'}
+                  />
+                  -{level.toFixed(1)}
                 </DropdownItem>
               ))}
             </WellPositionedDropdownMenu>
@@ -389,6 +439,7 @@ export const ListPage: React.FC = () => {
           toDate={toDate === INITIAL_TO_DATE ? undefined : toDate}
           problemTypeFilterState={problemTypeFilterState}
           showTagsOfTryingProblems={showTagsOfTryingProblems}
+          problemLinkColorMode={colorMode}
         />
       </Row>
     </>

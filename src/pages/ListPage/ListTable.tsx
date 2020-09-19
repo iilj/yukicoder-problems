@@ -3,7 +3,10 @@ import React, { useState } from 'react';
 import { Button } from 'reactstrap';
 import dataFormat from 'dateformat';
 import { DifficultyStars } from '../../components/DifficultyStars';
-import { ProblemLink } from '../../components/ProblemLink';
+import {
+  ProblemLink,
+  ProblemLinkColorMode,
+} from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
 import { SubmissionLink } from '../../components/SubmissionLink';
 import {
@@ -31,6 +34,7 @@ interface Props {
   toDate?: Date;
   problemTypeFilterState: ProblemType | 'All';
   showTagsOfTryingProblems: boolean;
+  problemLinkColorMode: ProblemLinkColorMode;
 }
 
 export const ListTable: React.FC<Props> = (props) => {
@@ -43,6 +47,7 @@ export const ListTable: React.FC<Props> = (props) => {
     toDate,
     problemTypeFilterState,
     showTagsOfTryingProblems,
+    problemLinkColorMode,
   } = props;
   const [showDetailsModalStatus, setShowDetailsModalStatus] = useState<{
     enabled: boolean;
@@ -80,7 +85,8 @@ export const ListTable: React.FC<Props> = (props) => {
             problemTitle={title}
             problemNo={row.No as ProblemNo}
             level={row.Level}
-            showDifficultyLevel
+            problemLinkColorMode={problemLinkColorMode}
+            difficulty={row.Difficulty}
           />
         );
       },
@@ -90,7 +96,13 @@ export const ListTable: React.FC<Props> = (props) => {
       dataField: 'Level',
       dataSort: true,
       dataFormat: function _dataFormat(level: ProblemLevel) {
-        return <DifficultyStars level={level} showDifficultyLevel />;
+        return (
+          <DifficultyStars
+            level={level}
+            showDifficultyLevel={true}
+            color={problemLinkColorMode === 'Level'}
+          />
+        );
       },
     },
     {
@@ -127,6 +139,11 @@ export const ListTable: React.FC<Props> = (props) => {
       ): React.ReactElement {
         return showTagsOfTryingProblems || row.SolveDate ? <>{tags}</> : <></>;
       },
+    },
+    {
+      header: 'Difficulty',
+      dataField: 'Difficulty',
+      dataSort: true,
     },
     {
       header: 'Shortest',
@@ -333,7 +350,7 @@ export const ListTable: React.FC<Props> = (props) => {
             })
           }
           rankingMergedProblem={showDetailsModalStatus.rankingMergedProblem}
-          showDifficultyLevel={true}
+          problemLinkColorMode={problemLinkColorMode}
           showTagsOfTryingProblems={showTagsOfTryingProblems}
         />
       ) : (

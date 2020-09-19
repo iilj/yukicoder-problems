@@ -11,15 +11,17 @@ import {
   ProblemType,
 } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
+import { ProblemLinkColorMode } from '../../components/ProblemLink';
 
 interface Props {
   problems: Problem[];
   solvedProblems: SolvedProblem[];
   user: string;
+  problemLinkColorMode: ProblemLinkColorMode;
 }
 
 export const DifficultyLevelTable: React.FC<Props> = (props) => {
-  const { problems, solvedProblems, user } = props;
+  const { problems, solvedProblems, user, problemLinkColorMode } = props;
   const [includingEducational, setIncludingEducational] = useState(true);
   const [includingScoring, setIncludingScoring] = useState(true);
   const [includingJoke, setIncludingJoke] = useState(true);
@@ -107,7 +109,8 @@ export const DifficultyLevelTable: React.FC<Props> = (props) => {
               >
                 <DifficultyStarsAbsoluteSpan
                   level={level}
-                  showDifficultyLevel
+                  showDifficultyLevel={true}
+                  color={problemLinkColorMode === 'Level'}
                 />
                 {level}
               </th>

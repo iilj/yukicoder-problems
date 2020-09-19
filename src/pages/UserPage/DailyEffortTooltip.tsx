@@ -69,7 +69,8 @@ export const DailyEffortTooltip: React.FC<Props> = (props) => {
                   <td>
                     <DifficultyStars
                       level={entry.dataKey}
-                      showDifficultyLevel
+                      showDifficultyLevel={true}
+                      color={true}
                     />
                   </td>
                 </tr>

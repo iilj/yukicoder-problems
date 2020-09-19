@@ -7,13 +7,15 @@ import {
   ExtendedContest,
   ProblemSolveStatus,
   RankingMergedProblem,
+  Difficulties,
 } from '../interfaces/MergedProblem';
 
 export const mergeSolveStatus = (
   problems: Problem[],
   contests: Contest[],
   problemContestMap: Map<ProblemId, ContestId>,
-  solvedProblemsMap: Map<ProblemId, SolvedProblem>
+  solvedProblemsMap: Map<ProblemId, SolvedProblem>,
+  difficulties: Difficulties
 ): MergedProblem[] => {
   const extendedContestMap = contests.reduce(
     (map, contest) =>
@@ -32,6 +34,10 @@ export const mergeSolveStatus = (
         ? extendedContestMap.get(contestId)
         : undefined;
       const solvedProblem = solvedProblemsMap.get(problem.ProblemId);
+      const Difficulty =
+        problem.ProblemId in difficulties
+          ? difficulties[problem.ProblemId]
+          : undefined;
       if (!extendedContest) {
         // コンテスト情報なし，ACしたかどうかのみ
         const SolveDate = solvedProblem ? solvedProblem.Date : undefined;
@@ -39,7 +45,14 @@ export const mergeSolveStatus = (
         const SolveStatus = solvedProblem
           ? ProblemSolveStatus.Solved
           : ProblemSolveStatus.Trying;
-        return { ...problem, DateNum, SolveDate, SolveDateNum, SolveStatus };
+        return {
+          ...problem,
+          DateNum,
+          SolveDate,
+          SolveDateNum,
+          SolveStatus,
+          Difficulty,
+        };
       }
       // assert コンテスト情報あり
       if (!solvedProblem) {
@@ -49,6 +62,7 @@ export const mergeSolveStatus = (
           Contest: extendedContest,
           DateNum,
           SolveStatus: ProblemSolveStatus.Trying,
+          Difficulty,
         };
       }
       // assert AC 済み
@@ -67,6 +81,7 @@ export const mergeSolveStatus = (
         SolveDate,
         SolveDateNum,
         SolveStatus,
+        Difficulty,
       };
     }
   );

@@ -10,7 +10,7 @@ import {
 import { Problem, ProblemNo } from '../interfaces/Problem';
 import { ContestId } from '../interfaces/Contest';
 import { DifficultyStars } from './DifficultyStars';
-import { ProblemLink } from './ProblemLink';
+import { ProblemLink, ProblemLinkColorMode } from './ProblemLink';
 import { ContestLink } from './ContestLink';
 import { SolvedCheckIcon } from './SolvedCheckIcon';
 import { SubmissionLink } from './SubmissionLink';
@@ -20,7 +20,7 @@ interface Props {
   show: boolean;
   handleClose: () => void;
   rankingMergedProblem: RankingMergedProblem;
-  showDifficultyLevel: boolean;
+  problemLinkColorMode: ProblemLinkColorMode;
   showTagsOfTryingProblems: boolean;
 }
 
@@ -33,7 +33,7 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
     show,
     handleClose,
     rankingMergedProblem,
-    showDifficultyLevel,
+    problemLinkColorMode,
     showTagsOfTryingProblems,
   } = props;
 
@@ -98,7 +98,8 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
                   problemTitle={rankingMergedProblem.Title}
                   problemNo={rankingMergedProblem.No as ProblemNo}
                   level={rankingMergedProblem.Level}
-                  showDifficultyLevel
+                  problemLinkColorMode={problemLinkColorMode}
+                  difficulty={rankingMergedProblem.Difficulty}
                 />
               </td>
             </tr>
@@ -118,7 +119,8 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
               <td>
                 <DifficultyStars
                   level={rankingMergedProblem.Level}
-                  showDifficultyLevel={showDifficultyLevel}
+                  showDifficultyLevel={true}
+                  color={problemLinkColorMode === 'Level'}
                 />
               </td>
             </tr>

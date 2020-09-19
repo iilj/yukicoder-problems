@@ -2,7 +2,10 @@ import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import dataFormat from 'dateformat';
-import { ProblemLink } from '../../components/ProblemLink';
+import {
+  ProblemLink,
+  ProblemLinkColorMode,
+} from '../../components/ProblemLink';
 import { ContestLink } from '../../components/ContestLink';
 import { DifficultyStars } from '../../components/DifficultyStars';
 import {
@@ -12,17 +15,21 @@ import {
 import { ProblemId, ProblemLevel, ProblemNo } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../../interfaces/Contest';
+import { Difficulties, Difficulty } from '../../interfaces/MergedProblem';
 
 interface Entry extends SolvedProblem {
   Contest: Contest | undefined;
+  Difficulty?: Difficulty;
 }
 
 interface Props {
   solvedProblems: SolvedProblem[];
   problemContestMap: Map<ProblemId, ContestId>;
   contestMap: Map<ContestId, Contest>;
+  difficulties: Difficulties;
   fromDate: Date;
   toDate: Date;
+  problemLinkColorMode: ProblemLinkColorMode;
 }
 
 export const SolvedProblemList: React.FC<Props> = (props) => {
@@ -30,8 +37,10 @@ export const SolvedProblemList: React.FC<Props> = (props) => {
     solvedProblems,
     problemContestMap,
     contestMap,
+    difficulties,
     fromDate,
     toDate,
+    problemLinkColorMode,
   } = props;
 
   return (
@@ -50,6 +59,10 @@ export const SolvedProblemList: React.FC<Props> = (props) => {
           (s) =>
             ({
               Contest: contestMap.get(problemContestMap.get(s.ProblemId) ?? -1),
+              Difficulty:
+                s.ProblemId in difficulties
+                  ? difficulties[s.ProblemId]
+                  : undefined,
               ...s,
             } as Entry)
         )}
@@ -109,7 +122,8 @@ export const SolvedProblemList: React.FC<Props> = (props) => {
             problemTitle={title}
             problemNo={row.No as ProblemNo}
             level={row.Level}
-            showDifficultyLevel
+            problemLinkColorMode={problemLinkColorMode}
+            difficulty={row.Difficulty}
           />
         )}
       >
@@ -120,7 +134,11 @@ export const SolvedProblemList: React.FC<Props> = (props) => {
         dataSort
         dataField="Level"
         dataFormat={(level: ProblemLevel) => (
-          <DifficultyStars level={level} showDifficultyLevel />
+          <DifficultyStars
+            level={level}
+            showDifficultyLevel={true}
+            color={problemLinkColorMode === 'Level'}
+          />
         )}
       >
         Level
