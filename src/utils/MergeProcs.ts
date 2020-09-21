@@ -7,8 +7,8 @@ import {
   ExtendedContest,
   ProblemSolveStatus,
   RankingMergedProblem,
-  Difficulties,
 } from '../interfaces/MergedProblem';
+import { Difficulties } from '../interfaces/Difficulty';
 
 export const mergeSolveStatus = (
   problems: Problem[],

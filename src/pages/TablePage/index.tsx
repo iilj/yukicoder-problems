@@ -24,7 +24,8 @@ import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { Problem, ProblemId } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
-import { MergedProblem, Difficulties } from '../../interfaces/MergedProblem';
+import { MergedProblem } from '../../interfaces/MergedProblem';
+import { Difficulties } from '../../interfaces/Difficulty';
 import { ProblemLinkColorMode } from '../../components/ProblemLink';
 
 /**
@@ -71,7 +72,7 @@ export const TablePage: React.FC = () => {
       const [problems, contests, difficulties] = await Promise.all([
         TypedCachedApiClient.cachedProblemArray(),
         TypedCachedApiClient.cachedContestArray(),
-        DifficultyDataClient.cachedContestArray(),
+        DifficultyDataClient.cachedDifficultyData(),
       ]);
       const [contestMap, problemContestMap] = await Promise.all([
         TypedCachedApiClient.cachedContestMap(),
@@ -195,7 +196,6 @@ export const TablePage: React.FC = () => {
     }, [] as ProblemId[]),
   } as Contest);
 
-  console.log(mergedProblems);
   return (
     <>
       {userStateLoaded && mergedStateLoaded ? (

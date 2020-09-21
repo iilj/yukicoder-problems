@@ -22,6 +22,7 @@ import {
   ProblemSolveStatus,
 } from '../../interfaces/MergedProblem';
 import { ProblemDetailModal } from '../../components/ProblemDetailModal';
+import { useNavigate } from 'react-router';
 
 export type FilterState = 'All' | 'Only Trying' | 'Only AC';
 
@@ -49,6 +50,7 @@ export const ListTable: React.FC<Props> = (props) => {
     showTagsOfTryingProblems,
     problemLinkColorMode,
   } = props;
+  const navigate = useNavigate();
   const [showDetailsModalStatus, setShowDetailsModalStatus] = useState<{
     enabled: boolean;
     rankingMergedProblem?: RankingMergedProblem;
@@ -209,12 +211,7 @@ export const ListTable: React.FC<Props> = (props) => {
           <Button
             color="secondary"
             size="sm"
-            onClick={() =>
-              setShowDetailsModalStatus({
-                enabled: true,
-                rankingMergedProblem: row,
-              })
-            }
+            onClick={() => navigate(`/problem-detail/${row.ProblemId}`)}
           >
             Detail
           </Button>

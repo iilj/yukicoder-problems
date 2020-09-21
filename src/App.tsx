@@ -25,6 +25,7 @@ import { ListPage } from './pages/ListPage';
 import { UserPage } from './pages/UserPage';
 // import logo from './logo.svg';
 import './App.css';
+import { ProblemDetailPage } from './pages/ProblemDetailPage';
 
 library.add(
   faStar,
@@ -49,6 +50,10 @@ const App: React.FC = () => {
           <Route path="/list/:param/:user" element={<ListPage />} />
           <Route path="/list/" element={<ListPage />} />
           <Route path="/user/:param/:user" element={<UserPage />} />
+          <Route
+            path="/problem-detail/:problemIdString"
+            element={<ProblemDetailPage />}
+          />
           <Route path="/" element={<Navigate to="/table/" />} />
         </Routes>
       </Container>

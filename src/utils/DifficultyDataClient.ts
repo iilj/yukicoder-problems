@@ -1,4 +1,5 @@
-import { Difficulties } from '../interfaces/MergedProblem';
+import { Difficulties, DifficultyDetailData } from '../interfaces/Difficulty';
+import { ProblemId } from '../interfaces/Problem';
 
 const BASE_URL = 'https://iilj.github.io/yukicoder-leaderboard-crawler/json';
 
@@ -14,9 +15,12 @@ const fetchJson = async <T>(url: string): Promise<T> => {
 const fetchDifficulties = () =>
   fetchJson<Difficulties>(`${BASE_URL}/summary.json`);
 
+const fetchDifficultyDetailData = (problemId: ProblemId) =>
+  fetchJson<DifficultyDetailData>(`${BASE_URL}/detail/${problemId}.json`);
+
 // contests raw array
 let CACHED_DIFFICULTIES: Difficulties;
-export const cachedContestArray = async (): Promise<Difficulties> => {
+export const cachedDifficultyData = async (): Promise<Difficulties> => {
   if (CACHED_DIFFICULTIES === undefined) {
     try {
       CACHED_DIFFICULTIES = await fetchDifficulties();
@@ -26,4 +30,27 @@ export const cachedContestArray = async (): Promise<Difficulties> => {
     }
   }
   return CACHED_DIFFICULTIES;
+};
+
+export const difficultyDetailDataUnit = {
+  coef: -1,
+  bias: -1,
+  difficulty: -1,
+  detail: [],
+} as DifficultyDetailData;
+export const cachedDifficultyDetailData = async (
+  problemId: ProblemId
+): Promise<DifficultyDetailData> => {
+  if (CACHED_DIFFICULTIES === undefined) {
+    try {
+      CACHED_DIFFICULTIES = await fetchDifficulties();
+    } catch (e) {
+      console.log(e);
+      CACHED_DIFFICULTIES = {} as Difficulties;
+    }
+  }
+  if (problemId in CACHED_DIFFICULTIES) {
+    return await fetchDifficultyDetailData(problemId);
+  }
+  return difficultyDetailDataUnit;
 };

@@ -37,7 +37,7 @@ import { User, UserName } from '../../interfaces/User';
 import { RankingProblem } from '../../interfaces/RankingProblem';
 import { ProblemLinkColorMode } from '../../components/ProblemLink';
 import { useLocalStorage } from '../../utils/LocalStorage';
-import { Difficulties } from '../../interfaces/MergedProblem';
+import { Difficulties } from '../../interfaces/Difficulty';
 
 const MS_OF_HOUR = 1000 * 60 * 60;
 const MS_OF_DAY = MS_OF_HOUR * 24;
@@ -86,7 +86,7 @@ export const UserPage: React.FC = () => {
         TypedCachedApiClient.cachedGolferPureMap(),
         TypedCachedApiClient.cachedProblemArray(),
         TypedCachedApiClient.cachedContestArray(),
-        DifficultyDataClient.cachedContestArray(),
+        DifficultyDataClient.cachedDifficultyData(),
       ]);
       const [contestMap, problemContestMap] = await Promise.all([
         TypedCachedApiClient.cachedContestMap(),

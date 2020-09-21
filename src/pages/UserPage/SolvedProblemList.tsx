@@ -15,7 +15,7 @@ import {
 import { ProblemId, ProblemLevel, ProblemNo } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../../interfaces/Contest';
-import { Difficulties, Difficulty } from '../../interfaces/MergedProblem';
+import { Difficulties, Difficulty } from '../../interfaces/Difficulty';
 
 interface Entry extends SolvedProblem {
   Contest: Contest | undefined;
