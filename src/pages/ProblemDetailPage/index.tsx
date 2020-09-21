@@ -1,116 +1,175 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Spinner } from 'reactstrap';
-import { Modal, Button } from 'react-bootstrap';
-import dataFormat from 'dateformat';
-import * as TypedCachedApiClient from '../utils/TypedCachedApiClient';
+import { useParams } from 'react-router-dom';
 import {
-  RankingMergedProblem,
-  ProblemSolveStatus,
-} from '../interfaces/MergedProblem';
-import { Problem, ProblemNo } from '../interfaces/Problem';
-import { ContestId } from '../interfaces/Contest';
-import { DifficultyStars } from './DifficultyStars';
-import { ProblemLink, ProblemLinkColorMode } from './ProblemLink';
-import { ContestLink } from './ContestLink';
-import { SolvedCheckIcon } from './SolvedCheckIcon';
-import { SubmissionLink } from './SubmissionLink';
-import { ProblemTypeIconSpanWithName } from './ProblemTypeIcon';
-
-interface Props {
-  show: boolean;
-  handleClose: () => void;
-  rankingMergedProblem: RankingMergedProblem;
-  problemLinkColorMode: ProblemLinkColorMode;
-  showTagsOfTryingProblems: boolean;
-}
+  Table,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Row,
+  Spinner,
+  UncontrolledDropdown,
+} from 'reactstrap';
+import dataFormat from 'dateformat';
+import {
+  ProblemLink,
+  ProblemLinkColorMode,
+} from '../../components/ProblemLink';
+import { Problem, ProblemId, ProblemNo } from '../../interfaces/Problem';
+import { useLocalStorage } from '../../utils/LocalStorage';
+import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
+import * as DifficultyDataClient from '../../utils/DifficultyDataClient';
+import { DifficultyStars } from '../../components/DifficultyStars';
+import { SubmissionLink } from '../../components/SubmissionLink';
+import { Contest, ContestId } from '../../interfaces/Contest';
+import { RankingProblem } from '../../interfaces/RankingProblem';
+import { ContestLink } from '../../components/ContestLink';
+import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
+import { TabbedDifficultyChart } from './TabbedDifficultyChart';
+import { useResetScroll } from '../../utils/UseResetScroll';
 
 const initialUniversalState = {
   problem: {} as Problem,
+  contestMap: new Map<ContestId, Contest>(),
+  problemContestMap: new Map<ProblemId, ContestId>(),
+  golferProblemMap: new Map<ProblemNo, RankingProblem>(),
+  golferPureProblemMap: new Map<ProblemNo, RankingProblem>(),
+  difficultyDetailData: DifficultyDataClient.difficultyDetailDataUnit,
 };
 
-export const ProblemDetailModal: React.FC<Props> = (props) => {
-  const {
-    show,
-    handleClose,
-    rankingMergedProblem,
-    problemLinkColorMode,
-    showTagsOfTryingProblems,
-  } = props;
+export const ProblemDetailPage: React.FC = () => {
+  const { problemIdString } = useParams() as {
+    problemIdString: string;
+  };
+  const problemId = Number(problemIdString);
 
   const [universalState, setUniversalState] = useState(initialUniversalState);
   const [universalStateLoaded, setUniversalStateLoaded] = useState(false);
 
+  useResetScroll();
   useEffect(() => {
     let unmounted = false;
     const getUniversalInfo = async () => {
       setUniversalStateLoaded(false);
-      const problem = await TypedCachedApiClient.cachedSingleProblem(
-        rankingMergedProblem.ProblemId
-      );
+      const [
+        problem,
+        contestMap,
+        problemContestMap,
+        golferProblemMap,
+        golferPureProblemMap,
+        difficultyDetailData,
+      ] = await Promise.all([
+        TypedCachedApiClient.cachedSingleProblem(problemId),
+        TypedCachedApiClient.cachedContestMap(),
+        TypedCachedApiClient.cachedProblemContestMap(),
+        TypedCachedApiClient.cachedGolferRankingProblemMap(),
+        TypedCachedApiClient.cachedGolferRankingPureProblemMap(),
+        DifficultyDataClient.cachedDifficultyDetailData(problemId),
+      ]);
 
       if (!unmounted) {
         setUniversalState({
           problem,
+          contestMap,
+          problemContestMap,
+          golferProblemMap,
+          golferPureProblemMap,
+          difficultyDetailData,
         });
         setUniversalStateLoaded(true);
       }
     };
-    if (show) {
-      void getUniversalInfo();
-    }
+    void getUniversalInfo();
     const cleanup = () => {
       unmounted = true;
     };
     return cleanup;
-  }, [show, rankingMergedProblem.ProblemId]);
+  }, [problemId]);
 
-  const { problem } = universalState;
+  const {
+    problem,
+    contestMap,
+    problemContestMap,
+    golferProblemMap,
+    golferPureProblemMap,
+    difficultyDetailData,
+  } = universalState;
 
-  const shortestRankingProblem = rankingMergedProblem.ShortestRankingProblem;
-  const pureShortestRankingProblem =
-    rankingMergedProblem.PureShortestRankingProblem;
+  const contestId = problemContestMap.get(problemId);
+  const contest = contestId ? contestMap.get(contestId) : undefined;
+
+  const shortestRankingProblem = golferProblemMap.get(problemId);
+  const pureShortestRankingProblem = golferPureProblemMap.get(problemId);
+
+  const [colorMode, setColorMode] = useLocalStorage<ProblemLinkColorMode>(
+    'TablePage_colorMode',
+    'Level'
+  );
 
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>{rankingMergedProblem.Title}</Modal.Title>
+    <>
+      <Row className="my-2 border-bottom">
         {universalStateLoaded ? (
-          <></>
+          <h2>{problem.Title}</h2>
         ) : (
           <Spinner
-            style={{
-              width: '3rem',
-              height: '3rem',
-              position: 'fixed',
-              right: '10px',
-              bottom: '10px',
-            }}
+            style={{ width: '3rem', height: '3rem', marginLeft: '0.8rem' }}
           />
         )}
-      </Modal.Header>
-      <Modal.Body>
+      </Row>
+
+      <Row className="my-2 border-bottom">
+        <h3>Solve Probability Chart</h3>
+      </Row>
+      <TabbedDifficultyChart difficultyDetailData={difficultyDetailData} />
+
+      <Row className="my-2 border-bottom">
+        <h3>Info</h3>
+      </Row>
+      <Row className="my-4">
+        <UncontrolledDropdown>
+          <DropdownToggle caret>
+            {
+              {
+                None: 'Color By',
+                Level: 'Level',
+                Difficulty: 'Difficulty (experimental)',
+              }[colorMode]
+            }
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem header>Color By</DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('None')}>
+              None
+            </DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('Level')}>
+              Level
+            </DropdownItem>
+            <DropdownItem onClick={(): void => setColorMode('Difficulty')}>
+              Difficulty (experimental)
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+      </Row>
+      <Row className="my-3">
         <Table striped bordered hover responsive>
           <tbody>
             <tr key="problem-title">
               <th>Title</th>
               <td>
                 <ProblemLink
-                  problemTitle={rankingMergedProblem.Title}
-                  problemNo={rankingMergedProblem.No as ProblemNo}
-                  level={rankingMergedProblem.Level}
-                  problemLinkColorMode={problemLinkColorMode}
-                  difficulty={rankingMergedProblem.Difficulty}
+                  problemTitle={problem.Title}
+                  problemNo={problem.No as ProblemNo}
+                  level={problem.Level}
+                  problemLinkColorMode={colorMode}
+                  difficulty={difficultyDetailData.difficulty}
                 />
               </td>
             </tr>
             <tr key="problem-date">
               <th>Date</th>
               <td>
-                {rankingMergedProblem.Date
-                  ? dataFormat(
-                      new Date(rankingMergedProblem.Date),
-                      'yyyy/mm/dd HH:MM'
-                    )
+                {problem.Date
+                  ? dataFormat(new Date(problem.Date), 'yyyy/mm/dd HH:MM')
                   : '-'}
               </td>
             </tr>
@@ -118,44 +177,33 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
               <th>Level</th>
               <td>
                 <DifficultyStars
-                  level={rankingMergedProblem.Level}
+                  level={problem.Level}
                   showDifficultyLevel={true}
-                  color={problemLinkColorMode === 'Level'}
+                  color={colorMode === 'Level'}
                 />
               </td>
             </tr>
             <tr key="problem-contest">
               <th>Contest</th>
               <td>
-                <ContestLink
-                  contestId={rankingMergedProblem.Contest?.Id as ContestId}
-                  contestName={rankingMergedProblem.Contest?.Name as string}
-                />
-              </td>
-            </tr>
-            <tr key="problem-solve-date">
-              <th>Solve Date</th>
-              <td>
-                {rankingMergedProblem.SolveDate ? (
-                  <>
-                    <SolvedCheckIcon />
-                    {dataFormat(
-                      new Date(rankingMergedProblem.SolveDate),
-                      'yyyy/mm/dd HH:MM'
-                    )}
-                  </>
-                ) : (
-                  <></>
+                {contest && (
+                  <ContestLink
+                    contestId={contest.Id}
+                    contestName={contest.Name}
+                  />
                 )}
               </td>
             </tr>
             <tr key="problem-tags">
               <th>Tags</th>
+              <td>{problem.Tags}</td>
+            </tr>
+            <tr key="problem-difficulty">
+              <th>Difficulty</th>
               <td>
-                {showTagsOfTryingProblems ||
-                rankingMergedProblem.SolveStatus !== ProblemSolveStatus.Trying
-                  ? rankingMergedProblem.Tags
-                  : ''}
+                {difficultyDetailData.difficulty === -1
+                  ? '-'
+                  : difficultyDetailData.difficulty}
               </td>
             </tr>
             <tr key="problem-solved-users">
@@ -240,7 +288,7 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
               <th>Problem Type</th>
               <td>
                 <ProblemTypeIconSpanWithName
-                  problemType={rankingMergedProblem.ProblemType}
+                  problemType={problem.ProblemType}
                 />
               </td>
             </tr>
@@ -254,12 +302,7 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
             </tr>
           </tbody>
         </Table>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary" onClick={handleClose}>
-          Close
-        </Button>
-      </Modal.Footer>
-    </Modal>
+      </Row>
+    </>
   );
 };

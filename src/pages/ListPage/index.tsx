@@ -44,10 +44,8 @@ import {
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { RankingProblem } from '../../interfaces/RankingProblem';
-import {
-  RankingMergedProblem,
-  Difficulties,
-} from '../../interfaces/MergedProblem';
+import { RankingMergedProblem } from '../../interfaces/MergedProblem';
+import { Difficulties } from '../../interfaces/Difficulty';
 import { ProblemLinkColorMode } from '../../components/ProblemLink';
 import { useLocalStorage } from '../../utils/LocalStorage';
 
@@ -99,7 +97,7 @@ export const ListPage: React.FC = () => {
         TypedCachedApiClient.cachedContestArray(),
         TypedCachedApiClient.cachedGolferRankingProblemMap(),
         TypedCachedApiClient.cachedGolferRankingPureProblemMap(),
-        DifficultyDataClient.cachedContestArray(),
+        DifficultyDataClient.cachedDifficultyData(),
       ]);
       const problemContestMap = await TypedCachedApiClient.cachedProblemContestMap();
 

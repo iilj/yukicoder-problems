@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Badge, Tooltip } from 'reactstrap';
+import { Difficulty } from '../interfaces/Difficulty';
 import { getRatingColor } from '../utils/RatingColor';
 import { TopcoderLikeCircle } from './TopcoderLikeCircle';
 import './DifficultyCircle.css';
 
 interface Props {
   id?: string;
-  difficulty?: number;
+  difficulty?: Difficulty;
 }
 
-function getColor(difficulty: number) {
+function getColor(difficulty: Difficulty) {
   if (difficulty < 3200) {
     return getRatingColor(difficulty);
   } else if (difficulty < 3600) {
@@ -26,7 +27,7 @@ export const DifficultyCircle: React.FC<Props> = (props) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggleTooltipState = (): void => setTooltipOpen(!tooltipOpen);
   const circleId = `DifficultyCircle-${id ?? ''}`;
-  if (difficulty === undefined) {
+  if (difficulty === undefined || difficulty < 0) {
     return (
       <span>
         <Badge

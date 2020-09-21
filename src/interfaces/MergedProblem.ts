@@ -1,10 +1,7 @@
 import { Contest } from './Contest';
 import { Problem } from './Problem';
 import { RankingProblem } from './RankingProblem';
-
-/** difficulty */
-export type Difficulty = number;
-export type Difficulties = { [key: number]: Difficulty };
+import { Difficulty } from './Difficulty';
 
 /** 問題の提出状況 */
 export enum ProblemSolveStatus {

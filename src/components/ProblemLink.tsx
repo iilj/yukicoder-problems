@@ -3,7 +3,7 @@ import { formatProblemUrl } from '../utils/Url';
 import { getDifficultyLevelColorClass } from '../utils';
 import { getRatingColorClass } from '../utils/RatingColor';
 import { ProblemNo, ProblemLevel } from '../interfaces/Problem';
-import { Difficulty } from '../interfaces/MergedProblem';
+import { Difficulty } from '../interfaces/Difficulty';
 import { DifficultyCircle } from './DifficultyCircle';
 
 export const ProblemLinkColorModes = ['None', 'Level', 'Difficulty'] as const;
