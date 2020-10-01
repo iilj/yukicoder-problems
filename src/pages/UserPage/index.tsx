@@ -32,7 +32,10 @@ import {
 } from '../../components/DateRangePicker';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { Problem, ProblemId, ProblemType } from '../../interfaces/Problem';
-import { SolvedProblem } from '../../interfaces/SolvedProblem';
+import {
+  SolvedProblem,
+  FirstSolvedProblem,
+} from '../../interfaces/SolvedProblem';
 import { User, UserName } from '../../interfaces/User';
 import { RankingProblem } from '../../interfaces/RankingProblem';
 import { ProblemLinkColorMode } from '../../components/ProblemLink';
@@ -56,6 +59,8 @@ const initialUserState = {
   userInfo: {} as User,
   solvedProblems: [] as SolvedProblem[],
   solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
+  firstSolvedProblems: [] as FirstSolvedProblem[],
+  firstSolvedProblemsMap: new Map<ProblemId, FirstSolvedProblem>(),
   minDate: INITIAL_FROM_DATE,
   maxDate: INITIAL_TO_DATE,
 };
@@ -117,14 +122,19 @@ export const UserPage: React.FC = () => {
     let unmounted = false;
     const getUserInfo = async () => {
       setUserStateLoaded(false);
-      const [userInfo, solvedProblems] = await Promise.all([
+      const [
+        userInfo,
+        solvedProblems,
+        firstSolvedProblems,
+      ] = await Promise.all([
         TypedCachedApiClient.cachedUserInfo(param, user),
         TypedCachedApiClient.cachedSolvedProblemArray(param, user),
+        TypedCachedApiClient.cachedFirstSolvedProblemArray(param, user),
       ]);
-      const solvedProblemsMap = await TypedCachedApiClient.cachedSolvedProblemMap(
-        param,
-        user
-      );
+      const [solvedProblemsMap, firstSolvedProblemsMap] = await Promise.all([
+        TypedCachedApiClient.cachedSolvedProblemMap(param, user),
+        TypedCachedApiClient.cachedFirstSolvedProblemMap(param, user),
+      ]);
 
       const dates = solvedProblems.map((problem) => Date.parse(problem.Date));
       const minDate = new Date(Math.min.apply(null, dates));
@@ -137,6 +147,8 @@ export const UserPage: React.FC = () => {
           userInfo,
           solvedProblems,
           solvedProblemsMap,
+          firstSolvedProblems,
+          firstSolvedProblemsMap,
           minDate,
           maxDate,
         });
@@ -163,6 +175,8 @@ export const UserPage: React.FC = () => {
     userInfo,
     solvedProblems,
     solvedProblemsMap,
+    firstSolvedProblems,
+    firstSolvedProblemsMap,
     minDate,
     maxDate,
   } = userState;
@@ -176,6 +190,23 @@ export const UserPage: React.FC = () => {
   );
 
   const name = userInfo ? userInfo.Name : undefined;
+
+  // merge solvedProblems and firstSolvedProblems
+  const mergedSolvedProblems = firstSolvedProblems.reduce(
+    (prevFirstSolvedProblems, firstSolvedProblem) => {
+      if (
+        solvedProblemsMap.get(firstSolvedProblem.ProblemId)?.Date !==
+        firstSolvedProblem.Date
+      ) {
+        prevFirstSolvedProblems.push(
+          solvedProblemsMap.get(firstSolvedProblem.ProblemId) as SolvedProblem
+        );
+      }
+      prevFirstSolvedProblems.push(firstSolvedProblem);
+      return prevFirstSolvedProblems;
+    },
+    [] as SolvedProblem[]
+  );
 
   // for user info section
   /** returns [shortestCount, shortestRank] */
@@ -206,7 +237,7 @@ export const UserPage: React.FC = () => {
       return contest.ProblemIdList.reduce((map_, problemId, idx) => {
         const key = Math.min(idx, 5) as 0 | 1 | 2 | 3 | 4 | 5;
         if (!map_.has(key)) map_.set(key, { total: 0, solved: 0 });
-        if (solvedProblemsMap.has(problemId))
+        if (firstSolvedProblemsMap.has(problemId))
           (map_.get(key) as { total: number; solved: number }).solved++;
         (map_.get(key) as { total: number; solved: number }).total++;
         return map_;
@@ -220,7 +251,7 @@ export const UserPage: React.FC = () => {
   });
 
   // for daily chart section
-  const dailyCountMap = solvedProblems
+  const dailyCountMap = mergedSolvedProblems
     .map((solvedProblem) => solvedProblem.Date)
     .reduce((map, solveDate) => {
       const date = new Date(solveDate);
@@ -416,7 +447,7 @@ export const UserPage: React.FC = () => {
       </Row>
       <TabbedDailyEffortBarChart
         dailyData={dailyCount}
-        solvedProblems={solvedProblems}
+        solvedProblems={mergedSolvedProblems}
         syncId="DailyEffortChart"
       />
 
@@ -425,7 +456,7 @@ export const UserPage: React.FC = () => {
       </Row>
       <TabbedClimbingLineChart
         climbingData={climbing}
-        solvedProblems={solvedProblems}
+        solvedProblems={mergedSolvedProblems}
         syncId="DailyEffortChart"
       />
 
@@ -434,7 +465,7 @@ export const UserPage: React.FC = () => {
       </Row>
       <TabbedHeatmap
         dailyCountMap={dailyCountMap}
-        solvedProblems={solvedProblems}
+        solvedProblems={mergedSolvedProblems}
         onRectClick={(miliSec) => {
           setFromDate(new Date(new Date(miliSec).setHours(0, 0, 0, 0)));
           setToDate(new Date(new Date(miliSec).setHours(23, 59, 59, 999)));
@@ -483,7 +514,7 @@ export const UserPage: React.FC = () => {
         </UncontrolledDropdown>
       </Row>
       <SolvedProblemList
-        solvedProblems={solvedProblems}
+        solvedProblems={mergedSolvedProblems}
         problemContestMap={problemContestMap}
         contestMap={contestMap}
         difficulties={difficulties}

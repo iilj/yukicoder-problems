@@ -10,34 +10,36 @@ import {
   ProblemLevel,
   ProblemType,
 } from '../../interfaces/Problem';
-import { SolvedProblem } from '../../interfaces/SolvedProblem';
+import { FirstSolvedProblem } from '../../interfaces/SolvedProblem';
 import { ProblemLinkColorMode } from '../../components/ProblemLink';
 
 interface Props {
   problems: Problem[];
-  solvedProblems: SolvedProblem[];
+  firstSolvedProblems: FirstSolvedProblem[];
   user: string;
   problemLinkColorMode: ProblemLinkColorMode;
 }
 
 export const DifficultyLevelTable: React.FC<Props> = (props) => {
-  const { problems, solvedProblems, user, problemLinkColorMode } = props;
+  const { problems, firstSolvedProblems, user, problemLinkColorMode } = props;
   const [includingEducational, setIncludingEducational] = useState(true);
   const [includingScoring, setIncludingScoring] = useState(true);
   const [includingJoke, setIncludingJoke] = useState(true);
   const [includingUnproved, setIncludingUnproved] = useState(true);
 
-  const difficultyLevelsSolvedCountMap = solvedProblems.reduce(
-    (map, solvedProblem) =>
-      solvedProblem.ProblemType === ProblemType.Normal ||
-      (solvedProblem.ProblemType === ProblemType.Educational &&
+  const difficultyLevelsSolvedCountMap = firstSolvedProblems.reduce(
+    (map, firstSolvedProblem) =>
+      firstSolvedProblem.ProblemType === ProblemType.Normal ||
+      (firstSolvedProblem.ProblemType === ProblemType.Educational &&
         includingEducational) ||
-      (solvedProblem.ProblemType === ProblemType.Scoring && includingScoring) ||
-      (solvedProblem.ProblemType === ProblemType.Joke && includingJoke) ||
-      (solvedProblem.ProblemType === ProblemType.Unproved && includingUnproved)
+      (firstSolvedProblem.ProblemType === ProblemType.Scoring &&
+        includingScoring) ||
+      (firstSolvedProblem.ProblemType === ProblemType.Joke && includingJoke) ||
+      (firstSolvedProblem.ProblemType === ProblemType.Unproved &&
+        includingUnproved)
         ? map.set(
-            solvedProblem.Level,
-            (map.get(solvedProblem.Level) as ProblemLevel) + 1
+            firstSolvedProblem.Level,
+            (map.get(firstSolvedProblem.Level) as ProblemLevel) + 1
           )
         : map,
     ProblemLevels.reduce(

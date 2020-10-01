@@ -23,7 +23,10 @@ import { mergeSolveStatus, mergedProblemsToMap } from '../../utils/MergeProcs';
 import { DifficultyStarsFillDefs } from '../../components/DifficultyStars';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { Problem, ProblemId } from '../../interfaces/Problem';
-import { SolvedProblem } from '../../interfaces/SolvedProblem';
+import {
+  SolvedProblem,
+  FirstSolvedProblem,
+} from '../../interfaces/SolvedProblem';
 import { MergedProblem } from '../../interfaces/MergedProblem';
 import { Difficulties } from '../../interfaces/Difficulty';
 import { ProblemLinkColorMode } from '../../components/ProblemLink';
@@ -45,6 +48,7 @@ const initialUniversalState = {
 
 const initialUserState = {
   solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
+  firstSolvedProblemsMap: new Map<ProblemId, FirstSolvedProblem>(),
 };
 
 const initialMergedState = {
@@ -101,14 +105,21 @@ export const TablePage: React.FC = () => {
     let unmounted = false;
     const getUserInfo = async () => {
       setUserStateLoaded(false);
-      const solvedProblemsMap =
+      const [solvedProblemsMap, firstSolvedProblemsMap] =
         param && user
-          ? await TypedCachedApiClient.cachedSolvedProblemMap(param, user)
-          : new Map<ProblemId, SolvedProblem>();
+          ? await Promise.all([
+              TypedCachedApiClient.cachedSolvedProblemMap(param, user),
+              TypedCachedApiClient.cachedFirstSolvedProblemMap(param, user),
+            ])
+          : [
+              new Map<ProblemId, SolvedProblem>(),
+              new Map<ProblemId, FirstSolvedProblem>(),
+            ];
 
       if (!unmounted) {
         setUserState({
           solvedProblemsMap,
+          firstSolvedProblemsMap,
         });
         setUserStateLoaded(true);
       }
@@ -129,6 +140,7 @@ export const TablePage: React.FC = () => {
         universalState.contests,
         universalState.problemContestMap,
         userState.solvedProblemsMap,
+        userState.firstSolvedProblemsMap,
         universalState.difficulties
       );
       const mergedProblemsMap = mergedProblemsToMap(mergedProblems);

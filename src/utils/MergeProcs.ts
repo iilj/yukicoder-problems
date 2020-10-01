@@ -1,6 +1,6 @@
 import { Contest, ContestId } from '../interfaces/Contest';
 import { Problem, ProblemId, ProblemNo } from '../interfaces/Problem';
-import { SolvedProblem } from '../interfaces/SolvedProblem';
+import { SolvedProblem, FirstSolvedProblem } from '../interfaces/SolvedProblem';
 import { RankingProblem } from '../interfaces/RankingProblem';
 import {
   MergedProblem,
@@ -15,6 +15,7 @@ export const mergeSolveStatus = (
   contests: Contest[],
   problemContestMap: Map<ProblemId, ContestId>,
   solvedProblemsMap: Map<ProblemId, SolvedProblem>,
+  firstSolvedProblemsMap: Map<ProblemId, FirstSolvedProblem>,
   difficulties: Difficulties
 ): MergedProblem[] => {
   const extendedContestMap = contests.reduce(
@@ -34,28 +35,36 @@ export const mergeSolveStatus = (
         ? extendedContestMap.get(contestId)
         : undefined;
       const solvedProblem = solvedProblemsMap.get(problem.ProblemId);
+      const firstSolvedProblem = firstSolvedProblemsMap.get(problem.ProblemId);
       const Difficulty =
         problem.ProblemId in difficulties
           ? difficulties[problem.ProblemId]
           : undefined;
       if (!extendedContest) {
         // コンテスト情報なし，ACしたかどうかのみ
-        const SolveDate = solvedProblem ? solvedProblem.Date : undefined;
+        const SolveDate = solvedProblem?.Date;
         const SolveDateNum = SolveDate ? Date.parse(SolveDate) : undefined;
-        const SolveStatus = solvedProblem
-          ? ProblemSolveStatus.Solved
-          : ProblemSolveStatus.Trying;
+        const FirstSolveDate = firstSolvedProblem?.Date;
+        const FirstSolveDateNum = FirstSolveDate
+          ? Date.parse(FirstSolveDate)
+          : undefined;
+        const SolveStatus =
+          solvedProblem || FirstSolveDate
+            ? ProblemSolveStatus.Solved
+            : ProblemSolveStatus.Trying;
         return {
           ...problem,
           DateNum,
           SolveDate,
           SolveDateNum,
+          FirstSolveDate,
+          FirstSolveDateNum,
           SolveStatus,
           Difficulty,
         };
       }
       // assert コンテスト情報あり
-      if (!solvedProblem) {
+      if (!firstSolvedProblem) {
         // 未 AC
         return {
           ...problem,
@@ -66,12 +75,14 @@ export const mergeSolveStatus = (
         };
       }
       // assert AC 済み
-      const SolveDate = solvedProblem.Date;
-      const SolveDateNum = Date.parse(SolveDate);
+      const SolveDate = solvedProblem?.Date;
+      const SolveDateNum = SolveDate ? Date.parse(SolveDate) : undefined;
+      const FirstSolveDate = firstSolvedProblem.Date;
+      const FirstSolveDateNum = Date.parse(FirstSolveDate);
       const SolveStatus =
-        SolveDateNum > extendedContest.EndDateNum
+        FirstSolveDateNum > extendedContest.EndDateNum
           ? ProblemSolveStatus.Solved
-          : SolveDateNum >= extendedContest.DateNum
+          : FirstSolveDateNum >= extendedContest.DateNum
           ? ProblemSolveStatus.Intime
           : ProblemSolveStatus.BeforeContest;
       return {
@@ -80,6 +91,8 @@ export const mergeSolveStatus = (
         DateNum,
         SolveDate,
         SolveDateNum,
+        FirstSolveDate,
+        FirstSolveDateNum,
         SolveStatus,
         Difficulty,
       };

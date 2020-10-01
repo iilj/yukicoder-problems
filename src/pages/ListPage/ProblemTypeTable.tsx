@@ -2,15 +2,16 @@ import React from 'react';
 import Table from 'reactstrap/lib/Table';
 import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
 import { Problem, ProblemType, ProblemTypes } from '../../interfaces/Problem';
+import { FirstSolvedProblem } from '../../interfaces/SolvedProblem';
 
 interface Props {
   problems: Problem[];
-  solvedProblems: Problem[];
+  firstSolvedProblems: FirstSolvedProblem[];
   user: string;
 }
 
 export const ProblemTypeTable: React.FC<Props> = (props) => {
-  const { problems, solvedProblems, user } = props;
+  const { problems, firstSolvedProblems, user } = props;
 
   const problemTypesTotalCountMap = problems.reduce(
     (map, problem) =>
@@ -23,11 +24,11 @@ export const ProblemTypeTable: React.FC<Props> = (props) => {
       new Map<ProblemType, number>()
     )
   );
-  const problemTypesSolvedCountMap = solvedProblems.reduce(
-    (map, solvedProblem) =>
+  const problemTypesSolvedCountMap = firstSolvedProblems.reduce(
+    (map, firstSolvedProblem) =>
       map.set(
-        solvedProblem.ProblemType,
-        (map.get(solvedProblem.ProblemType) as ProblemType) + 1
+        firstSolvedProblem.ProblemType,
+        (map.get(firstSolvedProblem.ProblemType) as ProblemType) + 1
       ),
     ProblemTypes.reduce(
       (map, type) => map.set(type, 0),

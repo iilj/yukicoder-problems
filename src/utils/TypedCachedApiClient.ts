@@ -1,5 +1,5 @@
 import { Problem, ProblemNo, ProblemId } from '../interfaces/Problem';
-import { SolvedProblem } from '../interfaces/SolvedProblem';
+import { SolvedProblem, FirstSolvedProblem } from '../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../interfaces/Contest';
 import { Language, LangId } from '../interfaces/Language';
 import { RankingProblem } from '../interfaces/RankingProblem';
@@ -46,6 +46,10 @@ const fetchUserInfo = (param: UserParam, user: UserName) =>
 const fetchSolvedProblems = (param: UserParam, user: UserName) =>
   fetchJson<SolvedProblem[]>(
     `${STATIC_API_BASE_URL}/solved/${param}/${encodeURIComponent(user)}`
+  );
+const fetchFirstSolvedProblems = (param: UserParam, user: UserName) =>
+  fetchJson<FirstSolvedProblem[]>(
+    `${STATIC_API_BASE_URL}/solved/${param}/${encodeURIComponent(user)}/first`
   );
 const fetchSingleProblem = (problemId: ProblemId) =>
   fetchJson<Problem>(`${STATIC_API_BASE_URL}/problems/${problemId}`);
@@ -105,6 +109,34 @@ export const cachedSolvedProblemArray = async (
     CACHED_SOLVED_PROBLEMS_USER = user;
   }
   return CACHED_SOLVED_PROBLEMS;
+};
+
+// first solved problems raw array
+let CACHED_FIRST_SOLVED_PROBLEMS: FirstSolvedProblem[];
+let CACHED_FIRST_SOLVED_PROBLEMS_PARAM: UserParam;
+let CACHED_FIRST_SOLVED_PROBLEMS_USER: string;
+export const cachedFirstSolvedProblemArray = async (
+  param: UserParam,
+  user: string
+): Promise<FirstSolvedProblem[]> => {
+  if (
+    CACHED_FIRST_SOLVED_PROBLEMS === undefined ||
+    param !== CACHED_FIRST_SOLVED_PROBLEMS_PARAM ||
+    user !== CACHED_FIRST_SOLVED_PROBLEMS_USER
+  ) {
+    try {
+      CACHED_FIRST_SOLVED_PROBLEMS = await fetchFirstSolvedProblems(
+        param,
+        user
+      );
+    } catch (e) {
+      console.log(e);
+      CACHED_FIRST_SOLVED_PROBLEMS = [];
+    }
+    CACHED_FIRST_SOLVED_PROBLEMS_PARAM = param;
+    CACHED_FIRST_SOLVED_PROBLEMS_USER = user;
+  }
+  return CACHED_FIRST_SOLVED_PROBLEMS;
 };
 
 const CACHED_SINGLE_PROBLEM_MAP = new Map<ProblemId, Problem>();
@@ -298,6 +330,43 @@ export const cachedSolvedProblemMap = async (
     CACHED_SOLVED_PROBLEMS_MAP_USER = user;
   }
   return CACHED_SOLVED_PROBLEMS_MAP;
+};
+
+// map (problem id -> first solved problem object)
+let CACHED_FIRST_SOLVED_PROBLEMS_MAP: Map<ProblemId, FirstSolvedProblem>;
+let CACHED_FIRST_SOLVED_PROBLEMS_MAP_PARAM: UserParam;
+let CACHED_FIRST_SOLVED_PROBLEMS_MAP_USER: string;
+export const cachedFirstSolvedProblemMap = async (
+  param: UserParam,
+  user: string
+): Promise<Map<ProblemId, FirstSolvedProblem>> => {
+  if (
+    CACHED_FIRST_SOLVED_PROBLEMS_MAP === undefined ||
+    param !== CACHED_FIRST_SOLVED_PROBLEMS_MAP_PARAM ||
+    user !== CACHED_FIRST_SOLVED_PROBLEMS_MAP_USER
+  ) {
+    const cachedFirstSolvedProblems = await cachedFirstSolvedProblemArray(
+      param,
+      user
+    );
+    if (cachedFirstSolvedProblems && Array.isArray(cachedFirstSolvedProblems)) {
+      CACHED_FIRST_SOLVED_PROBLEMS_MAP = cachedFirstSolvedProblems.reduce(
+        (map, problem) => {
+          if (problem === undefined) return map;
+          return map.set(problem.ProblemId, problem);
+        },
+        new Map<ProblemId, FirstSolvedProblem>()
+      );
+    } else {
+      CACHED_FIRST_SOLVED_PROBLEMS_MAP = new Map<
+        ProblemId,
+        FirstSolvedProblem
+      >();
+    }
+    CACHED_FIRST_SOLVED_PROBLEMS_MAP_PARAM = param;
+    CACHED_FIRST_SOLVED_PROBLEMS_MAP_USER = user;
+  }
+  return CACHED_FIRST_SOLVED_PROBLEMS_MAP;
 };
 
 // map (UserName -> RankingProblem array)

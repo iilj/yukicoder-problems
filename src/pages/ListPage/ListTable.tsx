@@ -133,6 +133,18 @@ export const ListTable: React.FC<Props> = (props) => {
       },
     },
     {
+      header: 'First Solve Date',
+      dataField: 'FirstSolveDate',
+      dataSort: true,
+      dataFormat: function _dataFormat(firstSolveDate: string) {
+        return firstSolveDate ? (
+          <>{dataFormat(new Date(firstSolveDate), 'yyyy/mm/dd HH:MM')}</>
+        ) : (
+          <></>
+        );
+      },
+    },
+    {
       header: 'Tags',
       dataField: 'Tags',
       dataSort: true,
@@ -140,7 +152,11 @@ export const ListTable: React.FC<Props> = (props) => {
         tags: string,
         row: RankingMergedProblem
       ): React.ReactElement {
-        return showTagsOfTryingProblems || row.SolveDate ? <>{tags}</> : <></>;
+        return showTagsOfTryingProblems || row.FirstSolveDate ? (
+          <>{tags}</>
+        ) : (
+          <></>
+        );
       },
     },
     {
