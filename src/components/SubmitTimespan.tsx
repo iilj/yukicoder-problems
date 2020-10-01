@@ -37,7 +37,7 @@ export const SubmitTimespan: React.FC<Props> = (props) => {
       mergedProblem.SolveStatus === ProblemSolveStatus.Solved
         ? ''
         : formatTimespan(
-            ((mergedProblem.SolveDateNum as number) -
+            ((mergedProblem.FirstSolveDateNum as number) -
               (mergedProblem.Contest as ExtendedContest).DateNum) /
               1000
           )}

@@ -41,7 +41,10 @@ import {
   ProblemLevel,
   ProblemLevels,
 } from '../../interfaces/Problem';
-import { SolvedProblem } from '../../interfaces/SolvedProblem';
+import {
+  SolvedProblem,
+  FirstSolvedProblem,
+} from '../../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { RankingProblem } from '../../interfaces/RankingProblem';
 import { RankingMergedProblem } from '../../interfaces/MergedProblem';
@@ -63,6 +66,8 @@ const initialUniversalState = {
 const initialUserState = {
   solvedProblems: [] as SolvedProblem[],
   solvedProblemsMap: new Map<ProblemId, SolvedProblem>(),
+  firstSolvedProblems: [] as FirstSolvedProblem[],
+  firstSolvedProblemsMap: new Map<ProblemId, FirstSolvedProblem>(),
 };
 
 const initialMergedState = {
@@ -124,19 +129,30 @@ export const ListPage: React.FC = () => {
     let unmounted = false;
     const getUserInfo = async () => {
       setUserStateLoaded(false);
-      const solvedProblems =
+      const [solvedProblems, firstSolvedProblems] =
         param && user
-          ? await TypedCachedApiClient.cachedSolvedProblemArray(param, user)
-          : ([] as SolvedProblem[]);
-      const solvedProblemsMap =
+          ? await Promise.all([
+              TypedCachedApiClient.cachedSolvedProblemArray(param, user),
+              TypedCachedApiClient.cachedFirstSolvedProblemArray(param, user),
+            ])
+          : [[] as SolvedProblem[], [] as FirstSolvedProblem[]];
+      const [solvedProblemsMap, firstSolvedProblemsMap] =
         param && user
-          ? await TypedCachedApiClient.cachedSolvedProblemMap(param, user)
-          : new Map<ProblemId, SolvedProblem>();
+          ? await Promise.all([
+              TypedCachedApiClient.cachedSolvedProblemMap(param, user),
+              TypedCachedApiClient.cachedFirstSolvedProblemMap(param, user),
+            ])
+          : [
+              new Map<ProblemId, SolvedProblem>(),
+              new Map<ProblemId, FirstSolvedProblem>(),
+            ];
 
       if (!unmounted) {
         setUserState({
           solvedProblems,
           solvedProblemsMap,
+          firstSolvedProblems,
+          firstSolvedProblemsMap,
         });
         setUserStateLoaded(true);
       }
@@ -157,6 +173,7 @@ export const ListPage: React.FC = () => {
         universalState.contests,
         universalState.problemContestMap,
         userState.solvedProblemsMap,
+        userState.firstSolvedProblemsMap,
         universalState.difficulties
       );
       const rankingMergedProblems = mergeShortest(
@@ -180,7 +197,7 @@ export const ListPage: React.FC = () => {
   }, [universalState, userState]);
 
   const { problems } = universalState;
-  const { solvedProblems } = userState;
+  const { firstSolvedProblems } = userState;
   const { rankingMergedProblems } = mergedState;
 
   const [colorMode, setColorMode] = useLocalStorage<ProblemLinkColorMode>(
@@ -230,7 +247,7 @@ export const ListPage: React.FC = () => {
       <Row>
         <DifficultyLevelTable
           problems={problems}
-          solvedProblems={solvedProblems}
+          firstSolvedProblems={firstSolvedProblems}
           user={user}
           problemLinkColorMode={colorMode}
         />
@@ -242,7 +259,7 @@ export const ListPage: React.FC = () => {
       <Row>
         <ProblemTypeTable
           problems={problems}
-          solvedProblems={solvedProblems}
+          firstSolvedProblems={firstSolvedProblems}
           user={user}
         />
       </Row>

@@ -33,6 +33,10 @@ export interface MergedProblem extends Problem {
   readonly SolveDate?: string;
   /** 最初に正答した日時 パース済み */
   readonly SolveDateNum?: number;
+  /** 最初に（リジャッジ前に）正答した日時 */
+  readonly FirstSolveDate?: string;
+  /** 最初に（リジャッジ前に）正答した日時 パース済み */
+  readonly FirstSolveDateNum?: number;
   /** 問題の提出状況 */
   readonly SolveStatus: ProblemSolveStatus;
   /** difficulty */
