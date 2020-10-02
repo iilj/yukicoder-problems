@@ -196,7 +196,8 @@ export const UserPage: React.FC = () => {
     (prevFirstSolvedProblems, firstSolvedProblem) => {
       if (
         solvedProblemsMap.get(firstSolvedProblem.ProblemId)?.Date !==
-        firstSolvedProblem.Date
+          firstSolvedProblem.Date &&
+        solvedProblemsMap.has(firstSolvedProblem.ProblemId)
       ) {
         prevFirstSolvedProblems.push(
           solvedProblemsMap.get(firstSolvedProblem.ProblemId) as SolvedProblem
