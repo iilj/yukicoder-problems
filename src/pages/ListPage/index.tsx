@@ -21,7 +21,7 @@ import { ListTable, FilterState } from './ListTable';
 import { getProblemTypeName } from '../../utils';
 import * as TypedCachedApiClient from '../../utils/TypedCachedApiClient';
 import * as DifficultyDataClient from '../../utils/DifficultyDataClient';
-import { mergeSolveStatus, mergeShortest } from '../../utils/MergeProcs';
+import { mergeSolveStatus, mergeRanking } from '../../utils/MergeProcs';
 import { WellPositionedDropdownMenu } from '../../components/WellPositionedDropdownMenu';
 import {
   DifficultyStarsFillDefs,
@@ -58,6 +58,7 @@ const initialUniversalState = {
   problems: [] as Problem[],
   contests: [] as Contest[],
   problemContestMap: new Map<ProblemId, ContestId>(),
+  speederProblemMap: new Map<ProblemNo, RankingProblem>(),
   golferProblemMap: new Map<ProblemNo, RankingProblem>(),
   golferPureProblemMap: new Map<ProblemNo, RankingProblem>(),
   difficulties: {} as Difficulties,
@@ -94,12 +95,14 @@ export const ListPage: React.FC = () => {
       const [
         problems,
         contests,
+        speederProblemMap,
         golferProblemMap,
         golferPureProblemMap,
         difficulties,
       ] = await Promise.all([
         TypedCachedApiClient.cachedProblemArray(),
         TypedCachedApiClient.cachedContestArray(),
+        TypedCachedApiClient.cachedSpeederRankingProblemMap(),
         TypedCachedApiClient.cachedGolferRankingProblemMap(),
         TypedCachedApiClient.cachedGolferRankingPureProblemMap(),
         DifficultyDataClient.cachedDifficultyData(),
@@ -110,6 +113,7 @@ export const ListPage: React.FC = () => {
         setUniversalState({
           problems,
           contests,
+          speederProblemMap,
           problemContestMap,
           golferProblemMap,
           golferPureProblemMap,
@@ -176,8 +180,9 @@ export const ListPage: React.FC = () => {
         userState.firstSolvedProblemsMap,
         universalState.difficulties
       );
-      const rankingMergedProblems = mergeShortest(
+      const rankingMergedProblems = mergeRanking(
         mergedProblems,
+        universalState.speederProblemMap,
         universalState.golferProblemMap,
         universalState.golferPureProblemMap
       );

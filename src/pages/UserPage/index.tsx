@@ -46,6 +46,7 @@ const MS_OF_HOUR = 1000 * 60 * 60;
 const MS_OF_DAY = MS_OF_HOUR * 24;
 
 const initialUniversalState = {
+  speederMap: new Map<UserName, RankingProblem[]>(),
   golferMap: new Map<UserName, RankingProblem[]>(),
   pureGolferMap: new Map<UserName, RankingProblem[]>(),
   contests: [] as Contest[],
@@ -81,12 +82,14 @@ export const UserPage: React.FC = () => {
     const getUniversalInfo = async () => {
       setUniversalStateLoaded(false);
       const [
+        speederMap,
         golferMap,
         pureGolferMap,
         problems,
         contests,
         difficulties,
       ] = await Promise.all([
+        TypedCachedApiClient.cachedSpeederMap(),
         TypedCachedApiClient.cachedGolferMap(),
         TypedCachedApiClient.cachedGolferPureMap(),
         TypedCachedApiClient.cachedProblemArray(),
@@ -100,6 +103,7 @@ export const UserPage: React.FC = () => {
 
       if (!unmounted) {
         setUniversalState({
+          speederMap,
           golferMap,
           pureGolferMap,
           contests,
@@ -163,6 +167,7 @@ export const UserPage: React.FC = () => {
   }, [param, user]);
 
   const {
+    speederMap,
     golferMap,
     pureGolferMap,
     contests,
@@ -212,22 +217,23 @@ export const UserPage: React.FC = () => {
   // for user info section
   /** returns [shortestCount, shortestRank] */
   const countRank = (
-    shortestMap: Map<UserName, RankingProblem[]>
+    rankingMap: Map<UserName, RankingProblem[]>
   ): [number, number] => {
     const shortestCount =
-      name && shortestMap.has(name)
-        ? (shortestMap.get(name) as RankingProblem[]).length
+      name && rankingMap.has(name)
+        ? (rankingMap.get(name) as RankingProblem[]).length
         : 0;
-    if (shortestMap.size === 0) return [shortestCount, 0];
-    if (shortestCount === 0) return [shortestCount, 1 + shortestMap.size];
+    if (rankingMap.size === 0) return [shortestCount, 0];
+    if (shortestCount === 0) return [shortestCount, 1 + rankingMap.size];
     let rank = 1;
-    golferMap.forEach((rankingProblems) => {
+    rankingMap.forEach((rankingProblems) => {
       if (rankingProblems.length > shortestCount) {
         ++rank;
       }
     });
     return [shortestCount, rank];
   };
+  const [fastestCount, fastestRank] = countRank(speederMap);
   const [shortestCount, shortestRank] = countRank(golferMap);
   const [pureShortestCount, pureShortestRank] = countRank(pureGolferMap);
 
@@ -324,16 +330,6 @@ export const UserPage: React.FC = () => {
       rank: undefined,
     },
     {
-      key: 'Shortest Code',
-      value: shortestCount,
-      rank: shortestRank,
-    },
-    {
-      key: 'Pure Shortest Code',
-      value: pureShortestCount,
-      rank: pureShortestRank,
-    },
-    {
       key: 'Score',
       value: userInfo.Score ?? 0,
       rank: undefined,
@@ -342,6 +338,21 @@ export const UserPage: React.FC = () => {
       key: 'Points',
       value: userInfo.Points ?? 0,
       rank: undefined,
+    },
+    {
+      key: 'Fastest Code',
+      value: fastestCount,
+      rank: fastestRank,
+    },
+    {
+      key: 'Shortest Code',
+      value: shortestCount,
+      rank: shortestRank,
+    },
+    {
+      key: 'Pure Shortest Code',
+      value: pureShortestCount,
+      rank: pureShortestRank,
     },
     // {
     //   key: 'Level',

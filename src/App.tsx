@@ -20,6 +20,7 @@ import {
 import { NavigationBar } from './components/NavigationBar';
 import { ShortRanking } from './pages/ShortRanking';
 import { PureShortRanking } from './pages/PureShortRanking';
+import { FastestRanking } from './pages/FastestRanking';
 import { TablePage } from './pages/TablePage';
 import { ListPage } from './pages/ListPage';
 import { UserPage } from './pages/UserPage';
@@ -43,6 +44,7 @@ const App: React.FC = () => {
       <NavigationBar />
       <Container style={{ width: '100%', maxWidth: '90%' }}>
         <Routes>
+          <Route path="/fast" element={<FastestRanking />} />
           <Route path="/short" element={<ShortRanking />} />
           <Route path="/pureshort" element={<PureShortRanking />} />
           <Route path="/table/:param/:user" element={<TablePage />} />

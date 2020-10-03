@@ -35,6 +35,8 @@ const fetchGolferRanking = () =>
   fetchJson<RankingProblem[]>(`${STATIC_API_BASE_URL}/ranking/golfer`);
 const fetchGolferRankingPure = () =>
   fetchJson<RankingProblem[]>(`${STATIC_API_BASE_URL}/ranking/golfer/pure`);
+const fetchSpeederRanking = () =>
+  fetchJson<RankingProblem[]>(`${STATIC_API_BASE_URL}/ranking/speeder`);
 const fetchGolferRankingPureLangId = (landId: LangId) =>
   fetchJson<RankingProblem[]>(
     `${STATIC_API_BASE_URL}/ranking/golfer/pure/${landId}`
@@ -229,6 +231,22 @@ export const cachedGolferRankingPureLangIdArray = async (
     }
   }
   return CACHED_GOLFER_RANKING_PURE_LANG_MAP.get(langId) as RankingProblem[];
+};
+
+// shortest code array
+let CACHED_SPEEDER_RANKING: RankingProblem[];
+export const cachedSpeederRankingArray = async (): Promise<
+  RankingProblem[]
+> => {
+  if (CACHED_SPEEDER_RANKING === undefined) {
+    try {
+      CACHED_SPEEDER_RANKING = await fetchSpeederRanking();
+    } catch (e) {
+      console.log(e);
+      CACHED_SPEEDER_RANKING = [];
+    }
+  }
+  return CACHED_SPEEDER_RANKING;
 };
 
 // language array
@@ -443,6 +461,28 @@ export const cachedGolferPureMapLangMap = async (
   >;
 };
 
+// map (UserName -> RankingProblem array)
+let CACHED_SPEEDER_RANKING_MAP: Map<UserName, RankingProblem[]>;
+export const cachedSpeederMap = async (): Promise<
+  Map<UserName, RankingProblem[]>
+> => {
+  if (CACHED_SPEEDER_RANKING_MAP === undefined) {
+    CACHED_SPEEDER_RANKING_MAP = (await cachedSpeederRankingArray()).reduce(
+      (map, rankingProblem) => {
+        if (!map.has(rankingProblem.UserName)) {
+          map.set(rankingProblem.UserName, []);
+        }
+        (map.get(rankingProblem.UserName) as RankingProblem[]).push(
+          rankingProblem
+        );
+        return map;
+      },
+      new Map<UserName, RankingProblem[]>()
+    );
+  }
+  return CACHED_SPEEDER_RANKING_MAP;
+};
+
 // map (Problem No -> RankingProblem of golfers)
 let CACHED_GOLFER_RANKING_PROBLEM_MAP: Map<ProblemNo, RankingProblem>;
 export const cachedGolferRankingProblemMap = async (): Promise<
@@ -473,4 +513,20 @@ export const cachedGolferRankingPureProblemMap = async (): Promise<
     );
   }
   return CACHED_GOLFER_RANKING_PURE_PROBLEM_MAP;
+};
+
+// map (Problem No -> RankingProblem of speeders)
+let CACHED_SPEEDER_RANKING_PROBLEM_MAP: Map<ProblemNo, RankingProblem>;
+export const cachedSpeederRankingProblemMap = async (): Promise<
+  Map<ProblemNo, RankingProblem>
+> => {
+  if (CACHED_SPEEDER_RANKING_PROBLEM_MAP === undefined) {
+    CACHED_SPEEDER_RANKING_PROBLEM_MAP = (
+      await cachedSpeederRankingArray()
+    ).reduce(
+      (map, rankingProblem) => map.set(rankingProblem.No, rankingProblem),
+      new Map<ProblemNo, RankingProblem>()
+    );
+  }
+  return CACHED_SPEEDER_RANKING_PROBLEM_MAP;
 };

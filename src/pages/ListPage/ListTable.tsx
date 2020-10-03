@@ -165,6 +165,23 @@ export const ListTable: React.FC<Props> = (props) => {
       dataSort: true,
     },
     {
+      header: 'Fastest',
+      dataField: 'FastestRankingProblem',
+      dataSort: true,
+      dataFormat: function _dataFormat(
+        fastestRankingProblem: RankingProblem
+      ): React.ReactElement {
+        return fastestRankingProblem ? (
+          <SubmissionLink
+            submissionId={fastestRankingProblem.SubmissionId}
+            submissionTitle={`${fastestRankingProblem.UserName}`}
+          />
+        ) : (
+          <></>
+        );
+      },
+    },
+    {
       header: 'Shortest',
       dataField: 'ShortestRankingProblem',
       dataSort: true,
@@ -238,6 +255,11 @@ export const ListTable: React.FC<Props> = (props) => {
     {
       header: 'Contest name for Search',
       dataField: 'ContestName',
+      hidden: true,
+    },
+    {
+      header: 'Fastest User for Search',
+      dataField: 'FastestRankingUserName',
       hidden: true,
     },
     {
