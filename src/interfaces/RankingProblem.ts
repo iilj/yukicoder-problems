@@ -18,6 +18,6 @@ export interface RankingProblem {
   readonly UserName: UserName;
   /** ソースコード長 */
   readonly Length: number;
-  /** 問題タイプ */
+  /** 言語ID */
   readonly LangId: LangId;
 }

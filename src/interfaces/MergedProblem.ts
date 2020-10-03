@@ -45,12 +45,16 @@ export interface MergedProblem extends Problem {
 
 /** コンテスト情報，解答状況，およびショートコード情報をマージした問題 */
 export interface RankingMergedProblem extends MergedProblem {
+  /** 最速実行時間コード */
+  readonly FastestRankingProblem?: RankingProblem;
   /** ショートコード */
   readonly ShortestRankingProblem?: RankingProblem;
   /** 純ショートコード */
   readonly PureShortestRankingProblem?: RankingProblem;
   /** 検索用 コンテスト名 */
   readonly ContestName?: string;
+  /** 検索用 最速実行時間コード保持ユーザ名 */
+  readonly FastestRankingUserName?: string;
   /** 検索用 ショートコード保持ユーザ名 */
   readonly ShortestRankingUserName?: string;
   /** 検索用 純ショートコード保持ユーザ名 */

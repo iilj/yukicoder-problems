@@ -110,13 +110,18 @@ export const mergedProblemsToMap = (
   );
 };
 
-export const mergeShortest = (
+export const mergeRanking = (
   mergedProblems: MergedProblem[],
+  speederProblemMap: Map<ProblemNo, RankingProblem>,
   golferProblemMap: Map<ProblemNo, RankingProblem>,
   golferPureProblemMap: Map<ProblemNo, RankingProblem>
 ): RankingMergedProblem[] =>
   mergedProblems.map(
     (mergedProblem): RankingMergedProblem => {
+      const FastestRankingProblem =
+        typeof mergedProblem.No === 'number'
+          ? speederProblemMap.get(mergedProblem.No)
+          : undefined;
       const ShortestRankingProblem =
         typeof mergedProblem.No === 'number'
           ? golferProblemMap.get(mergedProblem.No)
@@ -125,20 +130,17 @@ export const mergeShortest = (
         typeof mergedProblem.No === 'number'
           ? golferPureProblemMap.get(mergedProblem.No)
           : undefined;
-      const ContestName = mergedProblem.Contest
-        ? mergedProblem.Contest.Name
-        : undefined;
-      const ShortestRankingUserName = ShortestRankingProblem
-        ? ShortestRankingProblem.UserName
-        : undefined;
-      const PureShortestRankingUserName = PureShortestRankingProblem
-        ? PureShortestRankingProblem.UserName
-        : undefined;
+      const ContestName = mergedProblem.Contest?.Name;
+      const FastestRankingUserName = FastestRankingProblem?.UserName;
+      const ShortestRankingUserName = ShortestRankingProblem?.UserName;
+      const PureShortestRankingUserName = PureShortestRankingProblem?.UserName;
       return {
         ...mergedProblem,
+        FastestRankingProblem,
         ShortestRankingProblem,
         PureShortestRankingProblem,
         ContestName,
+        FastestRankingUserName,
         ShortestRankingUserName,
         PureShortestRankingUserName,
       };

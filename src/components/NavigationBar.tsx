@@ -147,6 +147,9 @@ export const NavigationBar: React.FC = () => {
               Rankings
             </DropdownToggle>
             <DropdownMenu right>
+              <DropdownItem tag={RouterLink} to="/fast">
+                Fastest Submissions
+              </DropdownItem>
               <DropdownItem tag={RouterLink} to="/short">
                 Shortest Submissions
               </DropdownItem>
