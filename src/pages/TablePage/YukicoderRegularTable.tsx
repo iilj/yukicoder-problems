@@ -187,6 +187,7 @@ export const YukicoderRegularTable: React.FC<Props> = (props) => {
                     problemLinkColorMode={problemLinkColorMode}
                     id={`lnk-regular-table-${mergedProblem.ProblemId}`}
                     difficulty={mergedProblem.Difficulty}
+                    augmented={mergedProblem.Augmented}
                   />
                   <SubmitTimespan
                     mergedProblem={mergedProblem}

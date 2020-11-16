@@ -1,4 +1,5 @@
 import React from 'react';
+import { UncontrolledTooltip } from 'reactstrap';
 import { formatProblemUrl } from '../utils/Url';
 import { getDifficultyLevelColorClass } from '../utils';
 import { getRatingColorClass } from '../utils/RatingColor';
@@ -15,6 +16,7 @@ interface Props {
   level: ProblemLevel;
   problemLinkColorMode: ProblemLinkColorMode;
   difficulty?: Difficulty;
+  augmented?: boolean;
   id?: string;
   showDifficultyCircle?: boolean;
 }
@@ -26,6 +28,7 @@ export const ProblemLink: React.FC<Props> = (props) => {
     level,
     problemLinkColorMode,
     difficulty,
+    augmented,
     id,
   } = props;
   const className =
@@ -38,10 +41,21 @@ export const ProblemLink: React.FC<Props> = (props) => {
     props.showDifficultyCircle !== undefined
       ? props.showDifficultyCircle
       : problemLinkColorMode === 'Difficulty';
+  const experimentalIconId = `experimental-${problemNo}-${id ?? 'dummy'}`;
   return (
     <>
       {showDifficultyCircle && (
         <DifficultyCircle id={id} difficulty={difficulty} />
+      )}
+      {showDifficultyCircle && augmented && (
+        <>
+          <span id={experimentalIconId} role="img" aria-label="experimental">
+            🧪
+          </span>
+          <UncontrolledTooltip placement="top" target={experimentalIconId}>
+            This estimate is experimental.
+          </UncontrolledTooltip>
+        </>
       )}
       <a
         href={formatProblemUrl(problemNo)}

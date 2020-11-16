@@ -38,7 +38,11 @@ export const mergeSolveStatus = (
       const firstSolvedProblem = firstSolvedProblemsMap.get(problem.ProblemId);
       const Difficulty =
         problem.ProblemId in difficulties
-          ? difficulties[problem.ProblemId]
+          ? difficulties[problem.ProblemId][0]
+          : undefined;
+      const Augmented =
+        problem.ProblemId in difficulties
+          ? difficulties[problem.ProblemId][3]
           : undefined;
       if (!extendedContest) {
         // コンテスト情報なし，ACしたかどうかのみ
@@ -61,6 +65,7 @@ export const mergeSolveStatus = (
           FirstSolveDateNum,
           SolveStatus,
           Difficulty,
+          Augmented,
         };
       }
       // assert コンテスト情報あり
@@ -72,6 +77,7 @@ export const mergeSolveStatus = (
           DateNum,
           SolveStatus: ProblemSolveStatus.Trying,
           Difficulty,
+          Augmented,
         };
       }
       // assert AC 済み
@@ -95,6 +101,7 @@ export const mergeSolveStatus = (
         FirstSolveDateNum,
         SolveStatus,
         Difficulty,
+        Augmented,
       };
     }
   );

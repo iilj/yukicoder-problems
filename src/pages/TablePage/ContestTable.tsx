@@ -113,6 +113,7 @@ export const ContestTable: React.FC<Props> = (props) => {
                           problemLinkColorMode={problemLinkColorMode}
                           id={`lnk-contest-table-${mergedProblem.ProblemId}`}
                           difficulty={mergedProblem.Difficulty}
+                          augmented={mergedProblem.Augmented}
                         />
                         <SubmitTimespan
                           mergedProblem={mergedProblem}
