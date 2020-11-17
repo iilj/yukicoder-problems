@@ -1,5 +1,6 @@
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import React from 'react';
+import dataFormat from 'dateformat';
 import { Row, Spinner } from 'reactstrap';
 import { ContestLink } from '../../components/ContestLink';
 import { DifficultyStarsAbsoluteSpan } from '../../components/DifficultyStars';
@@ -23,6 +24,7 @@ interface Props {
   problemLinkColorMode: ProblemLinkColorMode;
   showDifficultyLevel: boolean;
   showContestResult: boolean;
+  showContestDate: boolean;
   universalStateLoaded: boolean;
 }
 
@@ -33,6 +35,7 @@ export const YukicoderRegularTable: React.FC<Props> = (props) => {
     problemLinkColorMode,
     showDifficultyLevel,
     showContestResult,
+    showContestDate,
     universalStateLoaded,
   } = props;
 
@@ -104,11 +107,18 @@ export const YukicoderRegularTable: React.FC<Props> = (props) => {
             return 'table-problem';
           }}
           dataFormat={(_, contest: Contest) => (
-            <ContestLink
-              contestId={contest.Id}
-              contestName={contest.Name.replace(/^yukicoder contest /, '')}
-              rawContestName={contest.Name}
-            />
+            <>
+              <ContestLink
+                contestId={contest.Id}
+                contestName={contest.Name.replace(/^yukicoder contest /, '')}
+                rawContestName={contest.Name}
+              />
+              {showContestDate && (
+                <div className="table-contest-date">
+                  {dataFormat(new Date(contest.Date), 'yyyy/mm/dd')}
+                </div>
+              )}
+            </>
           )}
         >
           Contest

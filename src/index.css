@@ -101,6 +101,20 @@ h4 {
   font-size: x-small;
 }
 
+.table-contest-date {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0;
+  color: #888888;
+  font-size: x-small;
+}
+
+.table-contest-date-span {
+  color: #888888;
+  font-size: small;
+  margin-left: 0.5rem;
+}
+
 .table-problem-stars {
   position: absolute;
   left: 0;
