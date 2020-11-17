@@ -175,6 +175,10 @@ export const TablePage: React.FC = () => {
     'TablePage_showContestResult',
     true
   );
+  const [showContestDate, setShowContestDate] = useLocalStorage(
+    'TablePage_showContestDate',
+    false
+  );
   const [activeTab, setActiveTab] = useLocalStorage(
     'TablePage_activeTab',
     ContestTableTab.regular
@@ -244,6 +248,16 @@ export const TablePage: React.FC = () => {
             Show Level Stars
           </Label>
         </FormGroup>
+        <FormGroup check inline>
+          <Label check>
+            <Input
+              type="checkbox"
+              checked={showContestDate}
+              onChange={(e) => setShowContestDate(e.target.checked)}
+            />
+            Show Contest Date
+          </Label>
+        </FormGroup>
         <UncontrolledDropdown>
           <DropdownToggle caret>
             {
@@ -278,6 +292,7 @@ export const TablePage: React.FC = () => {
           showDifficultyLevel={showDifficultyLevel}
           problemLinkColorMode={colorMode}
           showContestResult={showContestResult}
+          showContestDate={showContestDate}
           universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
@@ -289,6 +304,7 @@ export const TablePage: React.FC = () => {
           showDifficultyLevel={showDifficultyLevel}
           problemLinkColorMode={colorMode}
           showContestResult={showContestResult}
+          showContestDate={showContestDate}
           universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
@@ -300,6 +316,7 @@ export const TablePage: React.FC = () => {
           showDifficultyLevel={showDifficultyLevel}
           problemLinkColorMode={colorMode}
           showContestResult={showContestResult}
+          showContestDate={showContestDate}
           universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>
@@ -311,6 +328,7 @@ export const TablePage: React.FC = () => {
           showDifficultyLevel={showDifficultyLevel}
           problemLinkColorMode={colorMode}
           showContestResult={showContestResult}
+          showContestDate={showContestDate}
           universalStateLoaded={universalStateLoaded}
         />
       </ContestWrapper>

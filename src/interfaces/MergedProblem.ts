@@ -41,6 +41,8 @@ export interface MergedProblem extends Problem {
   readonly SolveStatus: ProblemSolveStatus;
   /** difficulty */
   readonly Difficulty?: Difficulty;
+  /** experimental difficulty かどうか */
+  readonly Augmented?: boolean;
 }
 
 /** コンテスト情報，解答状況，およびショートコード情報をマージした問題 */

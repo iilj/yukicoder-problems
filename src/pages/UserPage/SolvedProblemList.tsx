@@ -20,6 +20,7 @@ import { Difficulties, Difficulty } from '../../interfaces/Difficulty';
 interface Entry extends SolvedProblem {
   Contest: Contest | undefined;
   Difficulty?: Difficulty;
+  Augmented?: boolean;
 }
 
 interface Props {
@@ -61,7 +62,11 @@ export const SolvedProblemList: React.FC<Props> = (props) => {
               Contest: contestMap.get(problemContestMap.get(s.ProblemId) ?? -1),
               Difficulty:
                 s.ProblemId in difficulties
-                  ? difficulties[s.ProblemId]
+                  ? difficulties[s.ProblemId][0]
+                  : undefined,
+              Augmented:
+                s.ProblemId in difficulties
+                  ? difficulties[s.ProblemId][3]
                   : undefined,
               ...s,
             } as Entry)
@@ -124,6 +129,7 @@ export const SolvedProblemList: React.FC<Props> = (props) => {
             level={row.Level}
             problemLinkColorMode={problemLinkColorMode}
             difficulty={row.Difficulty}
+            augmented={row.Augmented}
             id={`SolvedProblemList-ProblemLink-${row.ProblemId}`}
           />
         )}

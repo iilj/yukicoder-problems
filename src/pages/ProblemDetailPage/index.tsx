@@ -162,6 +162,7 @@ export const ProblemDetailPage: React.FC = () => {
                   level={problem.Level}
                   problemLinkColorMode={colorMode}
                   difficulty={difficultyDetailData.difficulty}
+                  augmented={difficultyDetailData.augmented}
                 />
               </td>
             </tr>

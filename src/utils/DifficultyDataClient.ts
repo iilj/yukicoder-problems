@@ -13,7 +13,7 @@ const fetchJson = async <T>(url: string): Promise<T> => {
 };
 
 const fetchDifficulties = () =>
-  fetchJson<Difficulties>(`${BASE_URL}/summary.json`);
+  fetchJson<Difficulties>(`${BASE_URL}/summary_v2.json`);
 
 const fetchDifficultyDetailData = (problemId: ProblemId) =>
   fetchJson<DifficultyDetailData>(`${BASE_URL}/detail/${problemId}.json`);
@@ -33,9 +33,10 @@ export const cachedDifficultyData = async (): Promise<Difficulties> => {
 };
 
 export const difficultyDetailDataUnit = {
+  difficulty: -1,
   coef: -1,
   bias: -1,
-  difficulty: -1,
+  augmented: false,
   detail: [],
 } as DifficultyDetailData;
 export const cachedDifficultyDetailData = async (

@@ -1,5 +1,6 @@
 import { Table, Row, Spinner } from 'reactstrap';
 import React from 'react';
+import dataFormat from 'dateformat';
 import {
   ProblemLink,
   ProblemLinkColorMode,
@@ -24,6 +25,7 @@ interface Props {
   problemLinkColorMode: ProblemLinkColorMode;
   showDifficultyLevel: boolean;
   showContestResult: boolean;
+  showContestDate: boolean;
   universalStateLoaded: boolean;
 }
 
@@ -34,6 +36,7 @@ export const ContestTable: React.FC<Props> = (props) => {
     problemLinkColorMode,
     showDifficultyLevel,
     showContestResult,
+    showContestDate,
     universalStateLoaded,
   } = props;
 
@@ -66,6 +69,11 @@ export const ContestTable: React.FC<Props> = (props) => {
               )}
               <ContestLink contestId={contest.Id} contestName={contest.Name} />
             </strong>
+            {showContestDate && (
+              <span className="table-contest-date-span">
+                ({dataFormat(new Date(contest.Date), 'yyyy/mm/dd')})
+              </span>
+            )}
             <Table striped bordered hover className="contest-other-table">
               <tbody>
                 <tr>
@@ -113,6 +121,7 @@ export const ContestTable: React.FC<Props> = (props) => {
                           problemLinkColorMode={problemLinkColorMode}
                           id={`lnk-contest-table-${mergedProblem.ProblemId}`}
                           difficulty={mergedProblem.Difficulty}
+                          augmented={mergedProblem.Augmented}
                         />
                         <SubmitTimespan
                           mergedProblem={mergedProblem}
