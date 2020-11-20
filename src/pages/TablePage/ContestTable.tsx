@@ -71,7 +71,7 @@ export const ContestTable: React.FC<Props> = (props) => {
             </strong>
             {showContestDate && (
               <span className="table-contest-date-span">
-                ({dataFormat(new Date(contest.Date), 'yyyy/mm/dd')})
+                ({dataFormat(Date.parse(contest.Date), 'yyyy/mm/dd')})
               </span>
             )}
             <Table striped bordered hover className="contest-other-table">
