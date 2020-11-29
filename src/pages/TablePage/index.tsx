@@ -192,7 +192,7 @@ export const TablePage: React.FC = () => {
   const regexpOpenContest = /\(Open\)$/;
   contests.forEach((contest) => {
     if (regexpYukicoderContest.exec(contest.Name)) {
-      if (contest.ProblemIdList.length <= 6)
+      if (contest.ProblemIdList.length <= 7)
         yukicoderRegularContests.push(contest);
       else yukicoderLongContests.push(contest);
     } else if (regexpOpenContest.exec(contest.Name)) {
