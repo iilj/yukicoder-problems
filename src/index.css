@@ -51,11 +51,17 @@ h4 {
   fill: url(#ggold);
 }
 
-.contest-other-table tr {
+.contest-other-table tbody tr {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
-.contest-other-table tr td {
+.contest-other-table tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.025);
+}
+.contest-other-table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.contest-other-table tbody tr td {
   flex: auto;
   word-break: break-word;
 }
