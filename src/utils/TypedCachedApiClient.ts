@@ -27,6 +27,8 @@ export type UserParam = 'id' | 'name' | 'twitter';
 
 const fetchContests = () =>
   fetchJson<Contest[]>(`${STATIC_API_BASE_URL}/contest/past`);
+const fetchCurrentContests = () =>
+  fetchJson<Contest[]>(`${STATIC_API_BASE_URL}/contest/current`);
 const fetchProblems = () =>
   fetchJson<Problem[]>(`${STATIC_API_BASE_URL}/problems`);
 const fetchLanguages = () =>
@@ -65,7 +67,9 @@ let CACHED_CONTESTS: Contest[];
 export const cachedContestArray = async (): Promise<Contest[]> => {
   if (CACHED_CONTESTS === undefined) {
     try {
-      CACHED_CONTESTS = (await fetchContests()).concat(OpenContests);
+      CACHED_CONTESTS = (await fetchCurrentContests())
+        .concat(await fetchContests())
+        .concat(OpenContests);
     } catch (e) {
       console.log(e);
       CACHED_CONTESTS = [];
