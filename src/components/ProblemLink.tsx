@@ -6,6 +6,7 @@ import { getRatingColorClass } from '../utils/RatingColor';
 import { ProblemNo, ProblemLevel } from '../interfaces/Problem';
 import { Difficulty } from '../interfaces/Difficulty';
 import { DifficultyCircle } from './DifficultyCircle';
+import { NewTabLink } from './NewTabLink';
 
 export const ProblemLinkColorModes = ['None', 'Level', 'Difficulty'] as const;
 export type ProblemLinkColorMode = typeof ProblemLinkColorModes[number];
@@ -57,15 +58,13 @@ export const ProblemLink: React.FC<Props> = (props) => {
           </UncontrolledTooltip>
         </>
       )}
-      <a
+      <NewTabLink
         href={formatProblemUrl(problemNo)}
-        target="_blank" // eslint-disable-line react/jsx-no-target-blank
-        rel="noopener"
         className={className}
         title={problemTitle}
       >
         {problemTitle}
-      </a>
+      </NewTabLink>
     </>
   );
 };

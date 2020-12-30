@@ -1,6 +1,7 @@
 import React from 'react';
 import { formatSubmissionUrl } from '../utils/Url';
 import { SubmissionId } from '../interfaces/Problem';
+import { NewTabLink } from './NewTabLink';
 
 interface Props {
   submissionId: SubmissionId;
@@ -11,14 +12,12 @@ interface Props {
 export const SubmissionLink: React.FC<Props> = (props) => {
   const { submissionId, submissionTitle, id } = props;
   return (
-    <a
+    <NewTabLink
       href={formatSubmissionUrl(submissionId)}
-      target="_blank" // eslint-disable-line react/jsx-no-target-blank
-      rel="noopener"
       title={submissionTitle}
       id={id}
     >
       {submissionTitle}
-    </a>
+    </NewTabLink>
   );
 };
