@@ -16,6 +16,7 @@ import { ProblemId, ProblemLevel, ProblemNo } from '../../interfaces/Problem';
 import { SolvedProblem } from '../../interfaces/SolvedProblem';
 import { Contest, ContestId } from '../../interfaces/Contest';
 import { Difficulties, Difficulty } from '../../interfaces/Difficulty';
+import { Badge } from 'reactstrap';
 
 interface Entry extends SolvedProblem {
   Contest: Contest | undefined;
@@ -112,8 +113,11 @@ export const SolvedProblemList: React.FC<Props> = (props) => {
       <TableHeaderColumn
         dataSort
         dataField="Date"
-        dataFormat={(date: string) => (
-          <>{dataFormat(new Date(date), 'yyyy/mm/dd HH:MM')}</>
+        dataFormat={(date: string, row: Entry) => (
+          <>
+            <>{dataFormat(new Date(date), 'yyyy/mm/dd HH:MM')}</>
+            <>{!row.First && <Badge color="success">After Rejudge</Badge>}</>
+          </>
         )}
       >
         Date
