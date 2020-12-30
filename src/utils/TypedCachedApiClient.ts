@@ -50,10 +50,20 @@ const fetchUserInfo = (param: UserParam, user: UserName) =>
 const fetchSolvedProblems = (param: UserParam, user: UserName) =>
   fetchJson<SolvedProblem[]>(
     `${STATIC_API_BASE_URL}/solved/${param}/${encodeURIComponent(user)}`
+  ).then((solvedProblems) =>
+    solvedProblems.map((solvedProblem) => {
+      solvedProblem.First = false;
+      return solvedProblem;
+    })
   );
 const fetchFirstSolvedProblems = (param: UserParam, user: UserName) =>
   fetchJson<FirstSolvedProblem[]>(
     `${STATIC_API_BASE_URL}/solved/${param}/${encodeURIComponent(user)}/first`
+  ).then((solvedProblems) =>
+    solvedProblems.map((solvedProblem) => {
+      solvedProblem.First = true;
+      return solvedProblem;
+    })
   );
 const fetchSingleProblem = (problemId: ProblemId) =>
   fetchJson<Problem>(`${STATIC_API_BASE_URL}/problems/${problemId}`);
