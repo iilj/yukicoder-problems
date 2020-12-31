@@ -1,4 +1,8 @@
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import {
+  BootstrapTable,
+  SortOrder,
+  TableHeaderColumn,
+} from 'react-bootstrap-table';
 import React, { useState } from 'react';
 import { Button } from 'reactstrap';
 import dataFormat from 'dateformat';
@@ -23,6 +27,7 @@ import {
 } from '../../interfaces/MergedProblem';
 import { ProblemDetailModal } from '../../components/ProblemDetailModal';
 import { useNavigate } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 
 export type FilterState = 'All' | 'Only Trying' | 'Only AC';
 
@@ -37,6 +42,32 @@ interface Props {
   showTagsOfTryingProblems: boolean;
   problemLinkColorMode: ProblemLinkColorMode;
 }
+
+const SORT_NAMES = [
+  'Date',
+  'Title',
+  'Level',
+  'Contest',
+  'SolveDate',
+  'FirstSolveDate',
+  'Tags',
+  'Difficulty',
+  'FastestRankingProblem',
+  'ShortestRankingProblem',
+  'PureShortestRankingProblem',
+  'ProblemType',
+  'No',
+  'ProblemId',
+] as const;
+type SortName = typeof SORT_NAMES[number];
+const sanitizeColumnName = (sortName: string | null): SortName => {
+  if (SORT_NAMES.includes(sortName as SortName)) return sortName as SortName;
+  else return 'Date';
+};
+const sanitizeSortOrder = (sortOrder: string | null): SortOrder => {
+  if (sortOrder == 'asc' || sortOrder == 'desc') return sortOrder;
+  else return 'desc';
+};
 
 export const ListTable: React.FC<Props> = (props) => {
   const {
@@ -58,6 +89,8 @@ export const ListTable: React.FC<Props> = (props) => {
     enabled: false,
     rankingMergedProblem: undefined,
   });
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const columns = [
     {
@@ -335,7 +368,8 @@ export const ListTable: React.FC<Props> = (props) => {
         }}
         options={{
           paginationPosition: 'top',
-          sizePerPage: 20,
+          page: Number(searchParams.get('page') ?? 1),
+          sizePerPage: Number(searchParams.get('sizePerPage') ?? 20),
           sizePerPageList: [
             {
               text: '20',
@@ -358,10 +392,39 @@ export const ListTable: React.FC<Props> = (props) => {
               value: rankingMergedProblems.length,
             },
           ],
+          onSizePerPageList: function _onSizePerPageList(sizePerPage: number) {
+            searchParams.set('page', `1`);
+            searchParams.set('sizePerPage', `${sizePerPage}`);
+            setSearchParams(searchParams);
+          },
+          onPageChange: function _onPageChange(
+            page: number,
+            sizePerPage: number
+          ) {
+            searchParams.set('page', `${page}`);
+            searchParams.set('sizePerPage', `${sizePerPage}`);
+            setSearchParams(searchParams);
+          },
           paginationPanel: function _paginationPanel(
             paginationPanelProps: ListPaginationPanelProps
           ) {
             return <ListPaginationPanel {...paginationPanelProps} />;
+          },
+          defaultSortName: sanitizeColumnName(searchParams.get('sortName')),
+          defaultSortOrder: sanitizeSortOrder(searchParams.get('sortOrder')),
+          onSortChange: function _onSortChange(
+            sortName: string | number | symbol,
+            sortOrder: SortOrder
+          ) {
+            searchParams.set('sortName', sortName as string);
+            searchParams.set('sortOrder', sortOrder);
+            setSearchParams(searchParams);
+          },
+          defaultSearch: searchParams.get('search') ?? '',
+          onSearchChange: function _onSearchChange(searchText: string) {
+            searchParams.set('page', `1`);
+            searchParams.set('search', searchText);
+            setSearchParams(searchParams, { replace: true });
           },
         }}
       >
