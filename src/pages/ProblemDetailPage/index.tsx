@@ -26,6 +26,7 @@ import { ContestLink } from '../../components/ContestLink';
 import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
 import { TabbedDifficultyChart } from './TabbedDifficultyChart';
 import { useResetScroll } from '../../utils/UseResetScroll';
+import { getHeader } from '../../utils';
 
 const initialUniversalState = {
   problem: {} as Problem,
@@ -96,6 +97,11 @@ export const ProblemDetailPage: React.FC = () => {
 
   const contestId = problemContestMap.get(problemId);
   const contest = contestId ? contestMap.get(contestId) : undefined;
+  const header = contest
+    ? `${getHeader(
+        contest.ProblemIdList.findIndex((pid) => pid === problem.ProblemId)
+      )}. `
+    : '';
 
   const shortestRankingProblem = golferProblemMap.get(problemId);
   const pureShortestRankingProblem = golferPureProblemMap.get(problemId);
@@ -157,7 +163,7 @@ export const ProblemDetailPage: React.FC = () => {
               <th>Title</th>
               <td>
                 <ProblemLink
-                  problemTitle={problem.Title}
+                  problemTitle={`${header}${problem.Title}`}
                   problemNo={problem.No as ProblemNo}
                   level={problem.Level}
                   problemLinkColorMode={colorMode}
