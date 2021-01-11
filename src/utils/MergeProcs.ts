@@ -27,6 +27,13 @@ export const mergeSolveStatus = (
       }),
     new Map<ContestId, ExtendedContest>()
   );
+  const problemIndexMap = contests.reduce((map, contest) => {
+    contest.ProblemIdList.forEach((pid, i) => {
+      if (pid < 0) return;
+      map.set(pid, i);
+    });
+    return map;
+  }, new Map<ProblemId, number>());
   const mergedProblems = problems.map(
     (problem): MergedProblem => {
       const DateNum = Date.parse(problem.Date as string);
@@ -66,6 +73,7 @@ export const mergeSolveStatus = (
           SolveStatus,
           Difficulty,
           Augmented,
+          Index: undefined,
         };
       }
       // assert コンテスト情報あり
@@ -78,6 +86,7 @@ export const mergeSolveStatus = (
           SolveStatus: ProblemSolveStatus.Trying,
           Difficulty,
           Augmented,
+          Index: problemIndexMap.get(problem.ProblemId),
         };
       }
       // assert AC 済み
@@ -102,6 +111,7 @@ export const mergeSolveStatus = (
         SolveStatus,
         Difficulty,
         Augmented,
+        Index: problemIndexMap.get(problem.ProblemId),
       };
     }
   );

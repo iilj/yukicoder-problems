@@ -28,6 +28,7 @@ import {
 import { ProblemDetailModal } from '../../components/ProblemDetailModal';
 import { useNavigate } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
+import { getHeader } from '../../utils';
 
 export type FilterState = 'All' | 'Only Trying' | 'Only AC';
 
@@ -115,9 +116,11 @@ export const ListTable: React.FC<Props> = (props) => {
         title: string,
         row: RankingMergedProblem
       ) {
+        const header =
+          row.Index !== undefined ? `${getHeader(row.Index)}. ` : '';
         return (
           <ProblemLink
-            problemTitle={title}
+            problemTitle={`${header}${title}`}
             problemNo={row.No as ProblemNo}
             level={row.Level}
             problemLinkColorMode={problemLinkColorMode}
