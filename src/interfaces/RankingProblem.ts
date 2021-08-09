@@ -16,8 +16,8 @@ export interface RankingProblem {
   readonly SubmitterId: UserId;
   /** 提出者名 */
   readonly UserName: UserName;
-  /** ソースコード長 */
-  readonly Length: number;
+  /** ソースコード長, nullable */
+  readonly Length: number | null;
   /** 言語ID */
   readonly LangId: LangId;
 }

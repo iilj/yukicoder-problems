@@ -221,3 +221,8 @@ const getHeaderFromNum = (num: number): string => {
   }
 };
 export const getHeader = (idx: number): string => getHeaderFromNum(idx + 1);
+
+export const bytesLengthToString = (length: number | null): string => {
+  if (length === null) return '??? Bytes';
+  return `${length} Bytes`;
+};

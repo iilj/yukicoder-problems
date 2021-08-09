@@ -7,7 +7,8 @@ import { User, UserName } from '../interfaces/User';
 import { OpenContests } from './OpenContest';
 
 const BASE_URL = 'https://yukicoder.me';
-const STATIC_API_BASE_URL = `${BASE_URL}/api/v1`;
+const STATIC_API_BASE_URL_V1 = `${BASE_URL}/api/v1`;
+const STATIC_API_BASE_URL_V2 = `${BASE_URL}/api/v2`;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const assertResultIsValid = (obj: any): void => {
@@ -26,30 +27,30 @@ const fetchJson = async <T>(url: string): Promise<T> => {
 export type UserParam = 'id' | 'name' | 'twitter';
 
 const fetchContests = () =>
-  fetchJson<Contest[]>(`${STATIC_API_BASE_URL}/contest/past`);
+  fetchJson<Contest[]>(`${STATIC_API_BASE_URL_V1}/contest/past`);
 const fetchCurrentContests = () =>
-  fetchJson<Contest[]>(`${STATIC_API_BASE_URL}/contest/current`);
+  fetchJson<Contest[]>(`${STATIC_API_BASE_URL_V1}/contest/current`);
 const fetchProblems = () =>
-  fetchJson<Problem[]>(`${STATIC_API_BASE_URL}/problems`);
+  fetchJson<Problem[]>(`${STATIC_API_BASE_URL_V1}/problems`);
 const fetchLanguages = () =>
-  fetchJson<Language[]>(`${STATIC_API_BASE_URL}/languages`);
+  fetchJson<Language[]>(`${STATIC_API_BASE_URL_V1}/languages`);
 const fetchGolferRanking = () =>
-  fetchJson<RankingProblem[]>(`${STATIC_API_BASE_URL}/ranking/golfer`);
+  fetchJson<RankingProblem[]>(`${STATIC_API_BASE_URL_V2}/ranking/golfer`);
 const fetchGolferRankingPure = () =>
-  fetchJson<RankingProblem[]>(`${STATIC_API_BASE_URL}/ranking/golfer/pure`);
+  fetchJson<RankingProblem[]>(`${STATIC_API_BASE_URL_V2}/ranking/golfer/pure`);
 const fetchSpeederRanking = () =>
-  fetchJson<RankingProblem[]>(`${STATIC_API_BASE_URL}/ranking/speeder`);
+  fetchJson<RankingProblem[]>(`${STATIC_API_BASE_URL_V2}/ranking/speeder`);
 const fetchGolferRankingPureLangId = (landId: LangId) =>
   fetchJson<RankingProblem[]>(
-    `${STATIC_API_BASE_URL}/ranking/golfer/pure/${landId}`
+    `${STATIC_API_BASE_URL_V2}/ranking/golfer/pure/${landId}`
   );
 const fetchUserInfo = (param: UserParam, user: UserName) =>
   fetchJson<User>(
-    `${STATIC_API_BASE_URL}/user/${param}/${encodeURIComponent(user)}`
+    `${STATIC_API_BASE_URL_V1}/user/${param}/${encodeURIComponent(user)}`
   );
 const fetchSolvedProblems = (param: UserParam, user: UserName) =>
   fetchJson<SolvedProblem[]>(
-    `${STATIC_API_BASE_URL}/solved/${param}/${encodeURIComponent(user)}`
+    `${STATIC_API_BASE_URL_V1}/solved/${param}/${encodeURIComponent(user)}`
   ).then((solvedProblems) =>
     solvedProblems.map((solvedProblem) => {
       solvedProblem.First = false;
@@ -58,7 +59,9 @@ const fetchSolvedProblems = (param: UserParam, user: UserName) =>
   );
 const fetchFirstSolvedProblems = (param: UserParam, user: UserName) =>
   fetchJson<FirstSolvedProblem[]>(
-    `${STATIC_API_BASE_URL}/solved/${param}/${encodeURIComponent(user)}/first`
+    `${STATIC_API_BASE_URL_V1}/solved/${param}/${encodeURIComponent(
+      user
+    )}/first`
   ).then((solvedProblems) =>
     solvedProblems.map((solvedProblem) => {
       solvedProblem.First = true;
@@ -66,7 +69,7 @@ const fetchFirstSolvedProblems = (param: UserParam, user: UserName) =>
     })
   );
 const fetchSingleProblem = (problemId: ProblemId) =>
-  fetchJson<Problem>(`${STATIC_API_BASE_URL}/problems/${problemId}`);
+  fetchJson<Problem>(`${STATIC_API_BASE_URL_V1}/problems/${problemId}`);
 
 // //////////////////
 // Raw Data
