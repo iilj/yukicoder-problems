@@ -26,7 +26,7 @@ import { ContestLink } from '../../components/ContestLink';
 import { ProblemTypeIconSpanWithName } from '../../components/ProblemTypeIcon';
 import { TabbedDifficultyChart } from './TabbedDifficultyChart';
 import { useResetScroll } from '../../utils/UseResetScroll';
-import { getHeader } from '../../utils';
+import { bytesLengthToString, getHeader } from '../../utils';
 
 const initialUniversalState = {
   problem: {} as Problem,
@@ -233,7 +233,11 @@ export const ProblemDetailPage: React.FC = () => {
                 {shortestRankingProblem ? (
                   <SubmissionLink
                     submissionId={shortestRankingProblem.SubmissionId}
-                    submissionTitle={`#${shortestRankingProblem.SubmissionId} (${shortestRankingProblem.UserName}, ${shortestRankingProblem.Length} Bytes)`}
+                    submissionTitle={`#${
+                      shortestRankingProblem.SubmissionId
+                    } (${
+                      shortestRankingProblem.UserName
+                    }, ${bytesLengthToString(shortestRankingProblem.Length)})`}
                   />
                 ) : problem.Statistics &&
                   problem.Statistics.ShortCodeSubmissionId > 0 ? (
@@ -252,7 +256,13 @@ export const ProblemDetailPage: React.FC = () => {
                 {pureShortestRankingProblem ? (
                   <SubmissionLink
                     submissionId={pureShortestRankingProblem.SubmissionId}
-                    submissionTitle={`#${pureShortestRankingProblem.SubmissionId} (${pureShortestRankingProblem.UserName}, ${pureShortestRankingProblem.Length} Bytes)`}
+                    submissionTitle={`#${
+                      pureShortestRankingProblem.SubmissionId
+                    } (${
+                      pureShortestRankingProblem.UserName
+                    }, ${bytesLengthToString(
+                      pureShortestRankingProblem.Length
+                    )})`}
                   />
                 ) : problem.Statistics &&
                   problem.Statistics.PureShortCodeSubmissionId > 0 ? (

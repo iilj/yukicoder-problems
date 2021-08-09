@@ -28,7 +28,7 @@ import {
 import { ProblemDetailModal } from '../../components/ProblemDetailModal';
 import { useNavigate } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
-import { getHeader } from '../../utils';
+import { bytesLengthToString, getHeader } from '../../utils';
 
 export type FilterState = 'All' | 'Only Trying' | 'Only AC';
 
@@ -228,7 +228,9 @@ export const ListTable: React.FC<Props> = (props) => {
         return shortestRankingProblem ? (
           <SubmissionLink
             submissionId={shortestRankingProblem.SubmissionId}
-            submissionTitle={`${shortestRankingProblem.UserName} (${shortestRankingProblem.Length} Bytes)`}
+            submissionTitle={`${
+              shortestRankingProblem.UserName
+            } (${bytesLengthToString(shortestRankingProblem.Length)})`}
           />
         ) : (
           <></>
@@ -245,7 +247,9 @@ export const ListTable: React.FC<Props> = (props) => {
         return pureShortestRankingProblem ? (
           <SubmissionLink
             submissionId={pureShortestRankingProblem.SubmissionId}
-            submissionTitle={`${pureShortestRankingProblem.UserName} (${pureShortestRankingProblem.Length} Bytes)`}
+            submissionTitle={`${
+              pureShortestRankingProblem.UserName
+            } (${bytesLengthToString(pureShortestRankingProblem.Length)})`}
           />
         ) : (
           <></>

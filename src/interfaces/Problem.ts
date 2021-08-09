@@ -42,17 +42,17 @@ export type ProblemLevel = typeof ProblemLevels[number];
 export interface Statistics {
   /** 提出者数 */
   readonly Total: number;
-  /** 正解者数 */
+  /** AC 数 */
   readonly Solved: number;
-  /** First Accepted 提出日時 */
+  /** FirstAC までの秒数 */
   readonly FirstAcceptedTimeSecond: number;
-  /** First Accepted 提出ID */
+  /** FirstAC の提出 ID */
   readonly FirstACSubmissionId: SubmissionId;
-  /** ショートコード 提出ID */
+  /** ショートコードの提出 ID */
   readonly ShortCodeSubmissionId: SubmissionId;
-  /** 純ショートコード 提出ID */
+  /** 純ショートコードの提出 ID */
   readonly PureShortCodeSubmissionId: SubmissionId;
-  /** 最速コード 提出ID */
+  /** 最速コードの提出ID */
   readonly FastSubmissionId: SubmissionId;
 }
 

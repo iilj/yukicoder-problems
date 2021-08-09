@@ -15,6 +15,7 @@ import { ContestLink } from './ContestLink';
 import { SolvedCheckIcon } from './SolvedCheckIcon';
 import { SubmissionLink } from './SubmissionLink';
 import { ProblemTypeIconSpanWithName } from './ProblemTypeIcon';
+import { bytesLengthToString } from '../utils';
 
 interface Props {
   show: boolean;
@@ -176,7 +177,11 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
                 {shortestRankingProblem ? (
                   <SubmissionLink
                     submissionId={shortestRankingProblem.SubmissionId}
-                    submissionTitle={`#${shortestRankingProblem.SubmissionId} (${shortestRankingProblem.UserName}, ${shortestRankingProblem.Length} Bytes)`}
+                    submissionTitle={`#${
+                      shortestRankingProblem.SubmissionId
+                    } (${
+                      shortestRankingProblem.UserName
+                    }, ${bytesLengthToString(shortestRankingProblem.Length)})`}
                   />
                 ) : problem.Statistics &&
                   problem.Statistics.ShortCodeSubmissionId > 0 ? (
@@ -195,7 +200,13 @@ export const ProblemDetailModal: React.FC<Props> = (props) => {
                 {pureShortestRankingProblem ? (
                   <SubmissionLink
                     submissionId={pureShortestRankingProblem.SubmissionId}
-                    submissionTitle={`#${pureShortestRankingProblem.SubmissionId} (${pureShortestRankingProblem.UserName}, ${pureShortestRankingProblem.Length} Bytes)`}
+                    submissionTitle={`#${
+                      pureShortestRankingProblem.SubmissionId
+                    } (${
+                      pureShortestRankingProblem.UserName
+                    }, ${bytesLengthToString(
+                      pureShortestRankingProblem.Length
+                    )})`}
                   />
                 ) : problem.Statistics &&
                   problem.Statistics.PureShortCodeSubmissionId > 0 ? (
