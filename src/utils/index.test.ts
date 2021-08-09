@@ -4,18 +4,7 @@ import { getLevelList, range, mapToObject, getHeader } from './index';
 describe('getLevelList()', () => {
   test('problem level list should be [0] + [1, 1.5, 2, ..., 6.0]', () => {
     expect(getLevelList()).toEqual([
-      0,
-      1,
-      1.5,
-      2,
-      2.5,
-      3,
-      3.5,
-      4,
-      4.5,
-      5,
-      5.5,
-      6,
+      0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6,
     ] as ProblemLevel[]);
   });
 });

@@ -107,7 +107,8 @@ export const ListPage: React.FC = () => {
         TypedCachedApiClient.cachedGolferRankingPureProblemMap(),
         DifficultyDataClient.cachedDifficultyData(),
       ]);
-      const problemContestMap = await TypedCachedApiClient.cachedProblemContestMap();
+      const problemContestMap =
+        await TypedCachedApiClient.cachedProblemContestMap();
 
       if (!unmounted) {
         setUniversalState({
@@ -210,18 +211,16 @@ export const ListPage: React.FC = () => {
     'Level'
   );
 
-  const [statusFilterState, setStatusFilterState] = useState<FilterState>(
-    'All'
-  );
+  const [statusFilterState, setStatusFilterState] =
+    useState<FilterState>('All');
   const [fromDifficultyLevel, setFromDifficultyLevel] = useState<
     ProblemLevel | -1
   >(-1);
   const [toDifficultyLevel, setToDifficultyLevel] = useState<
     ProblemLevel | 100
   >(INF_LEVEL);
-  const [showTagsOfTryingProblems, setShowTagsOfTryingProblems] = useState(
-    false
-  );
+  const [showTagsOfTryingProblems, setShowTagsOfTryingProblems] =
+    useState(false);
   const [fromDate, setFromDate] = useState(INITIAL_FROM_DATE);
   const [toDate, setToDate] = useState(INITIAL_TO_DATE);
   const [problemTypeFilterState, setProblemTypeFilterState] = useState<

@@ -126,15 +126,13 @@ export const UserPage: React.FC = () => {
     let unmounted = false;
     const getUserInfo = async () => {
       setUserStateLoaded(false);
-      const [
-        userInfo,
-        solvedProblems,
-        firstSolvedProblems,
-      ] = await Promise.all([
-        TypedCachedApiClient.cachedUserInfo(param, user),
-        TypedCachedApiClient.cachedSolvedProblemArray(param, user),
-        TypedCachedApiClient.cachedFirstSolvedProblemArray(param, user),
-      ]);
+      const [userInfo, solvedProblems, firstSolvedProblems] = await Promise.all(
+        [
+          TypedCachedApiClient.cachedUserInfo(param, user),
+          TypedCachedApiClient.cachedSolvedProblemArray(param, user),
+          TypedCachedApiClient.cachedFirstSolvedProblemArray(param, user),
+        ]
+      );
       const [solvedProblemsMap, firstSolvedProblemsMap] = await Promise.all([
         TypedCachedApiClient.cachedSolvedProblemMap(param, user),
         TypedCachedApiClient.cachedFirstSolvedProblemMap(param, user),
