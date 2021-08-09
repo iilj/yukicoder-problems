@@ -103,8 +103,10 @@ export const ProblemDetailPage: React.FC = () => {
       )}. `
     : '';
 
-  const shortestRankingProblem = golferProblemMap.get(problemId);
-  const pureShortestRankingProblem = golferPureProblemMap.get(problemId);
+  const shortestRankingProblem =
+    problem.No !== null ? golferProblemMap.get(problem.No) : undefined;
+  const pureShortestRankingProblem =
+    problem.No !== null ? golferPureProblemMap.get(problem.No) : undefined;
 
   const [colorMode, setColorMode] = useLocalStorage<ProblemLinkColorMode>(
     'TablePage_colorMode',
