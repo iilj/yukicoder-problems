@@ -3,10 +3,9 @@ import { Row, ButtonGroup, Button } from 'reactstrap';
 
 export enum ContestTableTab {
   'regular' = 0,
-  'long' = 1,
-  'other' = 2,
-  'other_problems' = 3,
-  'all' = 4,
+  'other' = 1,
+  'other_problems' = 2,
+  'all' = 3,
 }
 
 interface Props {
@@ -26,16 +25,7 @@ export const TableTabButtons: React.FC<Props> = (props) => {
           }}
           active={active === ContestTableTab.regular}
         >
-          yukicoder contest (regular)
-        </Button>
-        <Button
-          color="secondary"
-          onClick={() => {
-            setActive(ContestTableTab.long);
-          }}
-          active={active === ContestTableTab.long}
-        >
-          yukicoder contest (long)
+          yukicoder contest
         </Button>
         <Button
           color="secondary"
