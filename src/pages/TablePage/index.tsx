@@ -184,17 +184,15 @@ export const TablePage: React.FC = () => {
     ContestTableTab.regular
   );
 
-  const yukicoderRegularContests = [] as Contest[];
-  const yukicoderLongContests = [] as Contest[];
+  const yukicoderContests = [] as Contest[];
   const otherContests = [] as Contest[];
   const otherProblems = [] as Contest[];
-  const regexpYukicoderContest = /^yukicoder contest \d+/;
+  const regexpYukicoderContest = /^\s*yukicoder\s+contest\s+\d+/;
   const regexpOpenContest = /\(Open\)$/;
   contests.forEach((contest) => {
     if (regexpYukicoderContest.exec(contest.Name)) {
-      if (contest.ProblemIdList.length <= 7)
-        yukicoderRegularContests.push(contest);
-      else yukicoderLongContests.push(contest);
+      if (contest.ProblemIdList.length <= 8) yukicoderContests.push(contest);
+      else otherContests.push(contest);
     } else if (regexpOpenContest.exec(contest.Name)) {
       otherProblems.push(contest);
     } else otherContests.push(contest);
@@ -286,20 +284,8 @@ export const TablePage: React.FC = () => {
       <DifficultyStarsFillDefs />
       <ContestWrapper display={activeTab === ContestTableTab.regular}>
         <YukicoderRegularTable
-          contests={yukicoderRegularContests}
-          title="yukicoder contest (regular)"
-          mergedProblemsMap={mergedProblemsMap}
-          showDifficultyLevel={showDifficultyLevel}
-          problemLinkColorMode={colorMode}
-          showContestResult={showContestResult}
-          showContestDate={showContestDate}
-          universalStateLoaded={universalStateLoaded}
-        />
-      </ContestWrapper>
-      <ContestWrapper display={activeTab === ContestTableTab.long}>
-        <ContestTable
-          contests={yukicoderLongContests}
-          title="yukicoder contest (long)"
+          contests={yukicoderContests}
+          title="yukicoder contest"
           mergedProblemsMap={mergedProblemsMap}
           showDifficultyLevel={showDifficultyLevel}
           problemLinkColorMode={colorMode}
