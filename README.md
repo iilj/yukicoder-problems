@@ -1,6 +1,7 @@
 # yukicoder-problems
 
-[![Build Status](https://travis-ci.com/iilj/yukicoder-problems.svg?branch=master)](https://travis-ci.com/iilj/yukicoder-problems)
+[![Build and Deploy](https://github.com/iilj/yukicoder-problems/actions/workflows/main.yml/badge.svg)](https://github.com/iilj/yukicoder-problems/actions/workflows/main.yml)
+
 
 ## Overview
 
