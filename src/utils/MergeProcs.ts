@@ -76,18 +76,48 @@ export const mergeSolveStatus = (
       };
     }
     // assert コンテスト情報あり
+
     if (!firstSolvedProblem) {
-      // 未 AC
-      return {
-        ...problem,
-        Contest: extendedContest,
-        DateNum,
-        SolveStatus: ProblemSolveStatus.Trying,
-        Difficulty,
-        Augmented,
-        Index: problemIndexMap.get(problem.ProblemId),
-      };
+      if (!solvedProblem) {
+        // 未 AC
+        return {
+          ...problem,
+          Contest: extendedContest,
+          DateNum,
+          SolveStatus: ProblemSolveStatus.Trying,
+          Difficulty,
+          Augmented,
+          Index: problemIndexMap.get(problem.ProblemId),
+        };
+      } else {
+        // 何故か firstSolvedProblem のほうに入っていないことがあるので polyfill
+        // firstSolvedProblem の代わりに solvedProblem を使う
+        const SolveDate = solvedProblem?.Date;
+        const SolveDateNum = SolveDate ? Date.parse(SolveDate) : undefined;
+        const FirstSolveDate = solvedProblem.Date;
+        const FirstSolveDateNum = Date.parse(FirstSolveDate);
+        const SolveStatus =
+          FirstSolveDateNum > extendedContest.EndDateNum
+            ? ProblemSolveStatus.Solved
+            : FirstSolveDateNum >= extendedContest.DateNum
+            ? ProblemSolveStatus.Intime
+            : ProblemSolveStatus.BeforeContest;
+        return {
+          ...problem,
+          Contest: extendedContest,
+          DateNum,
+          SolveDate,
+          SolveDateNum,
+          FirstSolveDate,
+          FirstSolveDateNum,
+          SolveStatus,
+          Difficulty,
+          Augmented,
+          Index: problemIndexMap.get(problem.ProblemId),
+        };
+      }
     }
+
     // assert AC 済み
     const SolveDate = solvedProblem?.Date;
     const SolveDateNum = SolveDate ? Date.parse(SolveDate) : undefined;
