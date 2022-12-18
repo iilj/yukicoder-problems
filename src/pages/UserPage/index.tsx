@@ -211,6 +211,13 @@ export const UserPage: React.FC = () => {
     },
     [] as SolvedProblem[]
   );
+  // merge
+  // solvedProblems に入っていて firstSolvedProblemsMap に入っていないものを追加する
+  solvedProblems.forEach((solvedProblem) => {
+    if (!firstSolvedProblemsMap.has(solvedProblem.ProblemId)) {
+      mergedSolvedProblems.push(solvedProblem);
+    }
+  });
 
   // for user info section
   /** returns [shortestCount, shortestRank] */

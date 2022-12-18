@@ -44,7 +44,6 @@ export const SolvedProblemList: React.FC<Props> = (props) => {
     toDate,
     problemLinkColorMode,
   } = props;
-
   return (
     <BootstrapTable
       data={solvedProblems
