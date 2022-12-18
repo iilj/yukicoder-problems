@@ -215,6 +215,7 @@ export const UserPage: React.FC = () => {
   // solvedProblems に入っていて firstSolvedProblemsMap に入っていないものを追加する
   solvedProblems.forEach((solvedProblem) => {
     if (!firstSolvedProblemsMap.has(solvedProblem.ProblemId)) {
+      solvedProblem.First = true;
       mergedSolvedProblems.push(solvedProblem);
     }
   });
