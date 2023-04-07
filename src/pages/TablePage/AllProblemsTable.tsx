@@ -35,10 +35,8 @@ export const AllProblemsTable: React.FC<Props> = (props) => {
     .filter((a) => a.No !== null)
     .sort((a, b) => (a.No as ProblemNo) - (b.No as ProblemNo))
     .reduce((prevMap, problem) => {
-      const key = Math.min(
-        Math.floor(((problem.No as ProblemNo) - 1) / 100),
-        29
-      );
+      const no = problem.No as ProblemNo;
+      const key = Math.floor(no < 3000 ? (no - 1) / 100 : no / 100);
       if (!prevMap.has(key)) {
         prevMap.set(key, []);
       }
