@@ -7,6 +7,7 @@ import { ProblemNo, ProblemLevel } from '../interfaces/Problem';
 import { Difficulty } from '../interfaces/Difficulty';
 import { DifficultyCircle } from './DifficultyCircle';
 import { NewTabLink } from './NewTabLink';
+import { TexRenderer } from './TexRenderer';
 
 export const ProblemLinkColorModes = ['None', 'Level', 'Difficulty'] as const;
 export type ProblemLinkColorMode = typeof ProblemLinkColorModes[number];
@@ -63,7 +64,7 @@ export const ProblemLink: React.FC<Props> = (props) => {
         className={className}
         title={problemTitle}
       >
-        {problemTitle}
+        <TexRenderer text={problemTitle} />
       </NewTabLink>
     </>
   );
